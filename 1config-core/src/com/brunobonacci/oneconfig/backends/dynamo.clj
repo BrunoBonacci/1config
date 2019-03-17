@@ -9,7 +9,7 @@
 
 (defn default-dynamo-config []
   ;; TODO: REGION????
-  {:endpoint  (or (System/getenv "AWS_REGION") "eu-west-1")
+  {:endpoint  nil ;;(or (System/getenv "AWS_DEFAULT_REGION") "eu-west-1")
    :table     (or (System/getenv "ONECONFIG_DYNAMO_TABLE") "1Config")})
 
 

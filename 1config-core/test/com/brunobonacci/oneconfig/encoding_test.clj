@@ -33,10 +33,11 @@
                             :content-type "text/plain"
                             :value        "some-value"}]
                (-> store
-                   (save entry1)
-                   (save entry2)
-                   (list {})) => (contains [(contains (dissoc entry1 :content-type :value))
-                                            (contains (dissoc entry2 :content-type :value))])))
+                  (save entry1)
+                  (save entry2)
+                  (list {}))
+               => (contains [(contains (dissoc entry1 :content-type :value))
+                            (contains (dissoc entry2 :content-type :value))])))
 
        (fact "save and read a value a string "
              (let [store0 (in-memory-config-backend)
@@ -47,9 +48,9 @@
                           :content-type "text/plain"
                           :value "some-value"}]
                (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value) => "some-value"))
+                  (save entry)
+                  (load (dissoc entry :value :content-type))
+                  :value) => "some-value"))
 
 
        (fact "save and read a numeric value should be returned as a string"
@@ -61,9 +62,9 @@
                           :content-type "text/plain"
                           :value 23}]
                (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => "23")
+                  (save entry)
+                  (load (dissoc entry :value :content-type))
+                  :value)) => "23")
 
 
        (fact "anything else should fail."
@@ -75,8 +76,8 @@
                           :content-type "text/plain"
                           :value {:some "complex" :value #{1}}}]
                (-> store
-                   (save entry)
-                   )) => (throws Exception))
+                  (save entry)
+                  )) => (throws Exception))
        )
 
 

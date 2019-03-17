@@ -12,6 +12,7 @@
              [util :as util]]
             [com.brunobonacci.oneconfig.backends
              [dynamo :as dyn]
+             [kms-encryption :as kms]
              [encoding :as coder]]))
 
 (defn- validate-version! [version]
@@ -64,7 +65,8 @@
 (defmethod backend :dynamo
   [_ & opts]
   (coder/make-encoding-wrapper
-   (dyn/dynamo-config-backend (dyn/default-dynamo-config))))
+   (kms/kms-encryption-backend
+    (dyn/dynamo-config-backend (dyn/default-dynamo-config)))))
 
 
 
@@ -102,7 +104,7 @@
   (str/join "\n"
             ["-----------------------[META]-----------------------"
              (pp/write (dissoc v :value) :stream nil)
-             "----------------------------------------------------"]))
+             "----------------------[CONFIG]----------------------"]))
 
 
 (defn get! [backend config-entry & {:keys [with-meta] :or {with-meta false}}]

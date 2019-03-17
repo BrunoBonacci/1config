@@ -4,6 +4,8 @@
             [com.brunobonacci.oneconfig.util :refer :all]
             [com.brunobonacci.oneconfig.backends.file
              :refer [readonly-file-config-backend]]
+            [com.brunobonacci.oneconfig.backends.kms-encryption
+             :refer [kms-encryption-backend]]
             [com.brunobonacci.oneconfig.backends.encoding
              :refer [make-encoding-wrapper]]
             [com.brunobonacci.oneconfig.backends.dynamo
@@ -22,7 +24,9 @@
     ;; search configuration in files first
     (some-> (configuration-file-search) readonly-file-config-backend)
     ;; otherwise search in dynamo
-    (dynamo-config-backend (default-dynamo-config)))))
+    (kms-encryption-backend
+     (dynamo-config-backend
+      (default-dynamo-config))))))
 
 
 

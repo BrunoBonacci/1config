@@ -1,16 +1,12 @@
 (ns com.brunobonacci.oneconfig.util
-  (:require [safely.core :refer [safely]]
-            [clojure.java.io :as io]
+  (:require [cheshire.core :as json]
             [clojure.edn :as edn]
-            [cheshire.core :as json]
+            [clojure.java.io :as io]
+            [safely.core :refer [safely]]
             [schema.core :as s]
-            [clojure.string :as str])
-  (:import [java.util.zip GZIPInputStream GZIPOutputStream]
-           [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]))
-
-
-
-
+            [where.core :refer [where]])
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]
+           java.util.zip.GZIPInputStream))
 
 (defn sem-ver
   "Returns a vector of the numerical components of a 3-leg version number.
@@ -22,7 +18,7 @@
   "
   [ver]
   (when ver
-    (when-let [components (re-find #"(\d{1,3})\.(\d{1,3})\.(\d{1,3})" ver)]
+    (when-let [components (re-find #"(\d{1,5})\.(\d{1,5})\.(\d{1,5})" ver)]
       (mapv (fn [^String n] (Long/parseLong n)) (rest components)))))
 
 
@@ -31,7 +27,9 @@
    :key s/Str
    :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
    :value s/Any
-   (s/optional-key :content-type) s/Str})
+   (s/optional-key :content-type)     s/Str
+   (s/optional-key :master-key-alias) s/Str
+   (s/optional-key :master-key)       s/Str})
 
 
 (def config-entry-request-schema
@@ -54,15 +52,11 @@
 
 
 (defn comparable-version
-  "takes a 3-leg version which must and return a version string
-   which it can be compare lexicographically and maintain it's semantic
-   version meaning."
+  "takes a 3-leg version number and returns a version string
+   which it can be compared lexicographically and maintain it's semantic
+   version ordering."
   [ver]
-  (->> ver
-       sem-ver
-       (map (partial format "%03d"))
-       (reduce str)))
-
+  (apply format "%05d%05d%05d" (sem-ver ver)))
 
 
 (defn env
@@ -112,7 +106,7 @@
           (filter matches?)
           (map mapper))))
   ([dir]
-   (if-let [path (and dir (.exists (io/file dir)) (io/file dir))]
+   (if-let [^java.io.File path (and dir (.exists (io/file dir)) (io/file dir))]
      (if (.isDirectory path)
        (lazy-seq
         (cons path
@@ -199,9 +193,11 @@
 
 (defn- filter-entries [{:keys [key env version]} entries]
   (->> entries
-       (filter #(str/starts-with? (:env %) (or env "")))
-       (filter #(str/starts-with? (:key %) (or key "")))
-       (filter #(str/starts-with? (:version %) (or version "")))))
+     (filter
+      (where [:and
+              [:env :starts-with? (or env "")]
+              [:key :starts-with? (or key "")]
+              [:version :starts-with? (or version "")]]))))
 
 
 (defn list-entries [filters entries]

@@ -13,10 +13,14 @@
                  [amazonica "0.3.139" :exclusions
                   [com.amazonaws/aws-java-sdk
                    com.amazonaws/amazon-kinesis-client]]
-                 [com.amazonaws/aws-java-sdk-core "1.11.513"]
+                 [com.amazonaws/aws-java-sdk-core     "1.11.513"]
                  [com.amazonaws/aws-java-sdk-dynamodb "1.11.513"]
+                 [com.amazonaws/aws-java-sdk-kms      "1.11.513"]
+                 [com.amazonaws/aws-encryption-sdk-java "1.3.6"]
                  [prismatic/schema "1.1.10"]
-                 [cheshire "5.8.1"]]
+                 [cheshire "5.8.1"]
+                 [com.brunobonacci/where "0.5.0"]
+                 [org.clojure/core.cache "0.7.2"]]
 
   :bin {:name "cfg1"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
