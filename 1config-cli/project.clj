@@ -22,10 +22,14 @@
 
   :jvm-opts ["-server"]
 
+  :bin {:name "1cfg"
+        :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
+
   :profiles {:dev {:dependencies [[midje "1.9.6"]
                                   [org.clojure/test.check "0.10.0-alpha3"]
                                   [criterium "0.4.4"]
                                   [org.slf4j/slf4j-log4j12 "1.8.0-beta4"]]
                    :resource-paths ["dev-resources"]
-                   :plugins      [[lein-midje "3.2.1"]]}}
+                   :plugins      [[lein-midje "3.2.1"]
+                                  [lein-binplus "0.6.5"]]}}
   )

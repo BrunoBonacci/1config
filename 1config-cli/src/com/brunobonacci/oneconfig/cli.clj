@@ -151,7 +151,9 @@
 
 (defmethod format-output :table
   [{:keys [backend] :as context} entries]
-  (table/table [:key :env :version :change-num] entries))
+  (table/table [{:name :key :title "Config key"} :env :version :change-num
+                {:name :master-key-alias :title "Master encryption key"}]
+               entries))
 
 
 
