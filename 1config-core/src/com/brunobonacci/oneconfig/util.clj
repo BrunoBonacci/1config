@@ -200,11 +200,20 @@
               [:version :starts-with? (or version "")]]))))
 
 
-(defn list-entries [filters entries]
-  (->> entries
+
+(defn list-entries
+  [filters entries]
+  (let [;; add default ordering to given order
+        order (concat (get filters :order-by []) [:key :env (comp comparable-version :version) :change-num])
+        ;; use semantic versioning order
+        order (map (fn [k] (if (= k :version) (comp comparable-version :version) k)) order)
+        ;; compose order function
+        order-fn (apply juxt order)]
+    (->> entries
        (filter-entries filters)
-       (sort-by (juxt :key :env :version :change-num))
-       (map #(dissoc % :__ver_key :__sys_key :value :zver))))
+       (map #(select-keys % [:key :env :version :change-num :content-type
+                             :master-key :master-key-alias]))
+       (sort-by order-fn))))
 
 
 (comment

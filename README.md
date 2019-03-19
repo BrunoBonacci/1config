@@ -52,7 +52,7 @@ It will attempt to read a file or dynamo table in the following order.
 The name of the DynamoDB table can be customized with
 `$ONECONFIG_DYNAMO_TABLE` environment variable. It will use the
 machine role to access the database. The AWS region can be controlled
-via the environment variable `$AWS_REGION` which defaults to
+via the environment variable `$AWS_DEFAULT_REGION` which defaults to
 `eu-west-1`. For the AWS credentials we use the
 [Default Credential Provider Chain](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#id6).
 Therefore the credentials can be provided in one of the following ways:

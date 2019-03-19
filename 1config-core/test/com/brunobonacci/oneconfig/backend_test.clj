@@ -22,8 +22,8 @@
                       :version "1.2.3"
                       :value "some-config"}]
            (-> store
-               (save entry)
-               (load (dissoc entry :value)))
+              (save entry)
+              (load (dissoc entry :value)))
            => (contains entry)))
 
 
@@ -38,10 +38,10 @@
                              :version ver
                              :value "some-config1"}]
                  (-> store
-                     (save entry1)
-                     (load {:env (rand-env "dev")
-                            :key key
-                            :version ver}))
+                    (save entry1)
+                    (load {:env (rand-env "dev")
+                           :key key
+                           :version ver}))
                  => nil))
 
          (fact "  > different key"
@@ -53,10 +53,10 @@
                              :version ver
                              :value "some-config1"}]
                  (-> store
-                     (save entry1)
-                     (load {:env env
-                            :key (rand-key "service2")
-                            :version ver}))
+                    (save entry1)
+                    (load {:env env
+                           :key (rand-key "service2")
+                           :version ver}))
                  => nil))
          )
 
@@ -80,12 +80,12 @@
                        :value "some-config3"}
                ]
            (-> store
-               (save entry1)
-               (save entry2)
-               (save entry3)
-               (load {:env env
-                      :key key
-                      :version ver}))
+              (save entry1)
+              (save entry2)
+              (save entry3)
+              (load {:env env
+                     :key key
+                     :version ver}))
            => (contains entry3)))
 
 
@@ -108,8 +108,8 @@
                              :version ver
                              :value "some-config3"}
                      store2 (-> store
-                                (save entry1)
-                                (save entry2))
+                               (save entry1)
+                               (save entry2))
 
                      cnum (:change-num
                            (load store2 {:env env
@@ -143,13 +143,13 @@
                              :value "some-config3"}
                      ]
                  (-> store
-                     (save entry1)
-                     (save entry2)
-                     (save entry3)
-                     (load {:env env
-                            :key key
-                            :version ver
-                            :change-num 10}))
+                    (save entry1)
+                    (save entry2)
+                    (save entry3)
+                    (load {:env env
+                           :key key
+                           :version ver
+                           :change-num 10}))
                  => nil))
          )
 
@@ -174,12 +174,12 @@
                              :value "some-config3"}
                      ]
                  (-> store
-                     (save entry1)
-                     (save entry2)
-                     (save entry3)
-                     (load {:env env
-                            :key key
-                            :version "1.2.5"}))
+                    (save entry1)
+                    (save entry2)
+                    (save entry3)
+                    (load {:env env
+                           :key key
+                           :version "1.2.5"}))
                  => (contains entry2)))
 
 
@@ -200,12 +200,12 @@
                              :value "some-config3"}
                      ]
                  (-> store
-                     (save entry1)
-                     (save entry2)
-                     (save entry3)
-                     (load {:env env
-                            :key key
-                            :version "1.2.7"}))
+                    (save entry1)
+                    (save entry2)
+                    (save entry3)
+                    (load {:env env
+                           :key key
+                           :version "1.2.7"}))
                  => nil))
          )
 
@@ -239,36 +239,53 @@
                        :version "1.3.0"
                        :value   "some-config5"}
 
+               entry6 {:env     env1
+                       :key     key1
+                       :version "1.22.5"
+                       :value   "some-config3"}
+
+               entry7 {:env     env1
+                       :key     key1
+                       :version "1.3.5"
+                       :value   "some-config3"}
+
+
                store (-> store
-                         (save entry2)
-                         (save entry1)
-                         (save entry3)
-                         (save entry4)
-                         (save entry5))]
+                        (save entry2)
+                        (save entry1)
+                        (save entry3)
+                        (save entry4)
+                        (save entry5)
+                        (save entry6)
+                        (save entry7))]
 
            (fact "env filter returns entries that match"
                  (->> (list store {:env env1})
-                      (map #(dissoc % :change-num :content-type)))
+                    (map #(dissoc % :change-num :content-type)))
 
 
                  => [(dissoc entry5 :value)
-                     (dissoc entry2 :value)
-                     (dissoc entry1 :value)
-                     (dissoc entry3 :value)])
+                    (dissoc entry2 :value)
+                    (dissoc entry1 :value)
+                    (dissoc entry3 :value)
+                    (dissoc entry7 :value)
+                    (dissoc entry6 :value)])
+
 
            (fact "key filter returns entries that match"
                  (->> (list store {:key key2})
-                      (map #(dissoc % :change-num :content-type)))
+                    (map #(dissoc % :change-num :content-type)))
                  => (contains [(contains (dissoc entry5 :value))]))
+
 
            (fact "version filter returns entries that match and sorted by order inserted"
                  (->> (list store {:version "1.2.3"})
-                      (map #(dissoc % :change-num :content-type)))
+                    (map #(dissoc % :change-num :content-type)))
                  => (contains [(contains (dissoc entry2 :value)) (contains (dissoc entry1 :value))]))
 
            (fact "Can combine filters"
                  (->> (list store {:version "1.3.0" :env env2})
-                      (map #(dissoc % :change-num :content-type)))
+                    (map #(dissoc % :change-num :content-type)))
                  => (contains [(contains (dissoc entry4 :value)) ])))
 
 
@@ -289,12 +306,12 @@
                              :value   "some-config3"}
                      ]
                  (-> store
-                     (save entry1)
-                     (save entry2)
-                     (save entry3)
-                     (load {:env     env
-                            :key     key
-                            :version "1.2.7"}))
+                    (save entry1)
+                    (save entry2)
+                    (save entry3)
+                    (load {:env     env
+                           :key     key
+                           :version "1.2.7"}))
                  => nil))
          )
 
@@ -319,12 +336,12 @@
                              :value "some-config3"}
                      ]
                  (-> store
-                     (save entry1)
-                     (save entry2)
-                     (save entry3)
-                     (find {:env env
-                            :key key
-                            :version "1.2.5"}))
+                    (save entry1)
+                    (save entry2)
+                    (save entry3)
+                    (find {:env env
+                           :key key
+                           :version "1.2.5"}))
                  => (contains entry2)))
 
 
