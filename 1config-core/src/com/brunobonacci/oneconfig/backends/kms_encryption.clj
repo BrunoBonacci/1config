@@ -82,7 +82,7 @@
                  second
                  (str ":key/" target-key-id))]
             (assoc m :key-arn arn))))
-   (map (juxt (comp #(subs % 6) :alias-name) :key-arn))
+   (map (juxt :alias-name :key-arn))
    (into {})))
 
 

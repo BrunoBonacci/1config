@@ -213,7 +213,7 @@
     (->> (kms/master-keys)
        (map (fn [[k v]] {:alias k :master-key-arn v}))
        (sort-by :alias)
-       (table/table [{:name :alias :title "Key alias" :format #(str/replace % #"^1Config/" "")}
+       (table/table [{:name :alias :title "Key alias"}
                      :master-key-arn])))
    :on-error
    :message "Listing keys"))
