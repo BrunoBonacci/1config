@@ -193,3 +193,46 @@
 
   (list (backend :dynamo) {})
   )
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                     ----==| L I S T - K E Y S |==----                      ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn list-keys! []
+  (safely
+   (println
+    (->> (kms/master-keys)
+       (map (fn [[k v]] {:alias k :master-key-arn v}))
+       (sort-by :alias)
+       (table/table [{:name :alias :title "Key alias" :format #(str/replace % #"^1Config/" "")}
+                     :master-key-arn])))
+   :on-error
+   :message "Listing keys"))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                    ----==| C R E A T E - K E Y |==----                     ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(defn create-key!
+  [{:keys [key-name]}]
+  (safely
+   (let [key-alias (str "1Config/" key-name)]
+     (->>
+      (kms/create-master-key
+       key-alias
+       (format "1Config managed key for %s configurations" key-name))
+      (println "Created key: ")))
+   :on-error
+   :message "Creating key"))

@@ -244,11 +244,13 @@ Usage:
    ---------
 
    OPERATION:
-      - GET       : retrieve the current configuration value for
-                  : the given env/service/version combination
-      - SET       : sets the value of the given env/service/version combination
-      - LIST      : lists the available keys for the given backend
-      - INIT      : initialises the given backend (like create the table if necessary)
+      - GET        : retrieve the current configuration value for
+                   : the given env/service/version combination
+      - SET        : sets the value of the given env/service/version combination
+      - LIST       : lists the available keys for the given backend
+      - INIT       : initialises the given backend (like create the table if necessary)
+      - LIST-KEYS  : lists the master encryption keys created by 1Config.
+      - CREATE-KEY : creates an master encryption key.
 
    OPTIONS:
    ---------
@@ -266,8 +268,21 @@ Usage:
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'
    -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', default is 'edn'
+   -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
+                               : It must be a KMS key alias or an arn identifier for a key.
 
 Example:
+
+   --- keys management ---
+
+   (*) List KMS encryption keys managed by 1Config
+   cfg1 LIST-KEYS
+
+   (*) Create a master encryption key, the key name must be the same
+       and the configuration key to be used automatically.
+   cfg1 CREATE-KEY -m 'service1'
+
+   --- configuration entries management  ---
 
    (*) To initialise a given backend
    cfg1 INIT -b dynamo

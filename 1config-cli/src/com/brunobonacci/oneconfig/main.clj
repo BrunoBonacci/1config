@@ -28,11 +28,13 @@ Usage:
    ---------
 
    OPERATION:
-      - GET       : retrieve the current configuration value for
-                  : the given env/service/version combination
-      - SET       : sets the value of the given env/service/version combination
-      - LIST      : lists the available keys for the given backend
-      - INIT      : initialises the given backend (like create the table if necessary)
+      - GET        : retrieve the current configuration value for
+                   : the given env/service/version combination
+      - SET        : sets the value of the given env/service/version combination
+      - LIST       : lists the available keys for the given backend
+      - INIT       : initialises the given backend (like create the table if necessary)
+      - LIST-KEYS  : lists the master encryption keys created by 1Config.
+      - CREATE-KEY : creates an master encryption key.
 
    OPTIONS:
    ---------
@@ -50,8 +52,21 @@ Usage:
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'
    -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', default is 'edn'
+   -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
+                               : It must be a KMS key alias or an arn identifier for a key.
 
 Example:
+
+   --- keys management ---
+
+   (*) List KMS encryption keys managed by 1Config
+   cfg1 LIST-KEYS
+
+   (*) Create a master encryption key, the key name must be the same
+       and the configuration key to be used automatically.
+   cfg1 CREATE-KEY -m 'service1'
+
+   --- configuration entries management  ---
 
    (*) To initialise a given backend
    cfg1 INIT -b dynamo
@@ -119,13 +134,16 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
     :default [:key :env :version :change-num]
     :parse-fn #(-> % (str/split #" *, *") ((partial map keyword)))
     :validate [(partial every? #{:change-num :key :env :version})
-               "Must be a comma-separated list of: key, env, version, change-num"]]])
+               "Must be a comma-separated list of: key, env, version, change-num"]]
+
+   ["-m"  "--master-key KEY-NAME"]])
 
 
 (defn -main [& args]
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
-                content-type with-meta output-format order-by]} options
+                content-type with-meta output-format order-by
+                master-key]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
         backend-name (keyword backend)
@@ -136,16 +154,28 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
       errors          (help! errors)
       (not op)        (help! ["MISSING: required argument: operation"])
       (not
-       (#{:get :set :init :list} op)) (help! ["INVALID operation: must be either GET, SET, LIST or INIT"])
+       (#{:get :set :init :list :list-keys :create-key} op)) (help! ["INVALID operation: must be either GET, SET, LIST, INIT, LIST-KEYS or CREATE-KEY"])
       (and (= op :set) (not value)) (help! ["MISSING: required argument: value"])
+      (and (= op :create-key) (not master-key)) (help! ["MISSING: required argument: master-key"])
 
       :else
       (do
         (case op
           ;;
+          ;; LIST-KEYS
+          ;;
+          :list-keys (cli/list-keys!)
+
+          ;;
+          ;; CREATE-KEY
+          ;;
+          :create-key (cli/create-key! {:key-name master-key})
+
+          ;;
           ;; INIT
           ;;
           :init (cli/init-backend! backend-name)
+
           ;;
           ;; SET
           ;;
@@ -153,13 +183,13 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
                          {:env env :key key :content-type content-type
                           :version version :value
                           (or (cli/decode content-type value) (System/exit 2))})
+
           ;;
           ;; GET
           ;;
           :get (cli/get! (cli/backend backend-name)
                          {:env env :key key :version version :change-num change-num}
                          :with-meta with-meta)
-
 
           ;;
           ;; LIST
