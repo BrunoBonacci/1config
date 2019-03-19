@@ -99,7 +99,7 @@
   (save [this config-entry]
     (valid-entry? config-entry)
     (let [{:keys [key env version value]
-           :as entry} (merge {:content-type "application/edn"} config-entry)
+           :as entry} (merge {:content-type "edn"} config-entry)
           zver (comparable-version version)
           change-num (System/currentTimeMillis)
           sys-key (str env  "||" key)

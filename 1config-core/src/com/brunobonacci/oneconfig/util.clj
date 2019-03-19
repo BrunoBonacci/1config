@@ -23,18 +23,18 @@
 
 
 (def config-entry-schema
-  {:env s/Str
-   :key s/Str
+  {:env     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+   :key     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
    :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
-   :value s/Any
-   (s/optional-key :content-type)     s/Str
+   :value   s/Any
+   (s/optional-key :content-type)     (s/enum "txt" "edn" "json")
    (s/optional-key :master-key-alias) s/Str
    (s/optional-key :master-key)       s/Str})
 
 
 (def config-entry-request-schema
-  {:env s/Str
-   :key s/Str
+  {:env (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+   :key (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
    :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
    (s/optional-key :change-num) s/Int})
 
@@ -156,15 +156,15 @@
 
 (defmulti decode (fn [form value] form))
 
-(defmethod decode "application/edn"
+(defmethod decode "edn"
   [_ value]
   (edn/read-string value))
 
-(defmethod decode "application/json"
+(defmethod decode "json"
   [_ value]
   (json/parse-string value true))
 
-(defmethod decode "text/plain"
+(defmethod decode "txt"
   [_ value]
   value)
 
@@ -172,17 +172,17 @@
 (defmulti encode (fn [form value] form))
 
 
-(defmethod encode "application/edn"
+(defmethod encode "edn"
   [_ value]
   (pr-str value))
 
 
-(defmethod encode "application/json"
+(defmethod encode "json"
   [_ value]
   (json/generate-string value))
 
 
-(defmethod encode "text/plain"
+(defmethod encode "txt"
   [_ value]
   (cond
     (string? value) value

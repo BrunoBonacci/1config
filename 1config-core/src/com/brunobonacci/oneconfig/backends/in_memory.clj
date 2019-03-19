@@ -41,7 +41,7 @@
     (valid-entry? config-entry)
     (InMemoryConfigBackend.
      (let [{:keys [key env version value]
-            :as entry} (merge {:content-type "application/edn"} config-entry)
+            :as entry} (merge {:content-type "edn"} config-entry)
            zver (comparable-version version)]
        (update-in store [env key zver]
                   (fn [ov]

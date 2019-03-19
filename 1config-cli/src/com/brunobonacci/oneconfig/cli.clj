@@ -108,9 +108,9 @@
 (defn- format-value
   [{:keys [content-type value] :as v}]
   (case content-type
-    "application/json" (json/generate-string value {:pretty true})
-    "application/edn"  (pp/write value :stream nil)
-    "text/plain"       value))
+    "json" (json/generate-string value {:pretty true})
+    "edn"  (pp/write value :stream nil)
+    "txt"  value))
 
 
 
@@ -149,20 +149,13 @@
 
 
 
-(def content-map
-  {"application/edn"  "edn"
-   "application/json" "json"
-   "text/plain"       "text"})
-
-
-
 (defmethod format-output :cli
   [{:keys [backend] :as context} entries]
   (->> entries
      (map (fn [{:keys [key env version change-num content-type]}]
             (format "1cfg -b '%s' -k '%s' -e '%s' -v '%s' -t '%s' GET -c '%s' "
                     (name backend) key env version
-                    (content-map content-type "") change-num)))
+                    (or content-type "") change-num)))
      (str/join "\n")))
 
 

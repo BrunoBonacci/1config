@@ -111,10 +111,10 @@ with the following format:
 
   ;; content type of the value
   ;; currently we support:
-  ;;   - application/edn - which is the default
-  ;;   - application/json - a JSON encoded string
-  ;;   - text/plain - for plain text string.
-  :content-type "application/edn"
+  ;;   - edn - which is the default
+  ;;   - json - a JSON encoded string
+  ;;   - txt - for plain text string.
+  :content-type "edn"
 
   ;;
   ;; value is the actual value of the configuration item
@@ -153,7 +153,7 @@ config entry or nil if not found:
 ;; exact match
 (configure {:key "system1" :env "dev" :version "3.1.0"})
 ;;=>
-;; {:content-type "application/edn",
+;; {:content-type "edn",
 ;;  :env "dev",
 ;;  :key "system1",
 ;;  :version "3.1.0",
@@ -173,7 +173,7 @@ If an exact match isn't found the system retrieve the previous configuration is 
 
 (configure {:key "system1" :env "dev" :version "3.6.2"})
 ;;=>
-;; {:content-type "application/edn",
+;; {:content-type "edn",
 ;;  :env "dev",
 ;;  :key "system1",
 ;;  :version "3.1.0",
@@ -191,7 +191,7 @@ If an exact match isn't found the system retrieve the previous configuration is 
 
 (configure {:key "system1" :env "dev" :version "3.8.0"})
 ;;=>
-;; {:content-type "application/edn",
+;; {:content-type "edn",
 ;;  :env "dev",
 ;;  :key "system1",
 ;;  :version "3.7.0",
@@ -261,7 +261,7 @@ Usage:
         --with-meta            : whether to include meta data for GET operation
         --output-format FORMAT : either "table" or "cli" default is "table" (only for list)
    -C                          : same as `--output-format=cli`
-   -t   --content-type TYPE    : one of "edn", "text" or "json", default is "edn"
+   -t   --content-type TYPE    : one of "edn", "txt" or "json", default is "edn"
 
 Example:
 

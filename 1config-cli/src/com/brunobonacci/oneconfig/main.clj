@@ -46,7 +46,7 @@ Usage:
         --with-meta            : whether to include meta data for GET operation
         --output-format FORMAT : either \"table\" or \"cli\" default is \"table\" (only for list)
    -C                          : same as `--output-format=cli`
-   -t   --content-type TYPE    : one of \"edn\", \"text\" or \"json\", default is \"edn\"
+   -t   --content-type TYPE    : one of \"edn\", \"txt\" or \"json\", default is \"edn\"
 
 Example:
 
@@ -109,13 +109,7 @@ NOTE: use AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
    ["-t"  "--content-type TYPE"
     :default "edn"
-    :validate [(partial re-find #"^(edn|text|json)$") "Must be one of: edn, text, json"]]])
-
-
-(def content-map
-  {"edn"  "application/edn"
-   "json" "application/json"
-   "text" "text/plain"})
+    :validate [#{"edn" "txt" "json"} "Must be one of: edn, txt, json"]]])
 
 
 (defn -main [& args]
@@ -124,7 +118,6 @@ NOTE: use AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
                 content-type with-meta output-format]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
-        content-type (content-map content-type)
         backend-name (keyword backend)
         output-format (if (:C options) :cli output-format)]
 

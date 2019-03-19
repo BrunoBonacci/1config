@@ -16,7 +16,7 @@
   (str (name (gensym "key")) "-" key))
 
 
-(facts "content-type: text/plain"
+(facts "content-type: txt"
 
        (fact "can list items that have been saved"
              (let [store0 (in-memory-config-backend)
@@ -24,13 +24,13 @@
                    entry1 {:env          (rand-env "prod")
                            :key          (rand-key "service1")
                            :version      "1.2.3"
-                           :content-type "text/plain"
+                           :content-type "txt"
                            :value        "some-value"}
 
                    entry2  {:env          (rand-env "prod")
                             :key          (rand-key "service1")
                             :version      "1.2.4"
-                            :content-type "text/plain"
+                            :content-type "txt"
                             :value        "some-value"}]
                (-> store
                    (save entry1)
@@ -44,7 +44,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "text/plain"
+                          :content-type "txt"
                           :value "some-value"}]
                (-> store
                    (save entry)
@@ -58,7 +58,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "text/plain"
+                          :content-type "txt"
                           :value 23}]
                (-> store
                    (save entry)
@@ -72,7 +72,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "text/plain"
+                          :content-type "txt"
                           :value {:some "complex" :value #{1}}}]
                (-> store
                    (save entry)
@@ -81,7 +81,7 @@
 
 
 
-(facts "content-type: application/edn"
+(facts "content-type: edn"
 
        (fact "save and read a value a string "
              (let [store0 (in-memory-config-backend)
@@ -89,7 +89,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/edn"
+                          :content-type "edn"
                           :value "some-value"}]
                (-> store
                    (save entry)
@@ -104,7 +104,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/edn"
+                          :content-type "edn"
                           :value 23}]
                (-> store
                    (save entry)
@@ -118,7 +118,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/edn"
+                          :content-type "edn"
                           :value {:some "complex" :value #{1}}}]
                (-> store
                    (save entry)
@@ -128,7 +128,7 @@
 
 
 
-(facts "content-type: application/json"
+(facts "content-type: json"
 
        (fact "save and read a value a string "
              (let [store0 (in-memory-config-backend)
@@ -136,7 +136,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/json"
+                          :content-type "json"
                           :value "some-value"}]
                (-> store
                    (save entry)
@@ -150,7 +150,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/json"
+                          :content-type "json"
                           :value 23}]
                (-> store
                    (save entry)
@@ -164,7 +164,7 @@
                    entry {:env (rand-env "prod")
                           :key (rand-key "service1")
                           :version "1.2.3"
-                          :content-type "application/json"
+                          :content-type "json"
                           :value {:some "complex" :value #{1}}}]
                (-> store
                    (save entry)

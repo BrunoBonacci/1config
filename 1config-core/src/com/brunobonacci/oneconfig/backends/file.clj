@@ -39,7 +39,7 @@
         store (in-memory-config-backend)]
     (ReadOnlyFileConfigBackend. file content
                                 (->> content
-                                     (map (partial merge {:content-type "application/edn"}))
+                                     (map (partial merge {:content-type "edn"}))
                                      (map marshall-value)
                                      (reduce save store)))))
 

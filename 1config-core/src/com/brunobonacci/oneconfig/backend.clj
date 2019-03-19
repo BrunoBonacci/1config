@@ -15,7 +15,7 @@
   ;;
   ;; returns:
   ;; {:env "dev", :key "system1", :version "6.2.0",
-  ;;  :content-type "text/plain", :value "foo",
+  ;;  :content-type "txt", :value "foo",
   ;;  :change-num 1552740481566}
   ;;
   (find [this config-entry])
@@ -34,7 +34,7 @@
   ;;
   ;; returns:
   ;; {:env "dev", :key "system1", :version "6.2.0",
-  ;;  :content-type "text/plain", :value "foo",
+  ;;  :content-type "txt", :value "foo",
   ;;  :change-num 1552740481566}
   ;;
   (load [this config-entry])
@@ -47,7 +47,7 @@
   ;;
   ;; `config-entry` example:
   ;; {:key "system1" :env "dev" :version "6.2.0"
-  ;;  :content-type "text/plain" :value "secret"}
+  ;;  :content-type "txt" :value "secret"}
   ;;
   (save [this config-entry])
 
@@ -66,7 +66,7 @@
   ;;  ({ :key "system1"
   ;;     :env "dev",
   ;;     :version "6.2.4",
-  ;;     :content-type "text/plain",
+  ;;     :content-type "txt",
   ;;     :change-num 1552740164553,}
   ;;   ...)
   (list [this {:keys [key env version] :as filters}]))
