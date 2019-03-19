@@ -3,9 +3,8 @@
   (:require [amazonica.aws.kms :as kms]
             [amazonica.core :refer [defcredential] :as aws]
             [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer [lazy-mapcat]]
+            [com.brunobonacci.oneconfig.util :refer [lazy-mapcat clean-map]]
             [where.core :refer [where]]
-            [clojure.core.cache :as cache]
             [clojure.string :as str]
             [amazonica.aws.dynamodbv2 :as dyn])
   (:import [com.amazonaws.encryptionsdk
@@ -70,7 +69,7 @@
 
 
 
-(defn- -master-keys
+(defn master-keys
   []
   (->>
    (lazy-list-with-marker :aliases list-aliases)
@@ -88,15 +87,13 @@
 
 
 
-(def ^:private master-keys-cache
-  (atom (cache/ttl-cache-factory {} :ttl 5000)))
-
-
-
-(defn master-keys []
-  (-> (swap! master-keys-cache cache/through-cache :keys
-            (constantly (-master-keys)))
-     :keys))
+(defn normalize-alias
+  [alias]
+  (cond
+    (nil? alias)                        nil
+    (str/starts-with? alias "alias/")   alias
+    (str/starts-with? alias "1Config/") (str "alias/" alias)
+    :default                            (str "alias/1Config/" alias)))
 
 
 
@@ -105,7 +102,7 @@
   (let [mk (kms/create-key {:description description
                             :key-usage "ENCRYPT_DECRYPT"
                             :origin "AWS_KMS"})]
-    (kms/create-alias {:alias-name (format "alias/%s" key-name)
+    (kms/create-alias {:alias-name (normalize-alias key-name)
                        :target-key-id (-> mk :key-metadata :key-id)})
     (-> mk :key-metadata :arn)))
 
@@ -176,6 +173,50 @@
       :master-keys (into [] (.getMasterKeyIds out))})))
 
 
+(defn arn-or-alias
+  [master-key]
+  (cond
+    (nil? master-key)                        nil
+    (str/starts-with? master-key "arn:")     master-key
+    :default                                 (normalize-alias master-key)))
+
+
+
+(defn- lookup-master-key
+  "Lookup a master-key by alias or arn"
+  [master-key]
+  (try
+    (let [master-key (arn-or-alias master-key)
+          master-key-arn (-> (kms/describe-key {:key-id master-key}) :key-metadata :arn)
+          master-key-alias (when-not (= master-key-arn master-key) master-key)]
+      (clean-map
+       {:master-key master-key-arn
+        :master-key-alias master-key-alias}))
+    (catch Exception x
+      ;; if not found return nil
+      (when-not (re-find #" is not found." (.getMessage x))
+        (throw x)))))
+
+
+
+(defn- resolve-master-key
+  "Tries to lookup a key by alias or arn if not exists tries to create one"
+  [master-key]
+  ;; lookup master key
+  (or (lookup-master-key master-key)
+
+     ;; arn keys must already exists
+     (when (arn? master-key)
+       (throw (ex-info "Cannot find master key" {:master-key master-key})))
+
+     ;; if alias key doesn't exists will create one
+     {:master-key-alias (normalize-alias master-key)
+      :master-key
+      (create-master-key
+       (normalize-alias master-key)
+       (format "1Config managed key for %s configurations" master-key))}))
+
+
 
 (deftype KmsEncryptionConfigBackend [store]
 
@@ -193,21 +234,19 @@
         (update entry :value (comp :result #(decrypt % ctx))))))
 
 
-  (save [_ {:keys [key value] :as config-entry}]
-    (let [key-alias  (str "1Config/" key)
-          master-key (get (master-keys) key-alias)
-          master-key (or master-key
-                        (create-master-key
-                         key-alias
-                         (format "1Config managed key for %s configurations" key)))
+  (save [_ {:keys [key value master-key] :as config-entry}]
+    (let [{:keys [master-key-alias master-key]
+           } (resolve-master-key (or master-key key))
+          context (select-keys config-entry
+                               [:key :env :version])
           encrypted (:result
-                     (encrypt value master-key
-                              (select-keys config-entry
-                                           [:key :env :version])))]
+                     (encrypt value master-key context))]
       (as-> config-entry $
+        ;; add the encrypted value and the master encryption key
         (assoc $ :value encrypted
-               :master-key-alias key-alias
-               :master-key master-key)
+               :master-key master-key
+               :master-key-alias master-key-alias)
+        (clean-map $)
         (save store $))))
 
   (list [this filters]

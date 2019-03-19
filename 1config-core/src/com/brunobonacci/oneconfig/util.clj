@@ -23,8 +23,10 @@
 
 
 (def config-entry-schema
-  {:env     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :key     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+  {:env     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
+                                  "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+   :key     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
+                                  "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
    :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
    :value   s/Any
    (s/optional-key :content-type)     (s/enum "txt" "edn" "json")
@@ -33,8 +35,10 @@
 
 
 (def config-entry-request-schema
-  {:env (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :key (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" ) "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+  {:env (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
+                              "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
+   :key (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
+                              "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
    :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
    (s/optional-key :change-num) s/Int})
 
@@ -247,3 +251,11 @@
      (concat
       (f (first coll))
       (lazy-mapcat f (rest coll))))))
+
+
+(defn clean-map
+  "remove keys with nils"
+  [map]
+  (->> map
+     (remove (where second :is? nil))
+     (into {})))

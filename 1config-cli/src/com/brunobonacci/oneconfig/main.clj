@@ -180,9 +180,11 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;; SET
           ;;
           :set (cli/set! (cli/backend backend-name)
-                         {:env env :key key :content-type content-type
-                          :version version :value
-                          (or (cli/decode content-type value) (System/exit 2))})
+                         (as->
+                             {:env env :key key :content-type content-type
+                              :version version
+                              :value (or (cli/decode content-type value) (System/exit 2))} $
+                           (if master-key (assoc $ :master-key master-key) $)))
 
           ;;
           ;; GET

@@ -168,7 +168,10 @@
                 {:name :change-num       :title "Change num"}
                 {:name :master-key-alias :title "Master encryption key"}
                 {:name :ts               :title "Timestamp" :format timestamp-format}]
-               (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)) entries)))
+               (->> entries
+                  (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)))
+                  (map (fn [{:keys [master-key-alias master-key] :as m}]
+                         (assoc m :master-key-alias (or master-key-alias master-key)))))))
 
 
 
@@ -228,7 +231,7 @@
 (defn create-key!
   [{:keys [key-name]}]
   (safely
-   (let [key-alias (str "1Config/" key-name)]
+   (let [key-alias (kms/normalize-alias key-name)]
      (->>
       (kms/create-master-key
        key-alias
