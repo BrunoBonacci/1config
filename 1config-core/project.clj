@@ -22,7 +22,7 @@
                  [com.brunobonacci/where "0.5.0"]
                  [org.clojure/core.cache "0.7.2"]]
 
-  :bin {:name "cfg1"
+  :bin {:name "1cfg"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :global-vars {*warn-on-reflection* true}

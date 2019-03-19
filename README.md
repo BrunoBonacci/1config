@@ -227,7 +227,7 @@ Download latest release from github and save it in your `~/bin` folder:
 Then give it permissions to run:
 
 ``` shell
-chmod -x ~/bin/cfg1
+chmod -x ~/bin/1cfg
 ```
 
 Here how to use it:
@@ -238,7 +238,7 @@ Here how to use it:
 
 Usage:
 
-   cfg1 <OPERATION> -e <ENVIRONMENT> -k <SERVICE> -v <VERSION> [-b <BACKEND>] [-t <TYPE>] <VALUE>
+   1cfg <OPERATION> -e <ENVIRONMENT> -k <SERVICE> -v <VERSION> [-b <BACKEND>] [-t <TYPE>] <VALUE>
 
    WHERE:
    ---------
@@ -276,28 +276,28 @@ Example:
    --- keys management ---
 
    (*) List KMS encryption keys managed by 1Config
-   cfg1 LIST-KEYS
+   1cfg LIST-KEYS
 
    (*) Create a master encryption key, the key name must be the same
        and the configuration key to be used automatically.
-   cfg1 CREATE-KEY -m 'service1'
+   1cfg CREATE-KEY -m 'service1'
 
    --- configuration entries management  ---
 
    (*) To initialise a given backend
-   cfg1 INIT -b dynamo
+   1cfg INIT -b dynamo
 
    (*) To set the configuration value of a service called 'service1' use:
-   cfg1 SET -b dynamo -e test -k 'service1' -v '1.6.0' -t edn '{:port 8080}'
+   1cfg SET -b dynamo -e test -k 'service1' -v '1.6.0' -t edn '{:port 8080}'
 
    (*) To read last configuration value for a service called 'service1' use:
-   cfg1 GET -b dynamo -e test -k 'service1' -v '1.6.0'
+   1cfg GET -b dynamo -e test -k 'service1' -v '1.6.0'
 
    (*) To read a specific changeset for a service called 'service1' use:
-   cfg1 GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
+   1cfg GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
 
    (*) To list configuration with optional filters and ordering
-   cfg1 LIST -b dynamo -e prod -k ser -v 1. -o env,key
+   1cfg LIST -b dynamo -e prod -k ser -v 1. -o env,key
 
 
 NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
