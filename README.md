@@ -233,6 +233,7 @@ chmod -x ~/bin/cfg1
 Here how to use it:
 
 ``` text
+
   A command line tool for managing configurations in different environments.
 
 Usage:
@@ -252,16 +253,19 @@ Usage:
    OPTIONS:
    ---------
    -h   --help                 : this help
-   -b   --backend   BACKEND    : only "dynamo" is currently supported
-   -e   --env   ENVIRONMENT    : the name of the environment like "prod", "dev", "st1" etc
+   -b   --backend   BACKEND    : only 'dynamo' is currently supported, and it is the default one.
+   -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
-                               : exmaple: "service1", "db.pass" etc
-   -v   --version   VERSION    : a version number for the given key in the following format: "2.12.4"
+                               : exmaple: 'service1', 'db.pass' etc
+   -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
         --with-meta            : whether to include meta data for GET operation
-        --output-format FORMAT : either "table" or "cli" default is "table" (only for list)
-   -C                          : same as `--output-format=cli`
-   -t   --content-type TYPE    : one of "edn", "txt" or "json", default is "edn"
+        --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
+   -C                          : same as '--output-format=cli'
+   -o   --order-by     ORDER   : The listing order, must be a comma-separated list
+                               : of one or more of: 'key', 'env', 'version', 'change-num'
+                               : default order: 'key,env,version,change-num'
+   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', default is 'edn'
 
 Example:
 
@@ -277,12 +281,14 @@ Example:
    (*) To read a specific changeset for a service called 'service1' use:
    cfg1 GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
 
-   (*) To list configuration with optional filters
-   cfg1 LIST -b dynamo -e prod -k ser -v 1.
+   (*) To list configuration with optional filters and ordering
+   cfg1 LIST -b dynamo -e prod -k ser -v 1. -o env,key
 
 
-NOTE: use AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
-      set the access to the target AWS account.
+NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
+      provide authentication access to the target AWS account.
+      set AWS_DEFAULT_REGION to set the AWS region to use.
+
 ```
 
 ### AWS permissions

@@ -37,16 +37,19 @@ Usage:
    OPTIONS:
    ---------
    -h   --help                 : this help
-   -b   --backend   BACKEND    : only \"dynamo\" is currently supported
-   -e   --env   ENVIRONMENT    : the name of the environment like \"prod\", \"dev\", \"st1\" etc
+   -b   --backend   BACKEND    : only 'dynamo' is currently supported, and it is the default one.
+   -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
-                               : exmaple: \"service1\", \"db.pass\" etc
-   -v   --version   VERSION    : a version number for the given key in the following format: \"2.12.4\"
+                               : exmaple: 'service1', 'db.pass' etc
+   -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
         --with-meta            : whether to include meta data for GET operation
-        --output-format FORMAT : either \"table\" or \"cli\" default is \"table\" (only for list)
-   -C                          : same as `--output-format=cli`
-   -t   --content-type TYPE    : one of \"edn\", \"txt\" or \"json\", default is \"edn\"
+        --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
+   -C                          : same as '--output-format=cli'
+   -o   --order-by     ORDER   : The listing order, must be a comma-separated list
+                               : of one or more of: 'key', 'env', 'version', 'change-num'
+                               : default order: 'key,env,version,change-num'
+   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', default is 'edn'
 
 Example:
 
@@ -62,8 +65,8 @@ Example:
    (*) To read a specific changeset for a service called 'service1' use:
    cfg1 GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
 
-   (*) To list configuration with optional filters
-   cfg1 LIST -b dynamo -e prod -k ser -v 1.
+   (*) To list configuration with optional filters and ordering
+   cfg1 LIST -b dynamo -e prod -k ser -v 1. -o env,key
 
 
 NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
@@ -110,13 +113,19 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
    ["-t"  "--content-type TYPE"
     :default "edn"
-    :validate [#{"edn" "txt" "json"} "Must be one of: edn, txt, json"]]])
+    :validate [#{"edn" "txt" "json"} "Must be one of: edn, txt, json"]]
+
+   ["-o"  "--order-by ORDER"
+    :default [:key :env :version :change-num]
+    :parse-fn #(-> % (str/split #" *, *") ((partial map keyword)))
+    :validate [(partial every? #{:change-num :key :env :version})
+               "Must be a comma-separated list of: key, env, version, change-num"]]])
 
 
 (defn -main [& args]
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
-                content-type with-meta output-format]} options
+                content-type with-meta output-format order-by]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
         backend-name (keyword backend)
@@ -141,21 +150,21 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;; SET
           ;;
           :set (cli/set! (cli/backend backend-name)
-                          {:env env :key key :content-type content-type
-                           :version version :value
-                           (or (cli/decode content-type value) (System/exit 2))})
+                         {:env env :key key :content-type content-type
+                          :version version :value
+                          (or (cli/decode content-type value) (System/exit 2))})
           ;;
           ;; GET
           ;;
           :get (cli/get! (cli/backend backend-name)
-                          {:env env :key key :version version :change-num change-num}
-                           :with-meta with-meta)
+                         {:env env :key key :version version :change-num change-num}
+                         :with-meta with-meta)
 
 
           ;;
           ;; LIST
           ;;
           :list (cli/list! (cli/backend backend-name)
-                            {:env env :key key :version version}
-                            :output-format output-format :backend-name backend-name))
+                           {:env env :key key :version version :order-by order-by}
+                           :output-format output-format :backend-name backend-name))
         (normal-exit!)))))
