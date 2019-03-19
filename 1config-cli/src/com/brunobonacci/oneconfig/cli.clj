@@ -180,6 +180,7 @@
    (->> (list backend filters)
       (format-output {:format output-format :backend backend-name})
       println)
+   (println "(*) Timestamp is in local time.")
    :on-error
    :message "Listing config entry"))
 

@@ -66,8 +66,9 @@ Example:
    cfg1 LIST -b dynamo -e prod -k ser -v 1.
 
 
-NOTE: use AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
-      set the access to the target AWS account.
+NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
+      provide authentication access to the target AWS account.
+      set AWS_DEFAULT_REGION to set the AWS region to use.
 
 " (str/join "\n" errors))
   (System/exit 1))

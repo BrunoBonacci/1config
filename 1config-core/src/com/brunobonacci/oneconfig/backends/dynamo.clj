@@ -66,7 +66,8 @@
     (valid-entry-request? config-entry)
     (let [zver (comparable-version version)
           sys-key (str env  "||" key)
-          ver-key (str zver "||" (format "%020d" (or change-num (System/currentTimeMillis))))]
+          ver-key (str zver "||" (or (and change-num (format "%020d" change-num ))
+                                    (apply str (repeat 20 "9"))))]
       (some->
        (dyn/query cfg
                   :table-name (:table cfg)
@@ -98,10 +99,10 @@
 
   (save [this config-entry]
     (valid-entry? config-entry)
-    (let [{:keys [key env version value]
+    (let [{:keys [key env version value change-num]
            :as entry} (merge {:content-type "edn"} config-entry)
           zver (comparable-version version)
-          change-num (System/currentTimeMillis)
+          change-num (or change-num (System/currentTimeMillis))
           sys-key (str env  "||" key)
           ver-key (str zver "||" (format "%020d" change-num))
           db-entry (assoc entry
