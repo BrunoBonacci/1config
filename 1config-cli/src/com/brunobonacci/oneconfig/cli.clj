@@ -15,6 +15,14 @@
              [kms-encryption :as kms]
              [encoding :as coder]]))
 
+
+
+(defn timestamp-format
+  [^long ts]
+  (format "%1$tF  %1$tT" (java.util.Date. ts)))
+
+
+
 (defn- validate-version! [version]
   (when-not (re-find #"^\d+\.\d+\.\d+$" version)
     (throw (ex-info "Version must be in the form: 1.3.23" {}))))
@@ -30,10 +38,12 @@
 (defmulti init-backend! (fn [type & opts] type))
 
 
+
 (defmethod init-backend! :default
   [type & opts]
   (log/error "Invalid backend type" type)
   (throw (ex-info (str "Invalid backend type " type) {:type type :options opts})))
+
 
 
 (defmethod init-backend! :dynamo
@@ -56,10 +66,13 @@
 
 (defmulti backend (fn [type & opts] type))
 
+
+
 (defmethod backend :default
   [type & opts]
   (log/error "Invalid backend type" type)
   (throw (ex-info (str "Invalid backend type " type) {:type type :options opts})))
+
 
 
 (defmethod backend :dynamo
@@ -70,13 +83,13 @@
 
 
 
-
 (defn set! [backend config-entry]
   (validate-version! (:version config-entry))
   (safely
    (save backend config-entry)
    :on-error
    :message "Saving config entry"))
+
 
 
 (defn decode [content-type value]
@@ -100,11 +113,13 @@
     "text/plain"       value))
 
 
+
 (defn- format-meta [{:keys [content-type] :as v}]
   (str/join "\n"
             ["-----------------------[META]-----------------------"
              (pp/write (dissoc v :value) :stream nil)
              "----------------------[CONFIG]----------------------"]))
+
 
 
 (defn get! [backend config-entry & {:keys [with-meta] :or {with-meta false}}]
@@ -133,27 +148,34 @@
 (defmulti format-output (fn [{:keys [format backend]} entries] format))
 
 
+
 (def content-map
   {"application/edn"  "edn"
    "application/json" "json"
    "text/plain"       "text"})
 
 
+
 (defmethod format-output :cli
   [{:keys [backend] :as context} entries]
   (->> entries
-       (map (fn [{:keys [key env version change-num content-type]}]
-              (format "1cfg -b '%s' -k '%s' -e '%s' -v '%s' -t '%s' GET -c '%s' "
-                      (name backend) key env version
-                      (content-map content-type "") change-num)))
-       (str/join "\n")))
+     (map (fn [{:keys [key env version change-num content-type]}]
+            (format "1cfg -b '%s' -k '%s' -e '%s' -v '%s' -t '%s' GET -c '%s' "
+                    (name backend) key env version
+                    (content-map content-type "") change-num)))
+     (str/join "\n")))
+
 
 
 (defmethod format-output :table
   [{:keys [backend] :as context} entries]
-  (table/table [{:name :key :title "Config key"} :env :version :change-num
-                {:name :master-key-alias :title "Master encryption key"}]
-               entries))
+  (table/table [{:name :key              :title "Config key"}
+                {:name :env              :title "Env"}
+                {:name :version          :title "Version"}
+                {:name :change-num       :title "Change num"}
+                {:name :master-key-alias :title "Master encryption key"}
+                {:name :ts               :title "Timestamp" :format timestamp-format}]
+               (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)) entries)))
 
 
 
@@ -163,8 +185,8 @@
 
   (safely
    (->> (list backend filters)
-        (format-output {:format output-format :backend backend-name})
-        println)
+      (format-output {:format output-format :backend backend-name})
+      println)
    :on-error
    :message "Listing config entry"))
 
