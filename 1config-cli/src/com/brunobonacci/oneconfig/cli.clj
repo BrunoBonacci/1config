@@ -184,7 +184,7 @@
                 :or   {output-format :table}}]
 
   (safely
-   (->> (list backend filters)
+   (->> (list backend (util/clean-map filters))
       (format-output {:format output-format :backend backend-name})
       println)
    (println "(*) Timestamp is in local time.")

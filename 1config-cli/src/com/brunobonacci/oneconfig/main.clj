@@ -120,8 +120,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
    ["-k"  "--key KEY"]
 
-   ["-v"  "--version VER"
-    :default ""]
+   ["-v"  "--version VER"]
 
    ["-c"  "--change-num CHANGENUM"
     :parse-fn (fn [num-str] (when num-str (Long/parseLong num-str)))]
