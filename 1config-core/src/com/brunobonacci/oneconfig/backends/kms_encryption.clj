@@ -3,7 +3,8 @@
   (:require [amazonica.aws.kms :as kms]
             [amazonica.core :refer [defcredential] :as aws]
             [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer [lazy-mapcat clean-map]]
+            [com.brunobonacci.oneconfig.util :refer
+             [lazy-mapcat clean-map]]
             [where.core :refer [where]]
             [clojure.string :as str]
             [amazonica.aws.dynamodbv2 :as dyn])
@@ -141,7 +142,6 @@
 
 
 
-
 (defn- decrypt
   ([^String payload]
    (decrypt payload {}))
@@ -171,6 +171,7 @@
       :context     out-ctx
       :algorithm   (str (.getCryptoAlgorithm out))
       :master-keys (into [] (.getMasterKeyIds out))})))
+
 
 
 (defn arn-or-alias
@@ -218,27 +219,32 @@
 
 
 
+(defn- encryption-context
+  [config-entry]
+  (select-keys config-entry [:key :env :version :change-num :content-type]))
+
+
+
 (deftype KmsEncryptionConfigBackend [store]
 
   IConfigBackend
 
   (find [this {:keys [key env version] :as config-entry}]
     (when-let [entry (find store config-entry)]
-      (let [ctx (select-keys entry [:key :env :version])]
+      (let [ctx (encryption-context entry)]
         (update entry :value (comp :result #(decrypt % ctx))))))
 
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (when-let [entry (load store config-entry)]
-      (let [ctx (select-keys entry [:key :env :version])]
+      (let [ctx (encryption-context entry)]
         (update entry :value (comp :result #(decrypt % ctx))))))
 
 
   (save [_ {:keys [key value master-key] :as config-entry}]
     (let [{:keys [master-key-alias master-key]
            } (resolve-master-key (or master-key key))
-          context (select-keys config-entry
-                               [:key :env :version])
+          context (encryption-context config-entry)
           encrypted (:result
                      (encrypt value master-key context))]
       (as-> config-entry $

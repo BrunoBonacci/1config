@@ -16,7 +16,6 @@
   IConfigBackend
 
   (find [this {:keys [key env version] :as config-entry}]
-    (valid-entry-request? config-entry)
     (when-let [entry (find backend config-entry)]
       (if (:decoded entry)
         entry
@@ -27,7 +26,6 @@
 
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (valid-entry-request? config-entry)
     (when-let [entry (load backend config-entry)]
       (if (:decoded entry)
         entry
@@ -38,7 +36,6 @@
 
 
   (save [_ config-entry]
-    (valid-entry? config-entry)
     (EncodingConfigBackend.
      (save backend
            (marshall-value config-entry))))

@@ -13,7 +13,9 @@
             [com.brunobonacci.oneconfig.backends
              [dynamo :as dyn]
              [kms-encryption :as kms]
-             [encoding :as coder]]))
+             [immutable :as im]
+             [encoding :as coder]
+             [validation :as vl]]))
 
 
 
@@ -78,8 +80,10 @@
 (defmethod backend :dynamo
   [_ & opts]
   (coder/make-encoding-wrapper
-   (kms/kms-encryption-backend
-    (dyn/dynamo-config-backend (dyn/default-dynamo-config)))))
+   (vl/validation-backend
+    (im/immutable-backend
+     (kms/kms-encryption-backend
+      (dyn/dynamo-config-backend (dyn/default-dynamo-config)))))))
 
 
 

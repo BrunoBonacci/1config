@@ -1,15 +1,14 @@
 (ns com.brunobonacci.oneconfig
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer :all]
-            [com.brunobonacci.oneconfig.backends.file
-             :refer [readonly-file-config-backend]]
-            [com.brunobonacci.oneconfig.backends.kms-encryption
-             :refer [kms-encryption-backend]]
-            [com.brunobonacci.oneconfig.backends.encoding
-             :refer [make-encoding-wrapper]]
-            [com.brunobonacci.oneconfig.backends.dynamo
-             :refer [dynamo-config-backend default-dynamo-config]]))
+            [com.brunobonacci.oneconfig.backends
+             [dynamo         :refer [dynamo-config-backend default-dynamo-config]]
+             [encoding       :refer [make-encoding-wrapper]]
+             [file           :refer [readonly-file-config-backend]]
+             [immutable      :refer [immutable-backend]]
+             [kms-encryption :refer [kms-encryption-backend]]
+             [validation     :refer [validation-backend]]]
+            [com.brunobonacci.oneconfig.util :refer :all]))
 
 
 
@@ -24,9 +23,11 @@
     ;; search configuration in files first
     (some-> (configuration-file-search) readonly-file-config-backend)
     ;; otherwise search in dynamo
-    (kms-encryption-backend
-     (dynamo-config-backend
-      (default-dynamo-config))))))
+    (validation-backend
+     (immutable-backend
+      (kms-encryption-backend
+       (dynamo-config-backend
+        (default-dynamo-config))))))))
 
 
 

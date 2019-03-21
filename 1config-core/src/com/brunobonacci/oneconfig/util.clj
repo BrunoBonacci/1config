@@ -22,38 +22,6 @@
       (mapv (fn [^String n] (Long/parseLong n)) (rest components)))))
 
 
-(def config-entry-schema
-  {:env     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
-                                  "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :key     (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
-                                  "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
-   :value   s/Any
-   (s/optional-key :content-type)     (s/enum "txt" "edn" "json")
-   (s/optional-key :master-key-alias) s/Str
-   (s/optional-key :master-key)       s/Str})
-
-
-(def config-entry-request-schema
-  {:env (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
-                              "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :key (s/both s/Str (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
-                              "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
-   :version (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
-   (s/optional-key :change-num) s/Int})
-
-
-(defn check-entry [entry]
-  (s/check config-entry-schema entry))
-
-
-(defn valid-entry? [entry]
-  (s/validate config-entry-schema entry))
-
-
-(defn valid-entry-request? [entry]
-  (s/validate config-entry-request-schema entry))
-
 
 (defn comparable-version
   "takes a 3-leg version number and returns a version string

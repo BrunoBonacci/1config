@@ -19,7 +19,6 @@
   IConfigBackend
 
   (find [this {:keys [key env version] :as config-entry}]
-    (valid-entry-request? config-entry)
     (let [sem-ver (->> (get-in store [env key])
                         keys
                         (filter #(< (compare % (comparable-version version)) 1))
@@ -30,7 +29,6 @@
 
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (valid-entry-request? config-entry)
     (if (nil? change-num)
       (if-let [changeset (get-in store [env key (comparable-version version)])]
         (get changeset (-> changeset keys ((partial apply max)))))
@@ -38,7 +36,6 @@
 
 
   (save [_ config-entry]
-    (valid-entry? config-entry)
     (InMemoryConfigBackend.
      (let [{:keys [key env version value]
             :as entry} (merge {:content-type "edn"} config-entry)
