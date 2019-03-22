@@ -16,7 +16,7 @@
 
    :version        (s/pred sem-ver "Version must be of the following form \"1.12.3\"")
 
-   :content-type   (s/enum "txt" "edn" "json")
+   :content-type   (s/enum "txt" "edn" "json" "properties" "props")
 
    :value          s/Any
 

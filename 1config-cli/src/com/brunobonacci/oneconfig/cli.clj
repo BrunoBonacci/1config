@@ -112,9 +112,10 @@
 (defn- format-value
   [{:keys [content-type value] :as v}]
   (case content-type
-    "json" (json/generate-string value {:pretty true})
-    "edn"  (pp/write value :stream nil)
-    "txt"  value))
+    "json"       (json/generate-string value {:pretty true})
+    "edn"        (pp/write value :stream nil)
+    "txt"        value
+    ("properties" "props") (util/properties->str value)))
 
 
 

@@ -267,7 +267,8 @@ Usage:
    -o   --order-by     ORDER   : The listing order, must be a comma-separated list
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'
-   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', default is 'edn'
+   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', 'properties' or 'props'
+                               : default is 'edn'
    -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
                                : It must be a KMS key alias or an arn identifier for a key.
 

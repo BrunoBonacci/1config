@@ -6,7 +6,8 @@
             [schema.core :as s]
             [where.core :refer [where]])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]
-           java.util.zip.GZIPInputStream))
+           java.util.zip.GZIPInputStream
+           java.util.Properties java.util.Map))
 
 (defn sem-ver
   "Returns a vector of the numerical components of a 3-leg version number.
@@ -126,6 +127,18 @@
 
 
 
+(defn parse-properties [^String properties]
+  (doto (Properties.)
+    (.load (ByteArrayInputStream. (.getBytes properties "ISO-8859-1")))))
+
+
+(defn properties->str [^Properties properties]
+  (let [out (ByteArrayOutputStream.)]
+    (.store properties out nil)
+    (String. (.toByteArray out) "ISO-8859-1")))
+
+
+
 (defmulti decode (fn [form value] form))
 
 (defmethod decode "edn"
@@ -139,6 +152,16 @@
 (defmethod decode "txt"
   [_ value]
   value)
+
+
+(defmethod decode "properties"
+  [_ value]
+  (parse-properties value))
+
+
+(defmethod decode "props"
+  [_ value]
+  (decode "properties" value))
 
 
 (defmulti encode (fn [form value] form))
@@ -161,6 +184,22 @@
     (number? value) (str value)
     :else
     (throw (ex-info "Illegal value, a string expected" {:value value}))))
+
+
+(defmethod encode "properties"
+  [_ value]
+  (cond
+    (instance? Properties value) (properties->str value)
+    (instance? Map value)        (properties->str (doto (Properties.)
+                                                    (.putAll value)))
+    :else
+    (throw (ex-info "Illegal value, a Properties expected" {:value value}))))
+
+
+(defmethod encode "props"
+  [_ value]
+  (encode "properties" value))
+
 
 
 (defn- filter-entries [{:keys [key env version]} entries]
