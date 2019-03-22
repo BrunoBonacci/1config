@@ -8,8 +8,8 @@
 
 
 (defn default-dynamo-config []
-  ;; TODO: REGION????
-  {:endpoint  nil ;;(or (System/getenv "AWS_DEFAULT_REGION") "eu-west-1")
+  {:endpoint  nil ;; this is required to by amazonica
+                  ;; to consider first argument a config
    :table     (or (System/getenv "ONECONFIG_DYNAMO_TABLE") "1Config")})
 
 
