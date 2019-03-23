@@ -29,7 +29,11 @@
                     {:type "ReadOnlySingleFileConfigBackend" :file file})))
 
   (list [this filters]
-    {:env "*" :key "*" :version "*" :content-type type :change-num (System/currentTimeMillis)}))
+    [{:env "*"
+      :key "*"
+      :version "*"
+      :content-type type
+      :change-num (System/currentTimeMillis)}]))
 
 
 
