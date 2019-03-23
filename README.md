@@ -255,6 +255,7 @@ Usage:
    OPTIONS:
    ---------
    -h   --help                 : this help
+        --stacktrace           : To show the full stacktrace of an error
    -b   --backend   BACKEND    : only 'dynamo' is currently supported, and it is the default one.
    -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,

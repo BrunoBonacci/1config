@@ -266,3 +266,19 @@
   (->> map
      (remove (where second :is? nil))
      (into {})))
+
+
+(defmacro show-stacktrace!!
+  [show & body]
+  {:style/indent 1}
+  `(try ~@body
+        (catch Throwable x#
+          (if ~show
+            (.printStackTrace x#)
+            (do
+              (.println System/err (str "ERROR: " (.getMessage x#)))
+              (.println System/err (str "CAUSE: " (loop [e# x#]
+                                                    (if (.getCause e#)
+                                                      (recur (.getCause e#))
+                                                      (.getMessage e#)))))))
+          (System/exit 1))))

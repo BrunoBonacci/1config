@@ -1,7 +1,8 @@
 (ns com.brunobonacci.oneconfig.main
   (:require [com.brunobonacci.oneconfig.cli :as cli]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [com.brunobonacci.oneconfig.util :as util])
   (:gen-class))
 
 
@@ -39,6 +40,7 @@ Usage:
    OPTIONS:
    ---------
    -h   --help                 : this help
+        --stacktrace           : To show the full stacktrace of an error
    -b   --backend   BACKEND    : only 'dynamo' is currently supported, and it is the default one.
    -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
@@ -102,6 +104,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
 (def cli-options
   [["-h"  "--help"]
+   [nil  "--stacktrace"]
 
    ["-b"  "--backend BACKEND"
     :default "dynamo"
@@ -160,7 +163,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
       (and (= op :create-key) (not master-key)) (help! ["MISSING: required argument: master-key"])
 
       :else
-      (do
+      (util/show-stacktrace!! (:stacktrace options)
         (case op
           ;;
           ;; LIST-KEYS
