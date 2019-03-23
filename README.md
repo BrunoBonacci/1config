@@ -37,25 +37,27 @@ Finally get the configuration for your service.
 `configure` will try a number of different location to find a configuration provider.
 It will attempt to read a file or dynamo table in the following order.
 
-  * Environment variable `$ONECONFIG_FILE`, if set and the file exists
-    it will be used as configuration
   * Java System property `1config.file`, if set and the file exists
+    it will be used as configuration
+  * Environment variable `$ONECONFIG_FILE`, if set and the file exists
     it will be used as configuration
   * Java Resource bundle `1config.edn`, if present it will be used
     as configuration
   * `./1config/1config.edn` if present it will be used as
     configuration
-  * `~/.1config/1config.edn` (home dir) - if present it will be
-    used as configuration
+  * `~/.1config/<service-key>/<env>/<version>/<service-key>.<ext>`
+    (home dir) - if present it will be used as configuration.
+    Entries in the `~/.1config/` will have precendence over the DynamoDB table.
   * DynamoDB table called `1Config` in the "current" region.
 
 The name of the DynamoDB table can be customized with
 `$ONECONFIG_DYNAMO_TABLE` environment variable. It will use the
 machine role to access the database. The AWS region can be controlled
-via the environment variable `$AWS_DEFAULT_REGION` which defaults to
-`eu-west-1`. For the AWS credentials we use the
-[Default Credential Provider Chain](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#id6).
-Therefore the credentials can be provided in one of the following ways:
+via the environment variable `$AWS_DEFAULT_REGION`. For the AWS
+credentials we use the [Default Credential Provider
+Chain](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html#id6).
+Therefore the credentials can be provided in one of the following
+ways:
 
   - **Environment Variables** – `AWS_ACCESS_KEY_ID` and
     `AWS_SECRET_ACCESS_KEY`. The AWS SDK for Java uses the
@@ -83,106 +85,62 @@ Therefore the credentials can be provided in one of the following ways:
     `InstanceProfileCredentialsProvider` to load these credentials.
 
 
-### File based configuration.
+### Configuration resolution.
 
-This is mostly intended for local development, you can create a file
-named `~/.1config/1config.edn` (in your home) and put the
-configuration for one or more services in one or more environments
-with the following format:
-
-``` clojure
-;;
-;; It is a collection of entries where, each entry has the following form
-;;
-[
- {
-  ;; name of the environment - this can be any string which identifies
-  ;; an environment in your infrastructure
-  :env "dev"
-
-  ;; identifier of your system/service of configuration key to read/store
-  :key "system1"
-
-  ;; version of your system. This must be in the following format "x.y.z"
-  ;; where `x` is the major version, `y` is the minor version and `z`
-  ;; is the patch level. Versions are compare numerically on their elements
-  ;; for example "3.12.5" comes after "3.5.0".
-  :version "3.1.0"
-
-  ;; content type of the value
-  ;; currently we support:
-  ;;   - edn - which is the default
-  ;;   - json - a JSON encoded string
-  ;;   - txt - for plain text string.
-  :content-type "edn"
-
-  ;;
-  ;; value is the actual value of the configuration item
-  ;; it must be encoded following the `content-type` field.
-  ;;
-  :value {:db {:host "10.2.23.32" :port 1234}}
-  }
-]
-```
-
-A single `1config.edn` file can contain configuration for:
-
-  - one or more systems
-  - for every system you can have one or more environments
-  - for every environment you can one or more versions
-
-A configuration entry is uniquely identified by **environment, key and version**.
+A configuration entry is uniquely identified by **key, environment and version**.
 While resolving the specific configuration the system if going  to look for a
 exact version match or a version which is smaller than the given one.
 
 For this reason you don't have to publish a new configuration for every
 version change. For example: let's assume you have the following data.
 
-``` clojure
-[
-{:env "dev" :key "system1" :version "3.2.0" :value {:host "my.db.local" :port 1234 :user "test1" :pass "test1"}}
-{:env "dev" :key "system1" :version "3.7.0" :value {:host "my.db.local" :port 1234 :user "test2" :pass "test2"}}
-{:env "dev" :key "system1" :version "3.10.0" :value {:host "another.db"  :port 1234 :user "foo"   :pass "bar"}}
-]
-```
+|------------|-------|----------|----------------------------------------------------------------|
+| Config key | Env   | Version  | value                                                          |
+|------------|-------|----------|----------------------------------------------------------------|
+| `service1` | `dev` | `2.1.0`  | `{:host "localhost", :port 1234}`                              |
+| `service1` | `dev` | `3.7.0`  | `{:host "my.db.local" :port 1234 :user "test2" :pass "test2"}` |
+| `service1` | `dev` | `3.10.0` | `{:host "my.db.local" :port 1234 :user "foo" :pass "bar"}`     |
+|            |       |          |                                                                |
+
 
 If you ask of a precisely matching configuration you get that specific
 config entry or nil if not found:
 
 ``` clojure
+;; key not found
+(configure {:key "system-not-present" :env "dev" :version "3.1.0"})
+;;=> nil
+
+
 ;; exact match
-(configure {:key "system1" :env "dev" :version "3.1.0"})
+(configure {:key "system1" :env "dev" :version "2.1.0"})
 ;;=>
 ;; {:content-type "edn",
 ;;  :env "dev",
 ;;  :key "system1",
-;;  :version "3.1.0",
+;;  :version "2.1.0",
 ;;  :value {:host "localhost", :port 1234},
 ;;  :change-num 0}
 
-
-;; version not found
-(configure {:key "system-not-present" :env "dev" :version "3.1.0"})
-;;=> nil
 ```
 
-If an exact match isn't found the system retrieve the previous configuration is available
+If an exact match isn't found the system retrieve the previous
+configuration is available
 
 ``` clojure
 ;; exact match not found, but previous version found
-
+;; even across major versions
 (configure {:key "system1" :env "dev" :version "3.6.2"})
 ;;=>
 ;; {:content-type "edn",
 ;;  :env "dev",
 ;;  :key "system1",
-;;  :version "3.1.0",
+;;  :version "2.1.0",
 ;;  :value {:host "localhost", :port 1234},
 ;;  :change-num 0}
 
 
-;; version not found
-
+;; if there aren't previous versions it returns nil
 (configure {:key "system1" :env "dev" :version "1.1.0"})
 ;;=> nil
 
@@ -202,6 +160,26 @@ If an exact match isn't found the system retrieve the previous configuration is 
 
 As mentioned earlier, versions are sorted by numerical elements and not
 by alphanumeric values.
+
+
+### File based configuration.
+
+This is mostly intended for local development, you can create a files
+under `~/.1config/` (in your home) and put the configuration for one
+or more services in one or more environments with the following
+format: `~/.1config/<service-key>/<env>/<version>/<service-key>.<ext>`
+
+For example, these are all valid entries:
+
+  - `~/.1config/service1/dev/3.2.0/service1.edn`
+  - `~/.1config/service1/dev/3.10.6/service1.txt`
+  - `~/.1config/user-database/dev/1.0.0/user-database.properties`
+  - `~/.1config/service1/staging/3.10.6/service1.json`
+
+The intended use of the configuration in `~/.1config/` is to facilitate
+development and allow the service to start with a local configuration
+which doesn't reside in your code.
+
 
 ### Limitations
 

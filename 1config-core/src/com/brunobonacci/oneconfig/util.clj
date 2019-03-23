@@ -4,7 +4,8 @@
             [clojure.java.io :as io]
             [safely.core :refer [safely]]
             [schema.core :as s]
-            [where.core :refer [where]])
+            [where.core :refer [where]]
+            [clojure.string :as str])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]
            java.util.zip.GZIPInputStream
            java.util.Properties java.util.Map))
@@ -67,6 +68,14 @@
 
 
 
+(defn entry-record
+  "Given an internal entry, it returns only the keys which are public"
+  [entry]
+  (when entry
+    (select-keys entry [:env :key :version :content-type :value :change-num])))
+
+
+
 (defn list-files
   "Returns a lazy list of files and directories for a given path and reg-ex"
   ([pattern dir & {:keys [as-string]
@@ -89,11 +98,29 @@
      [])))
 
 
+(defn file-exists?
+  [f]
+  (when f
+    (and (.exists (io/file f))
+       f)))
 
-(defn search-candidates
-  "given a list of candidates searches for configuration files."
-  [& candidates]
-  (filter identity (flatten candidates)))
+
+
+(defn configuration-file-search
+  "It searches configuration files in a number of different locations.
+   it returns a list of entries or nil if no configuration files are found."
+  []
+  (some file-exists?
+        [(system-property "1config.file")
+         (env "ONECONFIG_FILE")
+         (io/resource "1config.edn")
+         (io/resource "1config.json")
+         (io/resource "1config.txt")
+         (io/resource "1config.properties")
+         "./1config.edn"
+         "./1config.json"
+         "./1config.txt"
+         "./1config.properties"]))
 
 
 
@@ -105,25 +132,19 @@
    :on-error :default nil))
 
 
-(defn entry-record
-  "Given an internal entry, it returns only the keys which are public"
-  [entry]
-  (when entry
-    (select-keys entry [:env :key :version :content-type :value :change-num])))
+(defn read-config-file
+  [file]
+  (safely
+   (some-> file slurp)
+   :on-error :default nil))
 
 
-
-(defn configuration-file-search
-  "It searches configuration files in a number of different locations.
-   it returns a list of entries or nil if no configuration files are found."
-  []
-  (some (fn [f] (and (.exists (io/file f)) f))
-        (search-candidates
-         (env "ONECONFIG_FILE")
-         (system-property "1config.file")
-         (io/resource "1config.edn")
-         "./1config/1config.edn"
-         (str (homedir) "/.1config/1config.edn"))))
+(defn filename->content-type
+  [^String file]
+  (->> file
+     (re-find #"(?i).*\.(edn|json|txt|properties)$")
+     second
+     (#(some-> % str/lower-case))))
 
 
 

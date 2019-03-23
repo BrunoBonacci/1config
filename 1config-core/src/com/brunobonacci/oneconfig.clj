@@ -5,6 +5,8 @@
              [dynamo         :refer [dynamo-config-backend default-dynamo-config]]
              [encoding       :refer [make-encoding-wrapper]]
              [file           :refer [readonly-file-config-backend]]
+             [file1          :refer [file1-config-backend]]
+             [hierarchical   :refer [hierarchical-backend]]
              [immutable      :refer [immutable-backend]]
              [kms-encryption :refer [kms-encryption-backend]]
              [validation     :refer [validation-backend]]]
@@ -20,14 +22,18 @@
   []
   (make-encoding-wrapper
    (or
-    ;; search configuration in files first
-    (some-> (configuration-file-search) readonly-file-config-backend)
+    ;; search exclusive configuration in files first
+    (some-> (configuration-file-search) file1-config-backend)
     ;; otherwise search in dynamo
-    (validation-backend
-     (immutable-backend
-      (kms-encryption-backend
-       (dynamo-config-backend
-        (default-dynamo-config))))))))
+    (let [kms+dynamo (kms-encryption-backend
+                      (dynamo-config-backend
+                       (default-dynamo-config)))]
+      (validation-backend
+       (immutable-backend
+        (hierarchical-backend
+         [(readonly-file-config-backend)
+          kms+dynamo]
+         [kms+dynamo])))))))
 
 
 
