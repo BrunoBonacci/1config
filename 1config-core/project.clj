@@ -21,12 +21,13 @@
                  [cheshire "5.8.1"]
                  [com.brunobonacci/where "0.5.0"]]
 
+  :java-source-paths ["java/src"]
+  :javac-options     ["-target" "1.8" "-source" "1.8" ]
+
   :bin {:name "1cfg"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :global-vars {*warn-on-reflection* true}
-
-  :jvm-opts ["-server"]
 
   :profiles {:dev {:dependencies [[midje "1.9.6"]
                                   [org.clojure/test.check "0.10.0-alpha3"]
