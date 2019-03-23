@@ -8,14 +8,13 @@
             [doric.core :as table]
             [safely.core :refer [safely]]
             [com.brunobonacci.oneconfig
+             :refer [one-config]]
+            [com.brunobonacci.oneconfig
              [backend :refer :all]
              [util :as util]]
             [com.brunobonacci.oneconfig.backends
              [dynamo :as dyn]
-             [kms-encryption :as kms]
-             [immutable :as im]
-             [encoding :as coder]
-             [validation :as vl]]))
+             [kms-encryption :as kms]]))
 
 
 
@@ -79,11 +78,7 @@
 
 (defmethod backend :dynamo
   [_ & opts]
-  (coder/make-encoding-wrapper
-   (vl/validation-backend
-    (im/immutable-backend
-     (kms/kms-encryption-backend
-      (dyn/dynamo-config-backend (dyn/default-dynamo-config)))))))
+  (one-config))
 
 
 
