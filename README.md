@@ -69,10 +69,10 @@ In order to use the library add the dependency to your `project.clj`
 
 ``` clojure
 ;; Leiningen project
-[com.brunobonacci/oneconfig "0.1.0-SNAPSHOT"]
+[com.brunobonacci/oneconfig "0.5.0"]
 
 ;; deps.edn format
-{:deps { com.brunobonacci/oneconfig "0.1.0-SNAPSHOT" }}
+{:deps { com.brunobonacci/oneconfig "0.5.0" }}
 ```
 
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
@@ -114,7 +114,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
@@ -328,12 +328,14 @@ There are a number of limitations to consider:
 
 ## Command line tool (`1cfg`)
 
-1config comes with a command line tool which allows you to
+`1Config` comes with a command line tool which allows you to
 initialise and set values in the given backend.
 
 Download latest release from github and save it in your `~/bin` folder:
 
   * https://github.com/BrunoBonacci/1config/releases
+
+**NOTE: It requires JDK/JRE 8+ to be installed and in the PATH.**
 
 Then give it permissions to run:
 
