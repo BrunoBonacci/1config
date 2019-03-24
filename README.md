@@ -2,8 +2,24 @@
 [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/oneconfig.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/oneconfig.svg) [![Dependencies Status](https://jarkeeper.com/BrunoBonacci/safely/status.svg)](https://jarkeeper.com/BrunoBonacci/oneconfig)
 
 A library to manage environments configuration at application level.
+Here some of the key-points and advantages:
+
+  * Easy way to retrieve and manage configuration for your AWS deployed services
+  * Compatible with AWS Lambdas as well
+  * AWS KMS encryption based security (same as S3-SSE, EBS and RDS)
+  * Support for multiple environments in the same AWS account
+  * Support for multiple concurrent versions
+  * Zero config approach (or at most 1 config `;-)`)
+  * Anti-tampering checks for configuration entries
+  * Supports Clojure, Java, Groovy, and other JVM languages (more to come)
+  * Command line tool for managing changes to the configuration
+  * Support for local development (outside AWS)
+  * Highly-configurable and secure authorization.
 
 ## Usage
+
+
+## Usage with Clojure
 
 In order to use the library add the dependency to your `project.clj`
 
@@ -15,7 +31,7 @@ In order to use the library add the dependency to your `project.clj`
 {:deps { com.brunobonacci/oneconfig "0.1.0-SNAPSHOT" }}
 ```
 
-Current version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
+Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
 
 
 Then require the namespace:
@@ -32,19 +48,68 @@ Finally get the configuration for your service.
 ;;=> {...}
 ```
 
+
+## Usage with Java
+
+In order to use the client library add the
+[Clojars.org](https://clojars.org/) Maven repository in your `pom.xml`
+and add the dependency:
+
+Add the repository:
+``` xml
+<repository>
+  <id>clojars.org</id>
+  <url>https://clojars.org/repo</url>
+</repository>
+```
+
+Then add the dependency
+
+``` xml
+<!-- https://mvnrepository.com/artifact/com.brunobonacci/oneconfig -->
+<dependency>
+    <groupId>com.brunobonacci</groupId>
+    <artifactId>oneconfig</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
+
+
+Then import the client, and request the configuration entry wanted:
+
+``` java
+// add the import
+import com.brunobonacci.oneconfig.client.OneConfigClient;
+import com.brunobonacci.oneconfig.client.OneConfigClient.ConfigEntry;
+// ....
+
+// then in your code retrieve the config:
+ConfigEntry config = OneConfigClient.configure("service1", "dev", "1.8.0");
+
+// check if configuration is found
+if ( config == null )
+    throw new RuntimeException("Unable to load configuration");
+
+// retrieve the value:
+config.getValueAsString();        // for txt entries
+config.getValueAsProperties();    // for properties entries
+config.getValueAsJsonMap();       // Map<String, Object> for json entries
+config.getValueAsEdnMap();        // Map<Keyword, Object> for edn entries
+```
+
+
 ### Configuration resolution
 
 `configure` will try a number of different location to find a configuration provider.
 It will attempt to read a file or dynamo table in the following order.
 
   * Java System property `1config.file`, if set and the file exists
-    it will be used as configuration
+    it will be used as *sole* configuration
   * Environment variable `$ONECONFIG_FILE`, if set and the file exists
-    it will be used as configuration
-  * Java Resource bundle `1config.edn`, if present it will be used
-    as configuration
-  * `./1config/1config.edn` if present it will be used as
-    configuration
+    it will be used as *sole* configuration
+  * Java Resource bundle `1config.edn` (or `.json`, `.txt`,
+    `.properties`), if present it will be used as *sole* configuration
   * `~/.1config/<service-key>/<env>/<version>/<service-key>.<ext>`
     (home dir) - if present it will be used as configuration.
     Entries in the `~/.1config/` will have precendence over the DynamoDB table.

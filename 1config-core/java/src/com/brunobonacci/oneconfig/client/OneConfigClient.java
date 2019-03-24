@@ -15,10 +15,11 @@ public class OneConfigClient {
         Clojure.var("clojure.core", "require").invoke( Clojure.read("com.brunobonacci.oneconfig"));
     }
 
-    private static final Keyword _key     = Keyword.intern("key");
-    private static final Keyword _env     = Keyword.intern("env");
-    private static final Keyword _version = Keyword.intern("version");
-    private static final Keyword _value   = Keyword.intern("value");
+    private static final Keyword _key         = Keyword.intern("key");
+    private static final Keyword _env         = Keyword.intern("env");
+    private static final Keyword _version     = Keyword.intern("version");
+    private static final Keyword _contentType = Keyword.intern("content-type");
+    private static final Keyword _value       = Keyword.intern("value");
 
     private static final IFn arraymap = Clojure.var("clojure.core", "array-map");
     private static final IFn configure = Clojure.var("com.brunobonacci.oneconfig", "configure");
@@ -62,6 +63,10 @@ public class OneConfigClient {
             return (String) _entry.get(OneConfigClient._version);
         }
 
+        public String getContentType() {
+            return (String) _entry.get(OneConfigClient._contentType);
+        }
+
         public Object getValue() {
             return _entry.get(OneConfigClient._value);
         }
@@ -73,6 +78,11 @@ public class OneConfigClient {
         @SuppressWarnings("unchecked")
         public Map<String,Object> getValueAsJsonMap() {
             return (Map<String,Object>) _entry.get(OneConfigClient._value);
+        }
+
+        @SuppressWarnings("unchecked")
+        public Map<Keyword,Object> getValueAsEdnMap() {
+            return (Map<Keyword,Object>) _entry.get(OneConfigClient._value);
         }
 
         public String getValueAsString() {
