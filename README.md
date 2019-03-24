@@ -203,7 +203,6 @@ exact version match or a version which is smaller than the given one.
 For this reason you don't have to publish a new configuration for every
 version change. For example: let's assume you have the following data.
 
-|------------|-------|----------|----------------------------------------------------------------|
 | Config key | Env   | Version  | value                                                          |
 |------------|-------|----------|----------------------------------------------------------------|
 | `service1` | `dev` | `2.1.0`  | `{:host "localhost", :port 1234}`                              |
