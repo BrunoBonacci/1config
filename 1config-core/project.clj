@@ -1,4 +1,4 @@
-(defproject com.brunobonacci/oneconfig-core (-> "../1config.version" slurp .trim)
+(defproject com.brunobonacci/oneconfig (-> "../1config.version" slurp .trim)
   :description "A Clojure library for managing configurations"
 
   :url "https://github.com/BrunoBonacci/1config"

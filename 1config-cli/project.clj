@@ -12,7 +12,7 @@
   :main com.brunobonacci.oneconfig.main
 
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [com.brunobonacci/oneconfig-core #=(ver)]
+                 [com.brunobonacci/oneconfig #=(ver)]
                  [org.clojure/tools.cli "0.4.1"]
                  [org.slf4j/slf4j-log4j12 "1.7.26"]
                  [doric "0.9.0"]
