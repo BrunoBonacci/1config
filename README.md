@@ -1,7 +1,7 @@
 # 1config
 [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/oneconfig.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/oneconfig.svg) [![Dependencies Status](https://jarkeeper.com/BrunoBonacci/safely/status.svg)](https://jarkeeper.com/BrunoBonacci/oneconfig)
 
-A library to manage environments configuration at application level.
+A library to manage multiple environments and application configuration safely and effectively.
 Here some of the key-points and advantages:
 
   * Easy way to retrieve and manage configuration for your AWS deployed services
