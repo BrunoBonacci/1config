@@ -47,8 +47,9 @@
   ([^com.brunobonacci.oneconfig.backend.IConfigBackend config-backend
     {:keys [env key version] :as config-entry}]
    {:pre [env key (sem-ver version)]}
-   (when config-backend
-     (find config-backend config-entry))))
+   (log-configure-request config-entry
+    (when config-backend
+      (find config-backend config-entry)))))
 
 
 ;; (configure {:key "system1" :env "dev" :version "6.2.4"})

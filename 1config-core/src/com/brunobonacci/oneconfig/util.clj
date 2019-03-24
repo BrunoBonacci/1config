@@ -5,7 +5,8 @@
             [safely.core :refer [safely]]
             [schema.core :as s]
             [where.core :refer [where]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.tools.logging :as log])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]
            java.util.zip.GZIPInputStream
            java.util.Properties java.util.Map))
@@ -303,3 +304,23 @@
                                                       (recur (.getCause e#))
                                                       (.getMessage e#)))))))
           (System/exit 1))))
+
+
+(defmacro log-configure-request
+  "logs the what was requested to configure and it was returned"
+  [in & body]
+  {:style/indent 1}
+  `(let [in# ~in]
+     (try
+       (let [out# (do ~@body)]
+         (log/infof "1config> requested config for: %s received: %s"
+                    (pr-str in#)
+                    (pr-str (and out#
+                               (select-keys out#
+                                            [:key :env :version :change-num]))))
+         out#)
+       (catch Exception x#
+         (log/infof "1config> requested config for: %s received: %s"
+                    (pr-str in#)
+                    (str "ERROR: " (pr-str (.getMessage x#))))
+         (throw x#)))))
