@@ -71,13 +71,14 @@ Quick start guide to use 1Config.
   ``` bash
   mkdir -p ~/bin
   wget https://github.com/BrunoBonacci/1config/releases/download/0.6.0/1cfg -O ~/bin/1cfg
-  chmod +x ~/bin/1cf
+  chmod +x ~/bin/1cfg
   export PATH=~/bin:$PATH
   ```
   * Initialize AWS ENV variables
   ``` bash
   export AWS_ACCESS_KEY_ID=xxx
   export AWS_SECRET_ACCESS_KEY=yyy
+  export AWS_DEFAULT_REGION=eu-west-1
   ```
   * Initialize DynamoDB table
   ``` bash
@@ -101,6 +102,8 @@ Quick start guide to use 1Config.
   (configure {:key "hello-world" :version "1.0.0" :env "test"})
   ```
 
+There is support for `edn`, `txt`, `json` and Java `properties` format.
+and supports Clojure, Java, Groovy, and other JVM languages (more to come)
 
 ## Usage with Clojure
 
