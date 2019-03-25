@@ -63,6 +63,45 @@ The diagram explains how to security model works. Here the steps involved:
     information.
   - **Luckly, all above steps are done automatically by `1Config`.**
 
+## Quick start.
+
+Quick start guide to use 1Config.
+
+  * Install command line tool
+  ``` bash
+  mkdir -p ~/bin
+  wget https://github.com/BrunoBonacci/1config/releases/download/0.6.0/1cfg -O ~/bin/1cfg
+  chmod +x ~/bin/1cf
+  export PATH=~/bin:$PATH
+  ```
+  * Initialize AWS ENV variables
+  ``` bash
+  export AWS_ACCESS_KEY_ID=xxx
+  export AWS_SECRET_ACCESS_KEY=yyy
+  ```
+  * Initialize DynamoDB table
+  ``` bash
+  1cfg INIT
+  ```
+  * Set your first secure configuration for application `hello-world`
+  ``` bash
+  1cfg SET -b dynamo -k hello-world -e test -v 1.0.0 -t txt 'secret password'
+  ```
+  * List the available configurations
+  ``` bash
+  1cfg LIST
+  ```
+  * Retrieve the configuration with the command line tool
+  ``` bash
+  1cfg GET -b dynamo -k hello-world -e test -v 1.0.0
+  ```
+  * Retrieve the configuration via the API in your application
+  ``` clojure
+  (require '[com.brunobonacci.oneconfig :refer [configure]])
+  (configure {:key "hello-world" :version "1.0.0" :env "test"})
+  ```
+
+
 ## Usage with Clojure
 
 In order to use the library add the dependency to your `project.clj`
