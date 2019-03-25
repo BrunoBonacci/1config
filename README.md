@@ -69,10 +69,10 @@ In order to use the library add the dependency to your `project.clj`
 
 ``` clojure
 ;; Leiningen project
-[com.brunobonacci/oneconfig "0.5.0"]
+[com.brunobonacci/oneconfig "0.6.0"]
 
 ;; deps.edn format
-{:deps { com.brunobonacci/oneconfig "0.5.0" }}
+{:deps { com.brunobonacci/oneconfig "0.6.0" }}
 ```
 
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
@@ -114,7 +114,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
