@@ -1,5 +1,8 @@
 # Changelog
 
+## Release: v0.6.1 (2019-03-25)
+
+  * Fixed issue when ~/.1config doesn't exists
 
 ## Release: v0.6.0 (2019-03-25)
 
