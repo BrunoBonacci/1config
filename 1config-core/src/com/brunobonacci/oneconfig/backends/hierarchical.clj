@@ -28,4 +28,6 @@
 
 (defn hierarchical-backend
   [read-stores write-stores]
-  (HierarchicalBackend. read-stores write-stores))
+  (HierarchicalBackend.
+   (remove nil? read-stores)
+   (remove nil? write-stores)))
