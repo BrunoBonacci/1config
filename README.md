@@ -468,24 +468,100 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 If you are using role based permissions then ensure that your role
 has the following permissions included:
 
+* Permissions for Command line tool user
+
 ``` json
 {
-  "Statement": [
-    {
-        "Action": [
-            "dynamodb:GetItem",
-            "dynamodb:BatchGetItem",
-            "dynamodb:Query"
-        ],
-        "Effect": "Allow",
-        "Resource": "arn:aws:dynamodb:eu-west-1:*:table/1Config"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowDiscoverThemselves",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetUser"
+            ],
+            "Resource": "arn:aws:iam::*:user/${aws:username}"
+        },
+        {
+            "Sid": "AllowInitDatabase",
+            "Effect": "Allow",
+            "Action": "dynamodb:CreateTable",
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowListAllConfigEntries",
+            "Effect": "Allow",
+            "Action": "dynamodb:Scan",
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowGetConfigEntriesPt1",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:Query"
+            ],
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowCreateKeysAndListKeys",
+            "Effect": "Allow",
+            "Action": [
+                "kms:CreateAlias",
+                "kms:CreateKey",
+                "kms:DescribeKey",
+                "kms:ListAliases"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowSetOnConfigEntryPt1",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:PutItem"
+            ],
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowSetOnConfigEntryPt2",
+            "Effect": "Allow",
+            "Action": [
+                "kms:GenerateDataKey"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
 
-For the command line tool you will need add the permission to create a
-table as well.
+* Permissions for the application
+
+``` json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowGetConfigEntriesPt1",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:Query"
+            ],
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": "*"
+        }
+    ]
+}
+```
 
 ## License
 
