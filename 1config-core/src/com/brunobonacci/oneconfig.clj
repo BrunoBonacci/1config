@@ -7,6 +7,7 @@
              [file           :refer [readonly-file-config-backend]]
              [file1          :refer [file1-config-backend]]
              [hierarchical   :refer [hierarchical-backend]]
+             [iam-user       :refer [iam-user-backend]]
              [immutable      :refer [immutable-backend]]
              [kms-encryption :refer [kms-encryption-backend]]
              [validation     :refer [validation-backend]]]
@@ -26,8 +27,9 @@
     (some-> (configuration-file-search) file1-config-backend)
     ;; otherwise search in dynamo
     (let [kms+dynamo (kms-encryption-backend
-                      (dynamo-config-backend
-                       (default-dynamo-config)))]
+                      (iam-user-backend
+                       (dynamo-config-backend
+                        (default-dynamo-config))))]
       (validation-backend
        (immutable-backend
         (hierarchical-backend

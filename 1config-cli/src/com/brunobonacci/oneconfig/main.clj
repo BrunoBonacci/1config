@@ -50,6 +50,7 @@ Usage:
         --with-meta            : whether to include meta data for GET operation
         --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
    -C                          : same as '--output-format=cli'
+   -X   --extented             : whether to display an extended table (more columns)
    -o   --order-by     ORDER   : The listing order, must be a comma-separated list
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'
@@ -118,7 +119,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
     :validate [#{:table :cli}]
     :default :table]
 
-   ["-C" "--C"]
+   ["-C" "--cli-format"]
+   ["-X" "--extended"]
 
    ["-e"  "--env ENV"]
 
@@ -147,11 +149,13 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
                 content-type with-meta output-format order-by
-                master-key]} options
+                master-key extended]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
         backend-name (keyword backend)
-        output-format (if (:C options) :cli output-format)]
+        output-format (if (:cli-format options) :cli output-format)
+        ;; if table and extended show :tablex
+        output-format (or (and (= output-format :table) extended :tablex) output-format)]
 
     (cond
       help            (help! [])
@@ -202,5 +206,6 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           :list (cli/list! (cli/backend backend-name)
                            {:env env :key key :version version :order-by order-by}
-                           :output-format output-format :backend-name backend-name))
+                           :output-format output-format :backend-name backend-name
+                           :extended extended))
         (normal-exit!)))))

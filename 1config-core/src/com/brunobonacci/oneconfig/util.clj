@@ -245,7 +245,7 @@
     (->> entries
        (filter-entries filters)
        (map #(select-keys % [:key :env :version :change-num :content-type
-                             :master-key :master-key-alias]))
+                             :master-key :master-key-alias :user]))
        (sort-by order-fn))))
 
 

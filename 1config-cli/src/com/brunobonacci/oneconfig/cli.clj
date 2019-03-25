@@ -166,8 +166,20 @@
                 {:name :env              :title "Env"}
                 {:name :version          :title "Version"}
                 {:name :change-num       :title "Change num"}
-                {:name :master-key-alias :title "Master encryption key"}
                 {:name :ts               :title "Timestamp" :format timestamp-format}]
+               (->> entries
+                  (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
+
+
+(defmethod format-output :tablex
+  [{:keys [backend] :as context} entries]
+  (table/table [{:name :key              :title "Config key"}
+                {:name :env              :title "Env"}
+                {:name :version          :title "Version"}
+                {:name :change-num       :title "Change num"}
+                {:name :ts               :title "Timestamp" :format timestamp-format}
+                {:name :master-key-alias :title "Master encryption key"}
+                {:name :user             :title "User"}]
                (->> entries
                   (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)))
                   (map (fn [{:keys [master-key-alias master-key] :as m}]
@@ -176,7 +188,7 @@
 
 
 (defn list! [backend filters
-             & {:keys [output-format backend-name]
+             & {:keys [output-format backend-name extended]
                 :or   {output-format :table}}]
 
   (safely
