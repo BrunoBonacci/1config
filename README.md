@@ -495,20 +495,6 @@ has the following permissions included:
             "Resource": "arn:aws:dynamodb:*:*:table/1Config"
         },
         {
-            "Sid": "AllowGetConfigEntriesPt1",
-            "Effect": "Allow",
-            "Action": [
-                "dynamodb:Query"
-            ],
-            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
-        },
-        {
-            "Sid": "AllowGetConfigEntriesPt2",
-            "Effect": "Allow",
-            "Action": "kms:Decrypt",
-            "Resource": "*"
-        },
-        {
             "Sid": "AllowCreateKeysAndListKeys",
             "Effect": "Allow",
             "Action": [
@@ -520,12 +506,26 @@ has the following permissions included:
             "Resource": "*"
         },
         {
+            "Sid": "AllowGetConfigEntriesPt1",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:Query"
+            ],
+            "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
             "Sid": "AllowSetOnConfigEntryPt1",
             "Effect": "Allow",
             "Action": [
                 "dynamodb:PutItem"
             ],
             "Resource": "arn:aws:dynamodb:*:*:table/1Config"
+        },
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": "*"
         },
         {
             "Sid": "AllowSetOnConfigEntryPt2",
@@ -537,6 +537,37 @@ has the following permissions included:
         }
     ]
 }
+```
+
+A simple way to limit which keys can be used by the user/profile
+attached to this policy is to list the arn of the keys it can use
+(ARNs can be obtained with `1cfg list-keys`):
+
+``` json
+   [...]
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": [
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-11111111111",
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-22222222222",
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-33333333333"
+            ]
+        },
+        {
+            "Sid": "AllowSetOnConfigEntryPt2",
+            "Effect": "Allow",
+            "Action": [
+                "kms:GenerateDataKey"
+            ],
+            "Resource": [
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-11111111111",
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-22222222222",
+                "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-33333333333"
+            ]
+        }
+   [...]
 ```
 
 * Permissions for the application
@@ -562,6 +593,20 @@ has the following permissions included:
     ]
 }
 ```
+
+Similarly the application can be limited to the key used for its own entries:
+
+``` json
+   [...]
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": "arn:aws:kms:eu-west-1:1234567890:key/aaaaaaa-bbbb-cccc-ddddd-33333333333"
+        }
+   [...]
+```
+
 
 ## License
 
