@@ -154,6 +154,15 @@
    (System/getProperty property)))
 
 
+
+(defn oneconfig-version
+  []
+  (some->
+   (io/resource "1config.version")
+   slurp
+   (str/trim)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
 ;;                 ----==| F I L E   U I L I T I E S |==----                  ;;

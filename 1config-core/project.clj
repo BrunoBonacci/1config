@@ -1,4 +1,4 @@
-(defproject com.brunobonacci/oneconfig (-> "../1config.version" slurp .trim)
+(defproject com.brunobonacci/oneconfig (-> "../ver/1config.version" slurp .trim)
   :description "A Clojure library for managing configurations"
 
   :url "https://github.com/BrunoBonacci/1config"
@@ -25,8 +25,7 @@
   :java-source-paths ["java/src"]
   :javac-options     ["-target" "1.8" "-source" "1.8" ]
 
-  :bin {:name "1cfg"
-        :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
+  :resource-paths ["resources" "../ver" ]
 
   :global-vars {*warn-on-reflection* true}
 

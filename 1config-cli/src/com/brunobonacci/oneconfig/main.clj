@@ -15,9 +15,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn help! [errors]
-  (println "
+  (println
+   (format "
       1config cli
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                     v%s
 
   A command line tool for managing configurations in different environments.
 
@@ -92,7 +94,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
       provide authentication access to the target AWS account.
       set AWS_DEFAULT_REGION to set the AWS region to use.
 
-" (str/join "\n" errors))
+" (util/oneconfig-version))
+   (str/join "\n" errors))
   (System/exit 1))
 
 

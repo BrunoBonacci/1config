@@ -1,4 +1,4 @@
-(defn ver [] (-> "../1config.version" slurp .trim))
+(defn ver [] (-> "../ver/1config.version" slurp .trim))
 (defproject com.brunobonacci/oneconfig-cli #=(ver)
   :description "A command line utility for managing 1config configurations"
 
@@ -21,6 +21,8 @@
   :global-vars {*warn-on-reflection* true}
 
   :jvm-opts ["-server"]
+
+  :resource-paths ["resources" "../ver" ]
 
   :bin {:name "1cfg"
         :bin-path "~/bin"
