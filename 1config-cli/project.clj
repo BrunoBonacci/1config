@@ -23,6 +23,7 @@
   :jvm-opts ["-server"]
 
   :bin {:name "1cfg"
+        :bin-path "~/bin"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :profiles {:dev {:dependencies [[midje "1.9.6"]
