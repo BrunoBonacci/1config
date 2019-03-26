@@ -54,6 +54,7 @@
      (dyn/create-configure-table cfg (:table cfg))
      :on-error
      :max-retry 3
+     :log-stacktrace false
      :message (str "Creating DynamoDB table:" (:table cfg)))))
 
 
@@ -87,6 +88,7 @@
   (safely
    (save backend config-entry)
    :on-error
+   :log-stacktrace false
    :message "Saving config entry"))
 
 
@@ -95,6 +97,7 @@
   (safely
    (util/decode content-type value)
    :on-error
+   :log-stacktrace false
    :message (str "parsing value as " content-type)))
 
 
@@ -134,6 +137,7 @@
        (println (format-value result)))
      (println "No configuration entry found."))
    :on-error
+   :log-stacktrace false
    :message "Retrieving config entry"))
 
 
@@ -197,6 +201,7 @@
       println)
    (println "(*) Timestamp is in local time.")
    :on-error
+   :log-stacktrace false
    :message "Listing config entry"))
 
 
@@ -228,6 +233,7 @@
        (table/table [{:name :alias :title "Key alias"}
                      :master-key-arn])))
    :on-error
+   :log-stacktrace false
    :message "Listing keys"))
 
 
@@ -250,4 +256,5 @@
        (format "1Config managed key for %s configurations" key-name))
       (println "Created key: ")))
    :on-error
+   :log-stacktrace false
    :message "Creating key"))
