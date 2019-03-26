@@ -11,6 +11,14 @@
            java.util.zip.GZIPInputStream
            java.util.Properties java.util.Map))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;              ----==| U S E F U L   F U N C T I O N S |==----               ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defn sem-ver
   "Returns a vector of the numerical components of a 3-leg version number.
   eg:
@@ -34,6 +42,101 @@
   (apply format "%05d%05d%05d" (sem-ver ver)))
 
 
+
+(defn entry-record
+  "Given an internal entry, it returns only the keys which are public"
+  [entry]
+  (when entry
+    (select-keys entry [:env :key :version :content-type :value :change-num])))
+
+
+
+(defn- filter-entries [{:keys [key env version]} entries]
+  (->> entries
+     (filter
+      (where [:and
+              [:env     :starts-with? (or env "")]
+              [:key     :starts-with? (or key "")]
+              [:version :starts-with? (or version "")]]))))
+
+
+
+(defn list-entries
+  [filters entries]
+  (let [;; add default ordering to given order
+        order (concat (get filters :order-by []) [:key :env (comp comparable-version :version) :change-num])
+        ;; use semantic versioning order
+        order (map (fn [k] (if (= k :version) (comp comparable-version :version) k)) order)
+        ;; compose order function
+        order-fn (apply juxt order)]
+    (->> entries
+       (filter-entries filters)
+       (map #(select-keys % [:key :env :version :change-num :content-type
+                             :master-key :master-key-alias :user]))
+       (sort-by order-fn))))
+
+
+;; mapcat is not lazy so defining one
+(defn lazy-mapcat
+  "maps a function over a collection and
+   lazily concatenate all the results."
+  [f coll]
+  (lazy-seq
+   (if (not-empty coll)
+     (concat
+      (f (first coll))
+      (lazy-mapcat f (rest coll))))))
+
+
+(defn clean-map
+  "remove keys with nils"
+  [map]
+  (->> map
+     (remove (where second :is? nil))
+     (into {})))
+
+
+(defmacro show-stacktrace!!
+  [show & body]
+  {:style/indent 1}
+  `(try ~@body
+        (catch Throwable x#
+          (if ~show
+            (.printStackTrace x#)
+            (do
+              (.println System/err (str "ERROR: " (.getMessage x#)))
+              (.println System/err (str "CAUSE: " (loop [e# x#]
+                                                    (if (.getCause e#)
+                                                      (recur (.getCause e#))
+                                                      (.getMessage e#)))))))
+          (System/exit 1))))
+
+
+(defmacro log-configure-request
+  "logs the what was requested to configure and it was returned"
+  [in & body]
+  {:style/indent 1}
+  `(let [in# ~in]
+     (try
+       (let [out# (do ~@body)]
+         (log/infof "1config> requested config for: %s received: %s"
+                    (pr-str in#)
+                    (pr-str (and out#
+                               (select-keys out#
+                                            [:key :env :version :change-num]))))
+         out#)
+       (catch Exception x#
+         (log/infof "1config> requested config for: %s received: %s"
+                    (pr-str in#)
+                    (str "ERROR: " (pr-str (.getMessage x#))))
+         (throw x#)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;              ----==| E N V   &   P R O P E R T I E S |==----               ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn env
   "Returns the value of a environment variable or a map with the all variables."
   ([]
@@ -50,6 +153,12 @@
   ([property]
    (System/getProperty property)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                 ----==| F I L E   U I L I T I E S |==----                  ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (defn read-file
@@ -69,11 +178,10 @@
 
 
 
-(defn entry-record
-  "Given an internal entry, it returns only the keys which are public"
-  [entry]
-  (when entry
-    (select-keys entry [:env :key :version :content-type :value :change-num])))
+(defn home-1config
+  "returns ~/.1config/"
+  []
+  (some-> (homedir) (str "/.1config/")))
 
 
 
@@ -125,6 +233,13 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                  ----==| F I L E   F O R M A T S |==----                   ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defn read-edn-file
   "reads a EDN file and returns its content or nil if invalid"
   [file]
@@ -138,6 +253,7 @@
   (safely
    (some-> file slurp)
    :on-error :default nil))
+
 
 
 (defn filename->content-type
@@ -159,6 +275,12 @@
     (.store properties out nil)
     (String. (.toByteArray out) "ISO-8859-1")))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                 ----==| E N C O D E / D E C O D E |==----                  ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (defmulti decode (fn [form value] form))
@@ -224,30 +346,6 @@
 
 
 
-(defn- filter-entries [{:keys [key env version]} entries]
-  (->> entries
-     (filter
-      (where [:and
-              [:env :starts-with? (or env "")]
-              [:key :starts-with? (or key "")]
-              [:version :starts-with? (or version "")]]))))
-
-
-
-(defn list-entries
-  [filters entries]
-  (let [;; add default ordering to given order
-        order (concat (get filters :order-by []) [:key :env (comp comparable-version :version) :change-num])
-        ;; use semantic versioning order
-        order (map (fn [k] (if (= k :version) (comp comparable-version :version) k)) order)
-        ;; compose order function
-        order-fn (apply juxt order)]
-    (->> entries
-       (filter-entries filters)
-       (map #(select-keys % [:key :env :version :change-num :content-type
-                             :master-key :master-key-alias :user]))
-       (sort-by order-fn))))
-
 
 (comment
   (defmethod decode "gzip"
@@ -268,59 +366,3 @@
 (defn marshall-value
   [{:keys [content-type] :as config-entry}]
   (update config-entry :value (partial encode content-type)))
-
-
-;; mapcat is not lazy so defining one
-(defn lazy-mapcat
-  "maps a function over a collection and
-   lazily concatenate all the results."
-  [f coll]
-  (lazy-seq
-   (if (not-empty coll)
-     (concat
-      (f (first coll))
-      (lazy-mapcat f (rest coll))))))
-
-
-(defn clean-map
-  "remove keys with nils"
-  [map]
-  (->> map
-     (remove (where second :is? nil))
-     (into {})))
-
-
-(defmacro show-stacktrace!!
-  [show & body]
-  {:style/indent 1}
-  `(try ~@body
-        (catch Throwable x#
-          (if ~show
-            (.printStackTrace x#)
-            (do
-              (.println System/err (str "ERROR: " (.getMessage x#)))
-              (.println System/err (str "CAUSE: " (loop [e# x#]
-                                                    (if (.getCause e#)
-                                                      (recur (.getCause e#))
-                                                      (.getMessage e#)))))))
-          (System/exit 1))))
-
-
-(defmacro log-configure-request
-  "logs the what was requested to configure and it was returned"
-  [in & body]
-  {:style/indent 1}
-  `(let [in# ~in]
-     (try
-       (let [out# (do ~@body)]
-         (log/infof "1config> requested config for: %s received: %s"
-                    (pr-str in#)
-                    (pr-str (and out#
-                               (select-keys out#
-                                            [:key :env :version :change-num]))))
-         out#)
-       (catch Exception x#
-         (log/infof "1config> requested config for: %s received: %s"
-                    (pr-str in#)
-                    (str "ERROR: " (pr-str (.getMessage x#))))
-         (throw x#)))))

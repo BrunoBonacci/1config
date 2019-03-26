@@ -72,7 +72,7 @@
 
 (defn readonly-file-config-backend
   ([]
-   (readonly-file-config-backend (str (homedir) "/.1config/")))
+   (readonly-file-config-backend (home-1config)))
   ([base-dir]
    (let [dir (io/file base-dir)]
      (when (and (.exists dir) (.isDirectory dir))
