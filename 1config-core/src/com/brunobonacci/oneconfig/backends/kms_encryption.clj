@@ -1,19 +1,15 @@
 (ns com.brunobonacci.oneconfig.backends.kms-encryption
   (:refer-clojure :exclude [find load list])
   (:require [amazonica.aws.kms :as kms]
-            [amazonica.core :refer [defcredential] :as aws]
-            [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer
-             [lazy-mapcat clean-map]]
-            [where.core :refer [where]]
+            [amazonica.core :as aws]
             [clojure.string :as str]
-            [amazonica.aws.dynamodbv2 :as dyn])
-  (:import [com.amazonaws.encryptionsdk
-            AwsCrypto CryptoResult]
-           [com.amazonaws.encryptionsdk.kms
-            KmsMasterKey KmsMasterKeyProvider]
-           [com.amazonaws.regions Regions Region]
+            [com.brunobonacci.oneconfig.backend :refer :all]
+            [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat]]
+            [where.core :refer [where]])
+  (:import com.amazonaws.encryptionsdk.AwsCrypto
+           com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations
+           [com.amazonaws.regions Region Regions]
            java.util.Collections))
 
 
@@ -221,7 +217,7 @@
 
 (defn- encryption-context
   [config-entry]
-  (select-keys config-entry [:key :env :version :change-num :content-type]))
+  (select-keys config-entry [:key :env :version :change-num :content-type :user]))
 
 
 

@@ -420,6 +420,7 @@ Usage:
         --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
    -C                          : same as '--output-format=cli'
    -X   --extented             : whether to display an extended table (more columns)
+   -P   --pretty-print         : whether to pretty print the configuration values
    -o   --order-by     ORDER   : The listing order, must be a comma-separated list
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'

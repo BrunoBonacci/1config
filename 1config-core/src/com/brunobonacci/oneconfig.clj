@@ -29,8 +29,8 @@
       ;; search exclusive configuration in files first
       (some-> (configuration-file-search) file1-config-backend)
       ;; otherwise search in dynamo
-      (let [kms+dynamo (kms-encryption-backend
-                        (iam-user-backend
+      (let [kms+dynamo (iam-user-backend
+                        (kms-encryption-backend
                          (dynamo-config-backend
                           (default-dynamo-config))))]
         (hierarchical-backend

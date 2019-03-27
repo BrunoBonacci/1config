@@ -47,7 +47,8 @@
   "Given an internal entry, it returns only the keys which are public"
   [entry]
   (when entry
-    (select-keys entry [:env :key :version :content-type :value :change-num])))
+    (select-keys entry [:env :key :version :content-type :value :change-num
+                        :user :master-key-alias :master-key])))
 
 
 

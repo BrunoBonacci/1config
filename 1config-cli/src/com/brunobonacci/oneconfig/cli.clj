@@ -200,16 +200,6 @@
    :message "Listing config entry"))
 
 
-(comment
-  (println
-   (format-output {:format :cli :backend :dynamo}
-                  '({:env "dev", :key "service1", :version "1.0.0", :change-num 123}
-                    {:env "dev", :key "service2", :version "1.0.0", :change-num 234234})))
-
-  (list (backend :dynamo) {})
-  )
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
