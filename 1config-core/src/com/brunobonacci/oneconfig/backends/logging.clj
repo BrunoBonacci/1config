@@ -8,13 +8,15 @@
   IConfigBackend
 
   (find [_ {:keys [key env version change-num] :as config-entry}]
-    (log/info "FIND:" (pr-str config-entry))
-    (find store config-entry))
+    (let [result (find store config-entry)]
+      (log/info "FIND:" (pr-str config-entry) "->" (pr-str result))
+      result))
 
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (log/info "LOAD:" (pr-str config-entry))
-    (load store config-entry))
+    (let [result (load store config-entry)]
+      (log/info "LOAD:" (pr-str config-entry) "->" (pr-str result))
+      result))
 
 
   (save [_ config-entry]

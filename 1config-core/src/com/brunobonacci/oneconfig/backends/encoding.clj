@@ -16,29 +16,33 @@
   IConfigBackend
 
   (find [this {:keys [key env version] :as config-entry}]
-    (when-let [entry (find backend config-entry)]
+    (when-let [{:keys [value] :as entry} (find backend config-entry)]
       (if (:decoded entry)
         entry
         (some->
          (unmarshall-value entry)
-         (assoc :decoded true)))))
+         (assoc :decoded true
+                :encoded-value value)))))
 
 
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (when-let [entry (load backend config-entry)]
+    (when-let [{:keys [value] :as entry} (load backend config-entry)]
       (if (:decoded entry)
         entry
         (some->
          (unmarshall-value entry)
-         (assoc :decoded true)))))
+         (assoc :decoded true
+                :encoded-value value)))))
 
 
 
-  (save [_ config-entry]
+  (save [this {:keys [encoded] :as config-entry}]
     (EncodingConfigBackend.
-     (save backend
-           (marshall-value config-entry))))
+     (as-> config-entry $
+       (dissoc $ :encoded)
+       (if-not encoded (marshall-value $) $)
+       (save backend $))))
 
   (list [this filters]
     (list backend filters)))

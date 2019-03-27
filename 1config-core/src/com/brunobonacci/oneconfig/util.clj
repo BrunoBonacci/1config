@@ -131,6 +131,13 @@
                     (str "ERROR: " (pr-str (.getMessage x#))))
          (throw x#)))))
 
+
+
+(defn println-err [& args]
+  (binding [*out* *err*]
+    (apply println args)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
 ;;              ----==| E N V   &   P R O P E R T I E S |==----               ;;
@@ -280,9 +287,9 @@
 
 
 (defn properties->str [^Properties properties]
-  (let [out (ByteArrayOutputStream.)]
-    (.store properties out nil)
-    (String. (.toByteArray out) "ISO-8859-1")))
+  (let [out (java.io.StringWriter.)]
+    (.store properties (java.io.PrintWriter. out) nil)
+    (-> out (.getBuffer) (.toString))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

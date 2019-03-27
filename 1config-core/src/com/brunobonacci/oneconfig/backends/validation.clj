@@ -18,7 +18,7 @@
 
    :content-type   (s/enum "txt" "edn" "json" "properties" "props")
 
-   :value          s/Any
+   :value          s/Str
 
    (s/optional-key :master-key) s/Str})
 
@@ -62,9 +62,7 @@
 
   (save [_ config-entry]
     (s/validate entry-save-schema config-entry)
-    ;; overrides any previously present :change-num
-    (->> (assoc config-entry :change-num (System/currentTimeMillis))
-       (save store)))
+    (save store config-entry))
 
 
   (list [_ filters]

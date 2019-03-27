@@ -10,6 +10,7 @@
              [iam-user       :refer [iam-user-backend]]
              [immutable      :refer [immutable-backend]]
              [kms-encryption :refer [kms-encryption-backend]]
+             [logging        :refer [logging-backend]]
              [validation     :refer [validation-backend]]]
             [com.brunobonacci.oneconfig.util :refer :all]))
 
@@ -22,16 +23,16 @@
    It returns a configuration backend if found or nil"
   []
   (make-encoding-wrapper
-   (or
-    ;; search exclusive configuration in files first
-    (some-> (configuration-file-search) file1-config-backend)
-    ;; otherwise search in dynamo
-    (let [kms+dynamo (kms-encryption-backend
-                      (iam-user-backend
-                       (dynamo-config-backend
-                        (default-dynamo-config))))]
-      (validation-backend
-       (immutable-backend
+   (validation-backend
+    (immutable-backend
+     (or
+      ;; search exclusive configuration in files first
+      (some-> (configuration-file-search) file1-config-backend)
+      ;; otherwise search in dynamo
+      (let [kms+dynamo (kms-encryption-backend
+                        (iam-user-backend
+                         (dynamo-config-backend
+                          (default-dynamo-config))))]
         (hierarchical-backend
          [(readonly-file-config-backend)
           kms+dynamo]

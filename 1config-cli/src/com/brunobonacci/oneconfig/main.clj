@@ -1,10 +1,10 @@
 (ns com.brunobonacci.oneconfig.main
-  (:require [com.brunobonacci.oneconfig.cli :as cli]
+  (:gen-class)
+  (:require [clojure.string :as str]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.string :as str]
-            [com.brunobonacci.oneconfig.util :as util])
-  (:gen-class))
-
+            [com.brunobonacci.oneconfig.cli :as cli]
+            [com.brunobonacci.oneconfig.util :as util]
+            [safely.core :refer [safely]]))
 
 (def ^:dynamic *repl-session* false)
 
@@ -53,6 +53,7 @@ Usage:
         --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
    -C                          : same as '--output-format=cli'
    -X   --extented             : whether to display an extended table (more columns)
+   -P   --pretty-print         : whether to pretty print the configuration values
    -o   --order-by     ORDER   : The listing order, must be a comma-separated list
                                : of one or more of: 'key', 'env', 'version', 'change-num'
                                : default order: 'key,env,version,change-num'
@@ -123,6 +124,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
     :default :table]
 
    ["-C" "--cli-format"]
+   ["-P" "--pretty-print"]
    ["-X" "--extended"]
 
    ["-e"  "--env ENV"]
@@ -148,11 +150,29 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
    ["-m"  "--master-key KEY-NAME"]])
 
 
+(defn- validate-format!!
+  "Returns `value` if the format validation is successful according to
+  the `content-type`, otherwise exit(2)."
+  [content-type value]
+
+  ;; parsing value to check if content is valid
+  (safely
+   (util/decode content-type value)
+   :on-error
+   :log-stacktrace false
+   :message (str "Parsing value as " content-type))
+
+  ;; returning the original value to be stored
+  ;; this is to preserve comments
+  value)
+
+
+
 (defn -main [& args]
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
                 content-type with-meta output-format order-by
-                master-key extended]} options
+                master-key extended pretty-print]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
         backend-name (keyword backend)
@@ -192,9 +212,9 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           :set (cli/set! (cli/backend backend-name)
                          (as->
-                             {:env env :key key :content-type content-type
-                              :version version
-                              :value (or (cli/decode content-type value) (System/exit 2))} $
+                             {:env env :key key :version version
+                              :content-type content-type
+                              :value (validate-format!! content-type value)} $
                            (if master-key (assoc $ :master-key master-key) $)))
 
           ;;
@@ -202,7 +222,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           :get (cli/get! (cli/backend backend-name)
                          {:env env :key key :version version :change-num change-num}
-                         :with-meta with-meta)
+                         :with-meta with-meta :pretty-print? pretty-print)
 
           ;;
           ;; LIST

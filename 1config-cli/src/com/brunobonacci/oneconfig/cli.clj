@@ -86,19 +86,10 @@
 (defn set! [backend config-entry]
   (validate-version! (:version config-entry))
   (safely
-   (save backend config-entry)
+   (save backend (assoc config-entry :encoded true))
    :on-error
    :log-stacktrace false
    :message "Saving config entry"))
-
-
-
-(defn decode [content-type value]
-  (safely
-   (util/decode content-type value)
-   :on-error
-   :log-stacktrace false
-   :message (str "parsing value as " content-type)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -108,12 +99,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn- format-value
-  [{:keys [content-type value] :as v}]
-  (case content-type
-    "json"       (json/generate-string value {:pretty true})
-    "edn"        (pp/write value :stream nil)
-    "txt"        value
-    ("properties" "props") (util/properties->str value)))
+  [{:keys [content-type value encoded-value] :as v} {:keys [pretty-print?]}]
+  (if-not pretty-print?
+    (or encoded-value value)
+    (case content-type
+        "json"       (json/generate-string value {:pretty true})
+        "edn"        (pp/write value :stream nil)
+        "txt"        value
+        ("properties" "props") (util/properties->str value))))
 
 
 
@@ -125,7 +118,9 @@
 
 
 
-(defn get! [backend config-entry & {:keys [with-meta] :or {with-meta false}}]
+(defn get! [backend config-entry & {:keys [with-meta pretty-print?]
+                                    :or {with-meta false
+                                         pretty-print? false} :as opts}]
   (validate-version! (:version config-entry))
   (safely
    (if-let [result (if (:change-num config-entry)
@@ -134,8 +129,8 @@
      (do
        (when with-meta
          (println (format-meta result)))
-       (println (format-value result)))
-     (println "No configuration entry found."))
+       (println (format-value result opts)))
+     (util/println-err "No configuration entry found."))
    :on-error
    :log-stacktrace false
    :message "Retrieving config entry"))
