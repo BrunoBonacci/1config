@@ -1,5 +1,11 @@
 # Changelog
 
+## Release: v0.7.0 (2019-03-28)
+
+  * Added user into the encryption context (anti tampering)
+  * Store values in verbatim to preserve comments
+  * Added optional pretty-printing for values
+
 ## Release: v0.6.1 (2019-03-25)
 
   * Fixed issue when ~/.1config doesn't exists
