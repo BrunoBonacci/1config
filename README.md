@@ -80,7 +80,7 @@ Quick start guide to use 1Config.
   export AWS_SECRET_ACCESS_KEY=yyy
   export AWS_DEFAULT_REGION=eu-west-1
   ```
-  * Initialize DynamoDB table
+  * Initialize DynamoDB table (only the first time)
   ``` bash
   1cfg INIT
   ```

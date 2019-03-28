@@ -110,11 +110,13 @@
 
 
 
-(defn- format-meta [{:keys [content-type] :as v}]
+(defn- format-with-meta [{:keys [content-type] :as v} opts]
   (str/join "\n"
             ["-----------------------[META]-----------------------"
-             (pp/write (dissoc v :value) :stream nil)
-             "----------------------[CONFIG]----------------------"]))
+             (pp/write (dissoc v :value :encoded-value) :stream nil)
+             "----------------------[CONFIG]----------------------"
+             (format-value v opts)
+             "----------------------------------------------------"]))
 
 
 
@@ -126,10 +128,10 @@
    (if-let [result (if (:change-num config-entry)
                      (load backend config-entry)
                      (find backend (dissoc config-entry :change-num)))]
-     (do
-       (when with-meta
-         (println (format-meta result)))
+     (if with-meta
+       (println (format-with-meta result opts))
        (println (format-value result opts)))
+
      (util/println-err "No configuration entry found."))
    :on-error
    :log-stacktrace false
