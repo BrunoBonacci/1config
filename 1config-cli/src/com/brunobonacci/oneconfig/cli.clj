@@ -165,6 +165,7 @@
                 {:name :env              :title "Env"}
                 {:name :version          :title "Version"}
                 {:name :change-num       :title "Change num"}
+                {:name :content-type     :title "Type"}
                 {:name :ts               :title "Timestamp" :format timestamp-format}]
                (->> entries
                   (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
@@ -176,6 +177,7 @@
                 {:name :env              :title "Env"}
                 {:name :version          :title "Version"}
                 {:name :change-num       :title "Change num"}
+                {:name :content-type     :title "Type"}
                 {:name :ts               :title "Timestamp" :format timestamp-format}
                 {:name :master-key-alias :title "Master encryption key"}
                 {:name :user             :title "User"}]

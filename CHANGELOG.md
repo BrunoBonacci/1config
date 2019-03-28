@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.8.0 (Unreleased)
+
+  * Added the `content-type` in the entry listing
+
 ## Release: v0.7.0 (2019-03-28)
 
   * Added user into the encryption context (anti tampering)
