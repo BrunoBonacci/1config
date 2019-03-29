@@ -1,8 +1,9 @@
 # 1config
-[![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg) [![Dependencies Status](https://jarkeeper.com/BrunoBonacci/oneconfig/status.svg)](https://jarkeeper.com/BrunoBonacci/oneconfig)
+[![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg)
 
-A library to manage multiple environments and application configuration safely and effectively.
-Here some of the key-points and advantages:
+A library to manage multiple environments and application
+configuration safely and effectively.  Here some of the key-points and
+advantages:
 
   * Easy way to retrieve and manage configuration for your AWS deployed services
   * Compatible with AWS Lambdas as well
@@ -15,6 +16,7 @@ Here some of the key-points and advantages:
   * Command line tool for managing changes to the configuration
   * Support for local development (outside AWS)
   * Highly-configurable and secure authorization.
+
 
 ## Security model
 
