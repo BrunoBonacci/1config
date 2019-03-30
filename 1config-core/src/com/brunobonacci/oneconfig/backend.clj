@@ -1,7 +1,11 @@
 (ns com.brunobonacci.oneconfig.backend
   (:refer-clojure :exclude [find load list]))
 
-(defprotocol IConfigBackend
+
+;;
+;; Protocol for the clients
+;;
+(defprotocol IConfigClient
 
   ;;
   ;; takes a `config-entry` to find in input and returns the best
@@ -18,7 +22,15 @@
   ;;  :content-type "txt", :value "foo",
   ;;  :change-num 1552740481566}
   ;;
-  (find [this config-entry])
+  (find [this config-entry]))
+
+
+
+
+;;
+;; Protocol for the backends
+;;
+(defprotocol IConfigBackend
 
 
   ;; it loads a specific `config-entry`. It must be an exact match

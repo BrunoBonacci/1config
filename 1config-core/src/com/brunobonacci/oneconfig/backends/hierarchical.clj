@@ -6,11 +6,13 @@
 
 (deftype HierarchicalBackend [read-stores write-stores]
 
-  IConfigBackend
+  IConfigClient
 
   (find [_ {:keys [key env version change-num] :as config-entry}]
     (some #(find % config-entry) read-stores))
 
+
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (some #(load % config-entry) read-stores))

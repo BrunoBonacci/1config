@@ -16,7 +16,7 @@
 
 
 
-(defn one-config
+(defn ^com.brunobonacci.oneconfig.backend.IConfigClient one-config
   "searches in a number of location for the configure file,
    if isn't found in any of the locations it searches into
    dynamodb using the aws roles to access the table.
@@ -47,7 +47,7 @@
   ([{:keys [env key version] :as config-entry}]
    {:pre [env key (sem-ver version)]}
    (configure (one-config) config-entry))
-  ([^com.brunobonacci.oneconfig.backend.IConfigBackend config-backend
+  ([^com.brunobonacci.oneconfig.backend.IConfigClient config-backend
     {:keys [env key version] :as config-entry}]
    {:pre [env key (sem-ver version)]}
    (log-configure-request config-entry

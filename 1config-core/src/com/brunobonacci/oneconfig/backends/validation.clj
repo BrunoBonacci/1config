@@ -48,12 +48,14 @@
 
 (deftype ValidationBackend [store]
 
-  IConfigBackend
+  IConfigClient
 
   (find [_ config-entry]
     (s/validate entry-request-schema config-entry)
     (find store config-entry))
 
+
+  IConfigBackend
 
   (load [_ config-entry]
     (s/validate entry-request-schema config-entry)

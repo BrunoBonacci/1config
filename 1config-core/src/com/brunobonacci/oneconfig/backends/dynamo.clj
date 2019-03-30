@@ -60,7 +60,7 @@
 
   (data [_] nil)
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version change-num] :as config-entry}]
     (let [zver (comparable-version version)
@@ -78,6 +78,7 @@
                    :__ver_key {:attribute-value-list [ver-key] :comparison-operator "LE"}})
        :items first entry-record)))
 
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (let [zver (comparable-version version)

@@ -13,7 +13,7 @@
 
   (data [_] (data backend))
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
     (when-let [{:keys [value] :as entry} (find backend config-entry)]
@@ -25,6 +25,7 @@
                 :encoded-value value)))))
 
 
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (when-let [{:keys [value] :as entry} (load backend config-entry)]

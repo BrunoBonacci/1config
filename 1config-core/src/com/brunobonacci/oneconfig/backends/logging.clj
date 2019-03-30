@@ -5,13 +5,15 @@
 
 (deftype LoggingBackend [store]
 
-  IConfigBackend
+  IConfigClient
 
   (find [_ {:keys [key env version change-num] :as config-entry}]
     (let [result (find store config-entry)]
       (log/info "FIND:" (pr-str config-entry) "->" (pr-str result))
       result))
 
+
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (let [result (load store config-entry)]

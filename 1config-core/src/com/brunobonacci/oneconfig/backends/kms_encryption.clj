@@ -223,13 +223,15 @@
 
 (deftype KmsEncryptionConfigBackend [store]
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
     (when-let [entry (find store config-entry)]
       (let [ctx (encryption-context entry)]
         (update entry :value (comp :result #(decrypt % ctx))))))
 
+
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (when-let [entry (load store config-entry)]

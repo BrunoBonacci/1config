@@ -12,12 +12,13 @@
 
   (data [_] {:file file :type type :content content})
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
     (assoc config-entry :value content
            :change-num (System/currentTimeMillis)))
 
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (assoc config-entry :value content

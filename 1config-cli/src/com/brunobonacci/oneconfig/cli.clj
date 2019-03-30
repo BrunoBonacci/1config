@@ -66,7 +66,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(defmulti backend (fn [type & opts] type))
+(defmulti ^com.brunobonacci.oneconfig.backend.IConfigBackend backend (fn [type & opts] type))
 
 
 

@@ -16,7 +16,7 @@
 
   (data [_] store)
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
     (let [sem-ver (->> (get-in store [env key])
@@ -27,6 +27,8 @@
       (if-let [changeset (get-in store [env key sem-ver])]
         (get changeset (-> changeset keys ((partial apply max)))))))
 
+
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (if (nil? change-num)

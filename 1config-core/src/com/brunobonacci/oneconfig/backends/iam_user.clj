@@ -6,11 +6,13 @@
 
 (deftype IamUserEnrichmentBackend [store]
 
-  IConfigBackend
+  IConfigClient
 
   (find [_ {:keys [key env version change-num] :as config-entry}]
     (find store config-entry))
 
+
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (load store config-entry))

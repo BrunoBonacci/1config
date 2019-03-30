@@ -30,7 +30,7 @@
 
 (deftype ReadOnlyFileConfigBackend [^java.io.File base-dir sep]
 
-  IConfigBackend
+  IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
     (let [basefile (str (.getCanonicalPath base-dir)
@@ -46,6 +46,7 @@
               (dissoc :file))))
 
 
+  IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (let [basefile (str (.getCanonicalPath base-dir)
