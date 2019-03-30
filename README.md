@@ -1,4 +1,4 @@
-# 1config
+# 1Config
 [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg)
 
 A library to manage multiple environments and application
