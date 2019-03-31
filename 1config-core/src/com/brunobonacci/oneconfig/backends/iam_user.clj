@@ -34,4 +34,5 @@
 
 (defn iam-user-backend
   [store]
-  (IamUserEnrichmentBackend. store))
+  (when store
+    (IamUserEnrichmentBackend. store)))

@@ -1,22 +1,15 @@
 (ns com.brunobonacci.oneconfig.cli
   (:refer-clojure :exclude [find load list])
   (:require [cheshire.core :as json]
-            [clojure
-             [pprint :as pp]
-             [string :as str]]
+            [clojure.pprint :as pp]
+            [clojure.string :as str]
             [clojure.tools.logging :as log]
+            [com.brunobonacci.oneconfig.backend :refer :all]
+            [com.brunobonacci.oneconfig.backends.dynamo :as dyn]
+            [com.brunobonacci.oneconfig.backends.kms-encryption :as kms]
+            [com.brunobonacci.oneconfig.util :as util]
             [doric.core :as table]
-            [safely.core :refer [safely]]
-            [com.brunobonacci.oneconfig
-             :refer [one-config]]
-            [com.brunobonacci.oneconfig
-             [backend :refer :all]
-             [util :as util]]
-            [com.brunobonacci.oneconfig.backends
-             [dynamo :as dyn]
-             [kms-encryption :as kms]]))
-
-
+            [safely.core :refer [safely]]))
 
 (defn timestamp-format
   [^long ts]
@@ -64,22 +57,6 @@
 ;;                            ---==| S E T |==----                            ;;
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-(defmulti ^com.brunobonacci.oneconfig.backend.IConfigBackend backend (fn [type & opts] type))
-
-
-
-(defmethod backend :default
-  [type & opts]
-  (log/error "Invalid backend type" type)
-  (throw (ex-info (str "Invalid backend type " type) {:type type :options opts})))
-
-
-
-(defmethod backend :dynamo
-  [_ & opts]
-  (one-config))
 
 
 

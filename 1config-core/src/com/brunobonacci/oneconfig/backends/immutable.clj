@@ -29,4 +29,5 @@
 
 (defn immutable-backend
   [store]
-  (ImmutableBackend. store))
+  (when store
+    (ImmutableBackend. store)))

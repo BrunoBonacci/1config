@@ -4,6 +4,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [com.brunobonacci.oneconfig.cli :as cli]
             [com.brunobonacci.oneconfig.util :as util]
+            [com.brunobonacci.oneconfig.backends :as b]
             [safely.core :refer [safely]]))
 
 (def ^:dynamic *repl-session* false)
@@ -43,7 +44,7 @@ Usage:
    ---------
    -h   --help                 : this help
         --stacktrace           : To show the full stacktrace of an error
-   -b   --backend   BACKEND    : only 'dynamo' is currently supported, and it is the default one.
+   -b   --backend   BACKEND    : Must be one of: hierarchical, dynamo, fs. Default: hierarchical
    -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
                                : exmaple: 'service1', 'db.pass' etc
@@ -112,8 +113,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
    [nil  "--stacktrace"]
 
    ["-b"  "--backend BACKEND"
-    :default "dynamo"
-    :validate [(partial re-find #"(?i)^(dynamo)$") "Must be one of: dynamo"]]
+    :default "hierarchical"
+    :validate [#{"hierarchical" "dynamo" "fs"} "Must be one of: hierarchical, dynamo, fs"]]
 
 
    [nil "--with-meta"]
@@ -210,7 +211,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           ;; SET
           ;;
-          :set (cli/set! (cli/backend backend-name)
+          :set (cli/set! (b/backend-factory {:type backend-name})
                          (as->
                              {:env env :key key :version version
                               :content-type content-type
@@ -220,14 +221,14 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           ;; GET
           ;;
-          :get (cli/get! (cli/backend backend-name)
+          :get (cli/get! (b/backend-factory {:type backend-name})
                          {:env env :key key :version version :change-num change-num}
                          :with-meta with-meta :pretty-print? pretty-print)
 
           ;;
           ;; LIST
           ;;
-          :list (cli/list! (cli/backend backend-name)
+          :list (cli/list! (b/backend-factory {:type backend-name})
                            {:env env :key key :version version :order-by order-by}
                            :output-format output-format :backend-name backend-name
                            :extended extended))

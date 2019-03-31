@@ -75,4 +75,5 @@
 
 (defn validation-backend
   [store]
-  (ValidationBackend. store))
+  (when store
+    (ValidationBackend. store)))

@@ -260,4 +260,5 @@
 
 (defn kms-encryption-backend
   [backend]
-  (KmsEncryptionConfigBackend. backend))
+  (when backend
+    (KmsEncryptionConfigBackend. backend)))

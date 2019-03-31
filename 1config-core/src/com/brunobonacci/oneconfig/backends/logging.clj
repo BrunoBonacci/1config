@@ -33,4 +33,5 @@
 
 (defn logging-backend
   [store]
-  (LoggingBackend. store))
+  (when store
+    (LoggingBackend. store)))
