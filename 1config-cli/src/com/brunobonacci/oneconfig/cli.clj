@@ -128,11 +128,12 @@
 
 
 (defmethod format-output :cli
-  [{:keys [backend] :as context} entries]
+  [context entries]
   (->> entries
-     (map (fn [{:keys [key env version change-num content-type]}]
+     (map (fn [{:keys [key env version change-num content-type backend] :as e}]
             (format "1cfg -b '%s' -k '%s' -e '%s' -v '%s' -t '%s' GET -c '%s' "
-                    (name backend) key env version
+                    (name (or backend (:backend context)))
+                    key env version
                     (or content-type "") change-num)))
      (str/join "\n")))
 

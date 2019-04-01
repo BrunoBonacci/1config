@@ -34,7 +34,8 @@
       :key "*"
       :version "*"
       :content-type type
-      :change-num (System/currentTimeMillis)}]))
+      :change-num (System/currentTimeMillis)
+      :backend :fix}]))
 
 
 

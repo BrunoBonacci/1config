@@ -121,7 +121,8 @@
                           {:table-name (:table cfg) :exclusive-start-key start-from}
                           {:table-name (:table cfg)})))]
       (->> (lazy-query q)
-           (list-entries filters)))))
+         (list-entries filters)
+         (map #(assoc % :backend :dynamo))))))
 
 
 

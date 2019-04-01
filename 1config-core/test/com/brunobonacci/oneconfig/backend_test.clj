@@ -261,7 +261,7 @@
 
            (fact "env filter returns entries that match"
                  (->> (list store {:env env1})
-                    (map #(dissoc % :change-num :content-type)))
+                    (map #(dissoc % :change-num :content-type :backend)))
 
 
                  => [(dissoc entry5 :value)

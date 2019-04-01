@@ -73,7 +73,8 @@
     (->> entries
        (filter-entries filters)
        (map #(select-keys % [:key :env :version :change-num :content-type
-                             :master-key :master-key-alias :user]))
+                             :master-key :master-key-alias :user
+                             :backend]))
        (sort-by order-fn))))
 
 

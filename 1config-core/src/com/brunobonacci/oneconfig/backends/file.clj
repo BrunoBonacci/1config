@@ -67,7 +67,8 @@
   (list [this filters]
     (->> (search-files {:base-dir base-dir :sep sep} base-dir)
        ;; apply post filters and ordering
-       (list-entries filters))))
+       (list-entries filters)
+       (map #(assoc % :backend :fs)))))
 
 
 

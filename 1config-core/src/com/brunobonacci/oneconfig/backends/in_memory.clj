@@ -55,7 +55,8 @@
          (mapcat vals)  ;need to remove the nested structure and just get a seq of enties
          (mapcat vals)
          (mapcat vals)
-         (list-entries filters))))
+         (list-entries filters)
+         (map #(assoc % :backend :in-memory)))))
 
 
 
