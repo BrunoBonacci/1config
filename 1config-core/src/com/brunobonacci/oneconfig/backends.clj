@@ -28,8 +28,14 @@
 
 
 (defmethod backend-factory :default
-  [c]
-  (backend-factory (assoc c :type :hierarchical)))
+  [{:keys [type] :as c}]
+  (let [type    (when-not (= :default type) type)
+        backend (keyword (or type (default-backend-name)))]
+    (when-not (#{:hierarchical :dynamo :fix :fs :filesystem} backend)
+      (throw (ex-info "Invalid backend selection" {:backend backend})))
+
+    (backend-factory
+     (assoc c :type backend))))
 
 
 
@@ -71,11 +77,11 @@
 
 (defmethod backend-factory :fs
   [c]
-  (backend-factory (assoc c :type :file-system)))
+  (backend-factory (assoc c :type :filesystem)))
 
 
 
-(defmethod backend-factory :file-system
+(defmethod backend-factory :filesystem
   [_]
   (->> (readonly-file-config-backend)
      common-wrappers))

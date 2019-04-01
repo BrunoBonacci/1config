@@ -10,7 +10,7 @@
 (defn default-dynamo-config []
   {:endpoint  nil ;; this is required to by amazonica
                   ;; to consider first argument a config
-   :table     (or (System/getenv "ONECONFIG_DYNAMO_TABLE") "1Config")})
+   :table     (env "ONECONFIG_DYNAMO_TABLE" "1Config")})
 
 
 (defn create-configure-table

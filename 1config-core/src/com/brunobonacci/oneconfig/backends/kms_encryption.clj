@@ -4,7 +4,7 @@
             [amazonica.core :as aws]
             [clojure.string :as str]
             [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat]]
+            [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
             [where.core :refer [where]])
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
@@ -20,7 +20,7 @@
     ;; for dev mode just use `defcredential` macro
     (some-> #'aws/credential deref deref :endpoint Regions/fromName)
     ;; check env
-    (some-> (System/getenv "AWS_DEFAULT_REGION") Regions/fromName)
+    (some-> (env "AWS_DEFAULT_REGION") Regions/fromName)
     ;; this call blocks and it is slow on non EC2
     (Regions/getCurrentRegion)
     ;; us-west-2 (??)

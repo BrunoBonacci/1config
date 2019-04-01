@@ -113,7 +113,6 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
    [nil  "--stacktrace"]
 
    ["-b"  "--backend BACKEND"
-    :default "hierarchical"
     :validate [#{"hierarchical" "dynamo" "fs"} "Must be one of: hierarchical, dynamo, fs"]]
 
 
@@ -176,7 +175,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
                 master-key extended pretty-print]} options
         [op value] arguments
         op (when op (keyword (str/lower-case op)))
-        backend-name (keyword backend)
+        backend-name (or (keyword backend) (util/default-backend-name))
         output-format (if (:cli-format options) :cli output-format)
         ;; if table and extended show :tablex
         output-format (or (and (= output-format :table) extended :tablex) output-format)]

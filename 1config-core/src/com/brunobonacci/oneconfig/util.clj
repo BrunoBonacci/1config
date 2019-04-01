@@ -151,7 +151,9 @@
   ([]
    (into {} (System/getenv)))
   ([var]
-   (System/getenv var)))
+   (System/getenv var))
+  ([var default]
+   (or (System/getenv var) default)))
 
 
 
@@ -170,6 +172,15 @@
    (io/resource "1config.version")
    slurp
    (str/trim)))
+
+
+
+(defn default-backend-name
+  []
+  (keyword
+   (or
+    (system-property "1config.default.backend")
+    (env "ONECONFIG_DEFAULT_BACKEND" "hierarchical"))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -367,6 +367,14 @@ It is good practice to keep the development environment separated from
 the other environments. You can pick a name/label like `dev` or
 `local` (or anything else) and just use it for your local development.
 
+For development purposes, if you wish to use only the filesystem based
+configuration provider (see below) you can either set the environment
+variable `ONECONFIG_DEFAULT_BACKEND` or the JVM system property
+`1config.default.backend` with the value `fs` (for example:
+`export ONECONFIG_DEFAULT_BACKEND=fs` **to be used for development
+purposes only**).
+
+
 ### Configuration providers
 
 `configure` will try a number of different location to find a configuration provider.
