@@ -1,6 +1,10 @@
 #!/bin/bash
 
+export CURR=$(pwd)
 export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+
+cd $(dirname $0)/../../1config-cli/
+lein do clean, bin
 
 if [ ! -f $CFG1 ] ; then
     echo "ERROR: 1cfg binary executable not present."
@@ -68,3 +72,4 @@ $CFG1 SET -b dynamo -e test1 -k 'test/super-service' -v '1.1.3' -t txt 'super-11
 
 
 echo "ALL OK."
+cd $CURR

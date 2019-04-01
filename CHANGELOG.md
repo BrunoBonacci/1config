@@ -3,6 +3,9 @@
 ## Release: v0.8.0 (Unreleased)
 
   * Added the `content-type` in the entry listing
+  * Added backend selection
+  * Added environment variable to select default backend
+  * Added ability to provide a value directly from a file
 
 ## Release: v0.7.0 (2019-03-28)
 

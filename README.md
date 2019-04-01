@@ -606,6 +606,7 @@ Usage:
                                : exmaple: 'service1', 'db.pass' etc
    -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
+   -f   --content-file FILE    : read the value to SET from the given file.
         --with-meta            : whether to include meta data for GET operation
         --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
    -C                          : same as '--output-format=cli'

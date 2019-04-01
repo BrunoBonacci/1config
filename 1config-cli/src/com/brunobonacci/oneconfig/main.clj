@@ -5,7 +5,8 @@
             [com.brunobonacci.oneconfig.cli :as cli]
             [com.brunobonacci.oneconfig.util :as util]
             [com.brunobonacci.oneconfig.backends :as b]
-            [safely.core :refer [safely]]))
+            [safely.core :refer [safely]]
+            [clojure.java.io :as io]))
 
 (def ^:dynamic *repl-session* false)
 
@@ -50,6 +51,7 @@ Usage:
                                : exmaple: 'service1', 'db.pass' etc
    -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
+   -f   --content-file FILE    : read the value to SET from the given file.
         --with-meta            : whether to include meta data for GET operation
         --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
    -C                          : same as '--output-format=cli'
@@ -141,6 +143,10 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
     :validate [#{"edn" "txt" "json" "properties" "props"}
                "Must be one of: edn, txt, json, properties, props"]]
 
+   ["-f"  "--content-file FILENAME"
+    :parse-fn io/file
+    :validate [#(.exists %) "The file must exist"]]
+
    ["-o"  "--order-by ORDER"
     :default [:key :env :version :change-num]
     :parse-fn #(-> % (str/split #" *, *") ((partial map keyword)))
@@ -172,8 +178,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
                 content-type with-meta output-format order-by
-                master-key extended pretty-print]} options
-        [op value] arguments
+                master-key extended pretty-print content-file]} options
+        [op value & too-many-args] arguments
         op (when op (keyword (str/lower-case op)))
         backend-name (or (keyword backend) (util/default-backend-name))
         output-format (if (:cli-format options) :cli output-format)
@@ -186,8 +192,10 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
       (not op)        (help! ["MISSING: required argument: operation"])
       (not
        (#{:get :set :init :list :list-keys :create-key} op)) (help! ["INVALID operation: must be either GET, SET, LIST, INIT, LIST-KEYS or CREATE-KEY"])
-      (and (= op :set) (not value)) (help! ["MISSING: required argument: value"])
+      (and (= op :set) (not (or value content-file))) (help! ["MISSING: required argument: value, provide a value in-line or via the '-f filename' option"])
       (and (= op :create-key) (not master-key)) (help! ["MISSING: required argument: master-key"])
+      (seq too-many-args)   (help! [(str "TOO MANY ARGUMENTS: " (str/join ", " too-many-args))])
+      (and value content-file) (help! [(format "TWO VALUES PROVIDED: inline and -f %s" content-file)])
 
       :else
       (util/show-stacktrace!! (:stacktrace options)
@@ -214,7 +222,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
                          (as->
                              {:env env :key key :version version
                               :content-type content-type
-                              :value (validate-format!! content-type value)} $
+                              :value (validate-format!! content-type
+                                                        (or value (some-> content-file slurp)))} $
                            (if master-key (assoc $ :master-key master-key) $)))
 
           ;;
