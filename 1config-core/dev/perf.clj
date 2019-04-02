@@ -7,19 +7,6 @@
 
   ;; perf tests of the public APIs as of v0.8.0
 
-  (quick-bench (one-config))
-  ;; Evaluation count : 2664 in 6 samples of 444 calls.
-  ;; Execution time mean : 226.795933 µs
-  ;; Execution time std-deviation : 7.872293 µs
-  ;; Execution time lower quantile : 221.213640 µs ( 2.5%)
-  ;; Execution time upper quantile : 239.728521 µs (97.5%)
-  ;; Overhead used : 3.726905 ns
-  ;;
-  ;; Found 1 outliers in 6 samples (16.6667 %)
-  ;; low-severe	 1 (16.6667 %)
-  ;; Variance from outliers : 13.8889 % Variance is moderately inflated by outliers
-
-
   ;; with end-2-end resolution in DynamoDB table with 10 read units provisioned
   (quick-bench (configure {:key "system1" :env "dev" :version "1.2.3-SNAPSHOT"}))
   ;;  Evaluation count : 6 in 6 samples of 1 calls.
