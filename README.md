@@ -272,9 +272,7 @@ following link for a leiningen example: https://github.com/BrunoBonacci/1config/
   []
   (some->> (io/resource "my-project.version")
            slurp
-           str/trim
-           ;; strip qualifiers like '-SNAPSHOT', '-alpha1', etc
-           (re-find #"\d+\.\d+\.\d+")))
+           str/trim))
 ```
 
 Finally, you can retrieve the user configuration and merge it with
