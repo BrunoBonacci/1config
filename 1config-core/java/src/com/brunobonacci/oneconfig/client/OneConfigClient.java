@@ -12,7 +12,8 @@ import clojure.lang.Keyword;
 public class OneConfigClient {
 
     static {
-        Clojure.var("clojure.core", "require").invoke( Clojure.read("com.brunobonacci.oneconfig"));
+        Clojure.var("clojure.core", "require")
+            .invoke( Clojure.read("com.brunobonacci.oneconfig"));
     }
 
     private static final Keyword _key         = Keyword.intern("key");
@@ -22,7 +23,10 @@ public class OneConfigClient {
     private static final Keyword _value       = Keyword.intern("value");
 
     private static final IFn arraymap = Clojure.var("clojure.core", "array-map");
-    private static final IFn configure = Clojure.var("com.brunobonacci.oneconfig", "configure");
+    private static final IFn configure = Clojure.var("com.brunobonacci.oneconfig",
+                                                     "configure");
+    private static final IFn deepMerge = Clojure.var("com.brunobonacci.oneconfig",
+                                                     "deep-merge");
 
 
     private OneConfigClient(){}
@@ -42,6 +46,24 @@ public class OneConfigClient {
         return new ConfigEntry(config);
     }
 
+
+    @SuppressWarnings("unchecked")
+    public static Map<Object,Object> deepMerge( Map<Object,Object> map1,
+                                                Map<Object,Object> map2 ){
+        return (Map<Object,Object>) deepMerge.invoke( map1, map2 );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<Keyword,Object> deepMergeEdnMaps( Map<Keyword,Object> map1,
+                                                        Map<Keyword,Object> map2 ){
+        return (Map<Keyword,Object>) deepMerge.invoke( map1, map2 );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String,Object> deepMergeJsonMaps( Map<String,Object> map1,
+                                                        Map<String,Object> map2 ){
+        return (Map<String,Object>) deepMerge.invoke( map1, map2 );
+    }
 
     public static class ConfigEntry {
 
@@ -73,6 +95,11 @@ public class OneConfigClient {
 
         public Properties getValueAsProperties() {
             return (Properties) _entry.get(OneConfigClient._value);
+        }
+
+        @SuppressWarnings("unchecked")
+        public Map<Object,Object> getValueAsMap() {
+            return (Map<Object,Object>) _entry.get(OneConfigClient._value);
         }
 
         @SuppressWarnings("unchecked")
