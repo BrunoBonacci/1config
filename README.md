@@ -835,6 +835,11 @@ resource "aws_dynamodb_table" "config_table" {
   hash_key       = "__sys_key"
   range_key      = "__ver_key"
 
+  # enable Point-in-time Recovery
+  point_in_time_recovery {
+    enabled = true
+  }
+
   attribute {
     name = "__sys_key"
     type = "S"
@@ -858,7 +863,6 @@ output "config_table_arn"{
 }
 
 ```
-
 
 ## License
 
