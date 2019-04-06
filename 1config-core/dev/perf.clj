@@ -5,16 +5,21 @@
 
 (comment
 
-  ;; perf tests of the public APIs as of v0.8.0
+  ;; perf tests of the public APIs as of v0.8.0 (JDK 12)
 
-  ;; with end-2-end resolution in DynamoDB table with 10 read units provisioned
-  (quick-bench (configure {:key "system1" :env "dev" :version "1.2.3-SNAPSHOT"}))
-  ;;  Evaluation count : 6 in 6 samples of 1 calls.
-  ;;  Execution time mean : 182.841613 ms
-  ;;  Execution time std-deviation : 7.517325 ms
-  ;;  Execution time lower quantile : 174.502340 ms ( 2.5%)
-  ;;  Execution time upper quantile : 190.740907 ms (97.5%)
-  ;;  Overhead used : 3.726905 ns
+  ;; with end-2-end resolution in DynamoDB table with 10 read units
+  ;; provisioned (it includes network transit (outside of AWS) and
+  ;; Dynamo query, key lookup, decryption, payload parsing.
+  (quick-bench
+   (configure
+    {:key "user-profile" :env "uat" :version "1.2.3-SNAPSHOT"}))
+
+  ;; Evaluation count : 6 in 6 samples of 1 calls.
+  ;; Execution time mean : 112.783515 ms
+  ;; Execution time std-deviation : 1.944561 ms
+  ;; Execution time lower quantile : 110.490900 ms ( 2.5%)
+  ;; Execution time upper quantile : 114.737041 ms (97.5%)
+  ;; Overhead used : 1.792913 ns
 
 
 
