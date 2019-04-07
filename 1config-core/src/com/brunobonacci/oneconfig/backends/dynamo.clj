@@ -111,8 +111,11 @@
                     :table-name (:table cfg)
                     :return-consumed-capacity "TOTAL"
                     :return-item-collection-metrics "SIZE"
+                    :condition-expression "attribute_not_exists(#ID)"
+                    :expression-attribute-names {"#ID" "__sys_key"}
                     :item db-entry))
     this)
+
 
   (list [this filters]
     (let [q (fn [start-from]
