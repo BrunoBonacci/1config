@@ -175,12 +175,21 @@
 
 
 
+(defn config-property
+  [prop-name env-name default]
+  (or
+   (system-property prop-name)
+   (env env-name)
+   default))
+
+
+
 (defn default-backend-name
   []
   (keyword
-   (or
-    (system-property "1config.default.backend")
-    (env "ONECONFIG_DEFAULT_BACKEND" "hierarchical"))))
+   (config-property "1config.default.backend"
+                    "ONECONFIG_DEFAULT_BACKEND"
+                    "hierarchical")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
