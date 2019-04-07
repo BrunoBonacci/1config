@@ -1,5 +1,10 @@
 # Changelog
 
+## Release: v0.9.0 (2019-04-08)
+
+  * Added ability to `save`/`SET` configuration entries into
+    filesystem backend via the command line tool.
+
 ## Release: v0.8.0 (2019-04-02)
 
   * Added the `content-type` in the entry listing
