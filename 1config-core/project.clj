@@ -9,6 +9,7 @@
   :scm {:name "git" :url "https://github.com/BrunoBonacci/1config.git"}
 
   :dependencies [[org.clojure/clojure "1.10.0"]
+                 [com.brunobonacci/where "0.5.1"]
                  [com.brunobonacci/safely "0.5.0-alpha6"]
                  [amazonica "0.3.139" :exclusions
                   [com.amazonaws/aws-java-sdk
@@ -19,8 +20,7 @@
                  [com.amazonaws/aws-java-sdk-iam      "1.11.513"]
                  [com.amazonaws/aws-encryption-sdk-java "1.3.6"]
                  [prismatic/schema "1.1.10"]
-                 [cheshire "5.8.1"]
-                 [com.brunobonacci/where "0.5.0"]]
+                 [cheshire "5.8.1"]]
 
   :java-source-paths ["java/src"]
   :javac-options     ["-target" "1.8" "-source" "1.8" ]
