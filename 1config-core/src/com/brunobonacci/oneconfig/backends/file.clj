@@ -7,12 +7,32 @@
             [where.core :refer [where]]))
 
 
+(defn- key->filename
+  "convert chars which are not allowed in files names
+   with something which doesn't cause problems"
+  [s]
+  (-> s
+     (str/replace #"/" "#")
+     (str/replace #"\\" "@")))
 
-(defn- search-files [{:keys [base-dir sep]} search-root]
-  (let [base-size (inc (count (.getCanonicalPath ^java.io.File base-dir)))]
+
+(defn- filename->key
+  "this function reverses the effect of `key->filename`"
+  [s]
+  (-> s
+     (str/replace #"#" "/")
+     (str/replace #"@" "\\\\")))
+
+
+(defn- search-files
+  "searches config files from the base-dir and relative search-root"
+  [{:keys [base-dir sep]} search-root]
+  (let [search-root (io/file base-dir (str "." sep search-root))
+        base-size   (inc (count (.getCanonicalPath ^java.io.File base-dir)))]
     (->>
-     ;; list all the files with supported extenstions
-     (list-files #"(?i).*\.(edn|json|txt|properties)$" search-root :as-string true)
+     ;; list all the files with supported extensions
+     (list-files #"(?i).*\.(edn|json|txt|properties)$" search-root
+                 :as-string true)
      ;; create relative paths
      (map #(subs % base-size))
      ;; split components
@@ -22,19 +42,20 @@
      ;; create entries
      (map (fn [[f [k e v t]]]
             {:file (str base-dir sep f)
-             :key k :env e :version v
+             :key (filename->key k) :env (filename->key e) :version v
              :content-type (filename->content-type t)
              :change-num (.lastModified (io/file (str base-dir sep f)))})))))
 
 
 
-(deftype ReadOnlyFileConfigBackend [^java.io.File base-dir sep]
+(deftype FileSystemConfigBackend [^java.io.File base-dir sep]
 
   IConfigClient
 
   (find [this {:keys [key env version] :as config-entry}]
-    (let [basefile (str (.getCanonicalPath base-dir)
-                        sep key sep env)
+    (let [key (key->filename key)
+          env (key->filename env)
+          basefile (str key sep env)
           entries (search-files {:base-dir base-dir :sep sep} basefile)
           entry (->> entries
                    (sort-by (comp comparable-version :version))
@@ -49,8 +70,9 @@
   IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (let [basefile (str (.getCanonicalPath base-dir)
-                        sep key sep env sep version)
+    (let [key (key->filename key)
+          env (key->filename env)
+          basefile (str key sep env sep version)
           entry (first (search-files {:base-dir base-dir :sep sep} basefile))]
       (some-> entry
               (assoc :value (slurp (:file entry)))
@@ -58,38 +80,58 @@
 
 
 
-  (save [_ config-entry]
-    (throw (ex-info "Operation not permitted on this type of backend."
-                    {:type "ReadOnlyFileConfigBackend" :base-dir base-dir})))
+  (save [this {:keys [key env version content-type value] :as config-entry}]
+    (let [key (key->filename key)
+          env (key->filename env)
+          ^java.io.File parent (io/file base-dir key env version)
+          _                    (.mkdirs parent)
+          file (io/file parent (format "%s.%s" key content-type))]
+      (spit file value)
+      this))
 
 
 
   (list [this filters]
-    (->> (search-files {:base-dir base-dir :sep sep} base-dir)
+    (->> (search-files {:base-dir base-dir :sep sep} nil)
        ;; apply post filters and ordering
        (list-entries filters)
        (map #(assoc % :backend :fs)))))
 
 
 
-(defn readonly-file-config-backend
+(defn filesystem-config-backend
   ([]
-   (readonly-file-config-backend (home-1config)))
+   (filesystem-config-backend (home-1config)))
   ([base-dir]
    (let [dir (io/file base-dir)]
      (when (and (.exists dir) (.isDirectory dir))
-       (ReadOnlyFileConfigBackend. dir (system-property "file.separator"))))))
+       (FileSystemConfigBackend. dir (system-property "file.separator"))))))
+
 
 
 (comment
+  (list-files #"." (io/file (home-1config)))
+  (search-files {:base-dir (io/file (home-1config)) :sep "/"} "/system1/dev")
 
-  (def c (readonly-file-config-backend))
+
+  (def c (filesystem-config-backend))
 
   (list c {})
-  (list c {:key "service1"})
+  (list c {:key "system1"})
 
-  (load c {:key "service1" :version "1.3.5" :env "dev"})
-  (load c {:key "service1" :version "1.2.5" :env "dev"})
+  (load c {:key "system1" :version "1.3.5" :env "dev"})
+  (load c {:key "system1" :version "1.0.0" :env "dev"})
 
-  (find c {:key "service1" :version "1.31.5" :env "dev"})
+  (find c {:key "system1" :version "1.31.5" :env "dev"})
+
+  (save c
+        {:key "system1"
+         :env "dev"
+         :version "1.6.3"
+         :content-type "edn"
+         :value (prn-str {:a 1 :b #{:c :d :x}})})
+
+  (find c {:key "system1" :version "1.6.3" :env "dev"})
+  (load c {:key "system1" :version "1.6.3" :env "dev"})
+
   )

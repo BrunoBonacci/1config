@@ -4,7 +4,7 @@
             [com.brunobonacci.oneconfig.backends
              [dynamo         :refer [dynamo-config-backend default-dynamo-config]]
              [encoding       :refer [make-encoding-wrapper]]
-             [file           :refer [readonly-file-config-backend]]
+             [file           :refer [filesystem-config-backend]]
              [file1          :refer [file1-config-backend]]
              [hierarchical   :refer [hierarchical-backend]]
              [iam-user       :refer [iam-user-backend]]
@@ -51,7 +51,7 @@
                        (dynamo-config-backend
                         (default-dynamo-config))))]
       (hierarchical-backend
-       [(readonly-file-config-backend)
+       [(filesystem-config-backend)
         kms+dynamo]
        [kms+dynamo])))))
 
@@ -83,5 +83,5 @@
 
 (defmethod backend-factory :filesystem
   [_]
-  (->> (readonly-file-config-backend)
+  (->> (filesystem-config-backend)
      common-wrappers))
