@@ -28,7 +28,8 @@
         :bin-path "~/bin"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
-  :profiles {:dev {:dependencies [[midje "1.9.6"]
+  :profiles {:uberjar {:aot :all}
+             :dev {:dependencies [[midje "1.9.6"]
                                   [org.clojure/test.check "0.10.0-alpha3"]
                                   [criterium "0.4.4"]
                                   [org.slf4j/slf4j-log4j12 "1.8.0-beta4"]]
