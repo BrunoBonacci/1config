@@ -84,7 +84,7 @@ Quick start guide to use 1Config.
   ```
   * Initialize DynamoDB table (only the first time)
   ``` bash
-  1cfg INIT
+  1cfg INIT -b dynamo
   ```
   * Set your first secure configuration for application `hello-world`
   ``` bash
