@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.9.1 (2019-04-09)
+
+  * Improved handling of SET on un-initialized fs backend.
+
 ## Release: v0.9.0 (2019-04-08)
 
   * Added ability to `save`/`SET` configuration entries into
