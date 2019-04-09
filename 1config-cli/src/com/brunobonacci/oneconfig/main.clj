@@ -48,7 +48,7 @@ Usage:
    -b   --backend   BACKEND    : Must be one of: hierarchical, dynamo, fs. Default: hierarchical
    -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
-                               : exmaple: 'service1', 'db.pass' etc
+                               : exmaple: 'service1', 'db-pass' etc
    -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
    -f   --content-file FILE    : read the value to SET from the given file.
