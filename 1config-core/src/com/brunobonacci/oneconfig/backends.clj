@@ -82,6 +82,6 @@
 
 
 (defmethod backend-factory :filesystem
-  [_]
-  (->> (filesystem-config-backend)
+  [cfg]
+  (->> (filesystem-config-backend cfg)
      common-wrappers))

@@ -101,10 +101,11 @@
 
 (defn filesystem-config-backend
   ([]
-   (filesystem-config-backend (home-1config)))
-  ([base-dir]
+   (filesystem-config-backend {:base-dir (home-1config) :force false}))
+  ([{:keys [base-dir force]
+     :or {base-dir (home-1config) force false}}]
    (let [dir (io/file base-dir)]
-     (when (and (.exists dir) (.isDirectory dir))
+     (when (or force (and (.exists dir) (.isDirectory dir)))
        (FileSystemConfigBackend. dir (system-property "file.separator"))))))
 
 
