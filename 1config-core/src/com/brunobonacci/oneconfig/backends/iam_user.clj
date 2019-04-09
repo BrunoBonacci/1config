@@ -1,6 +1,6 @@
 (ns com.brunobonacci.oneconfig.backends.iam-user
   (:refer-clojure :exclude [find load list])
-  (:require [amazonica.aws.identitymanagement :as iam]
+  (:require [amazonica.aws.securitytoken :as sts]
             [com.brunobonacci.oneconfig.backend :refer :all]
             [safely.core :refer [safely]]))
 
@@ -21,7 +21,7 @@
   (save [_ config-entry]
     ;; read-user from IAM
     (->> (safely
-           [[:user (-> (iam/get-user) :user :arn)]]
+           [[:user (-> (sts/get-caller-identity) :arn)]]
            :on-error
            :default [])
        (into config-entry)
