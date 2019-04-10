@@ -21,7 +21,7 @@
   (save [_ config-entry]
     ;; read-user from IAM
     (->> (safely
-           [[:user (-> (sts/get-caller-identity) :arn)]]
+           [[:user (-> (sts/get-caller-identity {}) :arn)]]
            :on-error
            :default [])
        (into config-entry)

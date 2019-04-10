@@ -17,7 +17,7 @@
                  [com.amazonaws/aws-java-sdk-core     "1.11.513"]
                  [com.amazonaws/aws-java-sdk-dynamodb "1.11.513"]
                  [com.amazonaws/aws-java-sdk-kms      "1.11.513"]
-                 [com.amazonaws/aws-java-sdk-iam      "1.11.513"]
+                 [com.amazonaws/aws-java-sdk-sts      "1.11.513"]
                  [com.amazonaws/aws-encryption-sdk-java "1.3.6"]
                  [prismatic/schema "1.1.10"]
                  [cheshire "5.8.1"]]
