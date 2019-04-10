@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.9.2 (2019-04-10)
+
+  * Retrieve AWS user using SecurityTokens APIs instead of IAM GetUser
+
 ## Release: v0.9.1 (2019-04-09)
 
   * Improved handling of SET on un-initialized fs backend.
