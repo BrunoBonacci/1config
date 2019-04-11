@@ -50,7 +50,7 @@ The diagram explains how to security model works. Here the steps involved:
   - If IAM permissions allow it the operation will succeed.
   - Then the *data key* itself will be encrypted using the *master key*.
   - Finally it stores the encrypted payload and the encrypted data key
-    together into DynamoDB table (`1Config1`).
+    together into DynamoDB table (`1Config`).
   - At this point the operator is done and the application is ready to
     retrieve the configuration.
   - The application will lookup the correct entry for the environment
