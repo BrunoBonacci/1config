@@ -155,6 +155,11 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
    ["-m"  "--master-key KEY-NAME"]])
 
+(defn nil-argument-names [hm]
+  (->> hm
+       (util/nil-value-keys)
+       (map name)
+       (str/join ", ")))
 
 (defn- validate-format
   "Returns `value` if the format validation is successful according to
@@ -194,7 +199,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
        (#{:get :set :init :list :list-keys :create-key} op)) (help! ["INVALID operation: must be either GET, SET, LIST, INIT, LIST-KEYS or CREATE-KEY"])
       (and (= op :set) (not (or value content-file))) (help! ["MISSING: required argument: value, provide a value in-line or via the '-f filename' option"])
       (and (= op :create-key) (not master-key)) (help! ["MISSING: required argument: master-key"])
-      (and (or (= op :get) (= op :set)) (some nil? [env key version])) (help! [str "MISSING: required arguments: " (util/required-names {:env env, :key key, :version version})])
+      (and (or (= op :get) (= op :set)) (some nil? [env key version])) (help! [str "MISSING: required arguments: " (nil-argument-names {:env env, :key key, :version version})])
       (seq too-many-args)   (help! [(str "TOO MANY ARGUMENTS: " (str/join ", " too-many-args))])
       (and value content-file) (help! [(format "TWO VALUES PROVIDED: inline and -f %s" content-file)])
 
