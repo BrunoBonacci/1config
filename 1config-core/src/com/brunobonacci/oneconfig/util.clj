@@ -97,6 +97,15 @@
      (remove (where second :is? nil))
      (into {})))
 
+(defn required-names
+  "Returns required argument names separated by comma"
+  [name-map]
+  (->> name-map
+       (filter val)
+       (into {})
+       (keys)
+       (map name)
+       (str/join ", ")))
 
 (defmacro show-stacktrace!!
   [show & body]
