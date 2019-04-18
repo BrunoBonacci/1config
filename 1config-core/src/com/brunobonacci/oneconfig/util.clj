@@ -97,6 +97,12 @@
      (remove (where second :is? nil))
      (into {})))
 
+(defn nil-value-keys
+  "Returns keys which correspond to nil values"
+  [map]
+  (->> map
+       (remove (where second :is-not? nil))
+       (keys)))
 
 (defmacro show-stacktrace!!
   [show & body]
