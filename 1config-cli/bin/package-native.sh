@@ -8,6 +8,7 @@ rm -fr  /tmp/$PACKAGE
 mkdir -p /tmp/$PACKAGE/hb/bin
 
 echo '(-) '"preparing copying artifact"
+chmod +x $BASE/target/$PACKAGE
 cp $BASE/target/$PACKAGE /tmp/$PACKAGE/
 
 echo '(-) '"preparing Homebrew package for Linux"
