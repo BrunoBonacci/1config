@@ -25,7 +25,6 @@
   :resource-paths ["resources" "../ver" ]
 
   :bin {:name "1cfg"
-        :bin-path "~/bin"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :profiles {:uberjar {:aot :all}
@@ -35,5 +34,10 @@
                                   [org.slf4j/slf4j-log4j12 "1.8.0-beta4"]]
                    :resource-paths ["dev-resources"]
                    :plugins      [[lein-midje "3.2.1"]
+                                  [lein-shell "0.5.0"]
                                   [lein-binplus "0.6.5"]]}}
+
+  :alias
+  {"package-native"
+   ["do" "shell" "./bin/package-native.sh"]}
   )
