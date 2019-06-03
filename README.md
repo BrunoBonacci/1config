@@ -839,9 +839,10 @@ variable "tags" {
 
 resource "aws_dynamodb_table" "config_table" {
   name           = "${var.table_name}"
-  billing_mode   = "PROVISIONED"
-  read_capacity  = "${var.read_capacity}"
-  write_capacity = "${var.write_capacity}"
+  billing_mode   = "PAY_PER_REQUEST"
+  ## billing_mode   = "PROVISIONED"
+  ## read_capacity  = "${var.read_capacity}"
+  ## write_capacity = "${var.write_capacity}"
   hash_key       = "__sys_key"
   range_key      = "__ver_key"
 
