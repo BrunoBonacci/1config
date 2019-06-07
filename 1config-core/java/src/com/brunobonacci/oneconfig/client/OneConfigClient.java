@@ -9,11 +9,15 @@ import clojure.lang.IFn;
 import clojure.lang.Keyword;
 
 
+// <T extends Map<? extends Object, T>>
+
 public class OneConfigClient {
 
     static {
         Clojure.var("clojure.core", "require")
             .invoke( Clojure.read("com.brunobonacci.oneconfig"));
+        Clojure.var("clojure.core", "require")
+            .invoke( Clojure.read("clojure.walk"));
     }
 
     private static final Keyword _key         = Keyword.intern("key");
@@ -22,11 +26,13 @@ public class OneConfigClient {
     private static final Keyword _contentType = Keyword.intern("content-type");
     private static final Keyword _value       = Keyword.intern("value");
 
-    private static final IFn arraymap = Clojure.var("clojure.core", "array-map");
+    private static final IFn arrayMap  = Clojure.var("clojure.core", "array-map");
+    private static final IFn getIn     = Clojure.var("clojure.core", "get-in");
     private static final IFn configure = Clojure.var("com.brunobonacci.oneconfig",
                                                      "configure");
     private static final IFn deepMerge = Clojure.var("com.brunobonacci.oneconfig",
                                                      "deep-merge");
+    private static final IFn stringify = Clojure.var("clojure.walk", "stringify-keys");
 
 
     private OneConfigClient(){}
@@ -35,9 +41,9 @@ public class OneConfigClient {
     @SuppressWarnings("unchecked")
     public static ConfigEntry configure( String key, String env, String version ){
 
-        final Object entry = arraymap.invoke(_key, key, _env, env, _version, version );
+        final Object entry = arrayMap.invoke(_key, key, _env, env, _version, version );
 
-        final Map<Keyword,Object> config = (Map<Keyword,Object>) configure.invoke(entry);
+        final Map<? extends Object, ? extends Object> config = (Map<? extends Object, ? extends Object>) configure.invoke(entry);
 
         if( config == null ){
             return null;
@@ -48,28 +54,33 @@ public class OneConfigClient {
 
 
     @SuppressWarnings("unchecked")
-    public static Map<Object,Object> deepMerge( Map<Object,Object> map1,
-                                                Map<Object,Object> map2 ){
-        return (Map<Object,Object>) deepMerge.invoke( map1, map2 );
+    public static Map<? extends Object, ? extends Object> deepMerge(
+        Map<? extends Object, ? extends Object> map1,
+        Map<? extends Object, ? extends Object> map2 ){
+        return (Map<? extends Object, ? extends Object>) deepMerge.invoke( map1, map2 );
     }
 
+    /*
     @SuppressWarnings("unchecked")
-    public static Map<Keyword,Object> deepMergeEdnMaps( Map<Keyword,Object> map1,
-                                                        Map<Keyword,Object> map2 ){
-        return (Map<Keyword,Object>) deepMerge.invoke( map1, map2 );
+    public static Map<? extends Object,? extends Object> deepMergeEdnMaps(
+        Map<? extends Object,? extends Object> map1,
+        Map<? extends Object,? extends Object> map2 ){
+        return (Map<? extends Object,? extends Object>) deepMerge.invoke( map1, map2 );
     }
+    */
 
     @SuppressWarnings("unchecked")
-    public static Map<String,Object> deepMergeJsonMaps( Map<String,Object> map1,
-                                                        Map<String,Object> map2 ){
-        return (Map<String,Object>) deepMerge.invoke( map1, map2 );
+    public static Map<? extends Object, ? extends Object> deepMergeJsonMaps(
+        Map<? extends Object, ? extends Object> map1,
+        Map<? extends Object, ? extends Object> map2 ){
+        return (Map<? extends Object, ? extends Object>) deepMerge.invoke( map1, map2 );
     }
 
     public static class ConfigEntry {
 
-        private Map<Keyword,Object> _entry = null;
+        private Map<? extends Object, ? extends Object> _entry = null;
 
-        ConfigEntry(Map<Keyword,Object> entry){
+        ConfigEntry(Map<? extends Object, ? extends Object> entry){
             _entry = entry;
         }
 
@@ -98,22 +109,32 @@ public class OneConfigClient {
         }
 
         @SuppressWarnings("unchecked")
-        public Map<Object,Object> getValueAsMap() {
-            return (Map<Object,Object>) _entry.get(OneConfigClient._value);
+        public Map<? extends Object, ? extends Object> getValueAsMap() {
+            return (Map<? extends Object, ? extends Object>) _entry.get(OneConfigClient._value);
         }
 
         @SuppressWarnings("unchecked")
-        public Map<String,Object> getValueAsJsonMap() {
-            return (Map<String,Object>) _entry.get(OneConfigClient._value);
+        public Map<String, ? extends Object> getValueAsJsonMap() {
+            return (Map<String, ? extends Object>) OneConfigClient.stringify.invoke(_entry.get(OneConfigClient._value));
         }
 
         @SuppressWarnings("unchecked")
-        public Map<Keyword,Object> getValueAsEdnMap() {
-            return (Map<Keyword,Object>) _entry.get(OneConfigClient._value);
+        public Map<? extends Object, ? extends Object> getValueAsEdnMap() {
+            return (Map<? extends Object, ? extends Object>) _entry.get(OneConfigClient._value);
         }
 
         public String getValueAsString() {
             return (String) _entry.get(OneConfigClient._value);
+        }
+
+        @SuppressWarnings("unchecked")
+        public Object getIn( Object ... keys ){
+            Map<? extends Object, ? extends Object> map = (Map<? extends Object, ? extends Object>) _entry.get(OneConfigClient._value);
+            if( map != null ){
+                return OneConfigClient.getIn.invoke(map, keys);
+            } else {
+                return null;
+            }
         }
 
         public String toString() {
