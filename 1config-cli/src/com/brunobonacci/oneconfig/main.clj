@@ -248,7 +248,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           ;;
           ;; SET
           ;;
-          :set (cli/set! (b/backend-factory {:type backend-name :force true})
+          :set (cli/set! (keyword (or backend-name (util/default-backend-name)))
+                         (b/backend-factory {:type backend-name :force true})
                          (as->
                              {:env env :key key :version version
                               :content-type content-type

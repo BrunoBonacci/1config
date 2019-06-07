@@ -9,7 +9,7 @@
   :scm {:name "git" :url "https://github.com/BrunoBonacci/1config.git"}
 
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [com.brunobonacci/where "0.5.1"]
+                 [com.brunobonacci/where "0.5.2"]
                  [com.brunobonacci/safely "0.5.0-alpha6"]
                  [amazonica "0.3.139" :exclusions
                   [com.amazonaws/aws-java-sdk
