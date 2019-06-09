@@ -37,7 +37,7 @@
                                   [lein-shell "0.5.0"]
                                   [lein-binplus "0.6.5"]]}}
 
-  :alias
+  :aliases
   {"package-native"
-   ["do" "shell" "./bin/package-native.sh"]}
+   ["do" "shell" "./bin/package.sh"]}
   )

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#
+# Script used to circumvent homebrew executable policy
+# as it cannot run a executable jar.
+#
+
+JAVACMD=`which java`
+if [ "$JAVACMD" = "" ] ; then
+   if [ "$JAVA_HOME" = "" ] ; then
+      echo "Java not present in your PATH, add it to your path or set JAVA_HOME."
+      exit 1
+   else
+      JAVACMD=$JAVAHOME/bin/java
+   fi
+fi
+
+exec $JAVACMD -server $JVM_OPTS-Dfile.encoding=utf-8 -jar $(dirname $0)/1cfg.jar "$@"

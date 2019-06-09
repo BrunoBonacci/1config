@@ -1,5 +1,11 @@
 # Changelog
 
+## Release: v0.10.0 (2019-06-09)
+
+  * Added ability to restrict keys, envs etc via `user-profiles.edn`
+  * Turned keys into string for Java client
+  * Added getIn() capability into Java client
+
 ## Release: v0.9.2 (2019-04-10)
 
   * Retrieve AWS user using SecurityTokens APIs instead of IAM GetUser
