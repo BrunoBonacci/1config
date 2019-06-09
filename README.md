@@ -72,7 +72,7 @@ Quick start guide to use 1Config.
   * Install command line tool
   ``` bash
   mkdir -p ~/bin
-  wget https://github.com/BrunoBonacci/1config/releases/download/0.9.2/1cfg -O ~/bin/1cfg
+  wget https://github.com/BrunoBonacci/1config/releases/download/0.10.0/1cfg -O ~/bin/1cfg
   chmod +x ~/bin/1cfg
   export PATH=~/bin:$PATH
   ```
@@ -113,10 +113,10 @@ In order to use the library add the dependency to your `project.clj`
 
 ``` clojure
 ;; Leiningen project
-[com.brunobonacci/oneconfig "0.9.2"]
+[com.brunobonacci/oneconfig "0.10.0"]
 
 ;; deps.edn format
-{:deps { com.brunobonacci/oneconfig "0.9.2" }}
+{:deps { com.brunobonacci/oneconfig "0.10.0" }}
 ```
 
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
@@ -158,7 +158,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.9.2</version>
+    <version>0.10.0</version>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)

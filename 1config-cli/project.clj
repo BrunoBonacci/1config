@@ -38,6 +38,6 @@
                                   [lein-binplus "0.6.5"]]}}
 
   :aliases
-  {"package-native"
+  {"package"
    ["do" "shell" "./bin/package.sh"]}
   )
