@@ -69,7 +69,13 @@ The diagram explains how to security model works. Here the steps involved:
 
 Quick start guide to use 1Config.
 
-  * Install command line tool
+  * Install command line tool via [Homebrew](https://brew.sh/)
+  ``` bash
+  brew tap BrunoBonacci/lazy-tools
+  brew install one-config
+  ```
+
+  * Otherwise use the Manual installation
   ``` bash
   mkdir -p ~/bin
   wget https://github.com/BrunoBonacci/1config/releases/download/0.10.0/1cfg -O ~/bin/1cfg
