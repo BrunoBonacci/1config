@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.10.1 (2019-06-09)
+
+  * Fixed missing content-type when providing a configuration via `$ONECONFIG_FILE`
+
 ## Release: v0.10.0 (2019-06-09)
 
   * Added ability to restrict keys, envs etc via `user-profiles.edn`
