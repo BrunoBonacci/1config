@@ -18,13 +18,13 @@
   (delay
    (or
     ;; for dev mode just use `defcredential` macro
-    (some-> #'aws/credential deref deref :endpoint Regions/fromName)
+    (some-> #'aws/credential deref deref :endpoint Regions/fromName Region/getRegion)
     ;; check env
-    (some-> (env "AWS_DEFAULT_REGION") Regions/fromName)
+    (some-> (env "AWS_DEFAULT_REGION") Regions/fromName Region/getRegion)
     ;; this call blocks and it is slow on non EC2
     (Regions/getCurrentRegion)
     ;; us-west-2 (??)
-    (Regions/DEFAULT_REGION))))
+    (-> Regions/DEFAULT_REGION Region/getRegion))))
 
 
 
@@ -121,7 +121,7 @@
          (KmsMasterKeyProvider.
           ;; reuse amazonica credential variable
           (aws/get-credentials (some-> #'aws/credential deref deref))
-          (Region/getRegion @aws-region)
+          ^Region @aws-region
           (PredefinedClientConfigurations/defaultConfig)
           (key-id master-key-id))
          ;; sanitize context if present
@@ -147,7 +147,7 @@
          (KmsMasterKeyProvider.
           ;; reuse amazonica credential variable
           (aws/get-credentials (some-> #'aws/credential deref deref))
-          (Region/getRegion @aws-region)
+          ^Region @aws-region
           (PredefinedClientConfigurations/defaultConfig)
           (Collections/emptyList))
          ;; sanitize context if present
