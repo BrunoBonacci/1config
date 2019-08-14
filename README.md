@@ -9,7 +9,8 @@ advantages:
   * Compatible with AWS Lambdas as well
   * AWS KMS double encryption based security (same as S3-SSE, EBS and RDS)
   * Support for multiple environments in the same AWS account
-  * Support for multiple concurrent versions
+  * Support for multiple services in the same environment
+  * Support for multiple concurrent versions of the same service
   * Zero config approach (or at most 1 config `;-)`)
   * *Anti-tampering checks for configuration entries*
   * Supports Clojure, Java, Groovy, and other JVM languages (more to come)
