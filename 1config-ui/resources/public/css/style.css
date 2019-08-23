@@ -1,0 +1,182 @@
+body {
+    background-color: #f5f7fa;
+    font-family: 'Cardo', serif;
+}
+
+.modal-selector {
+    font-family: 'Cardo', serif;
+    font-size: 12px;
+}
+.modal-textarea {
+    height: 350px;
+    width: 250px;
+    font-family: 'Cardo', serif;
+    font-size: 12px;
+}
+
+.master-key-width {
+    width: 30px;
+}
+
+.modal-content {
+    position: fixed;
+    height: 100px;
+    width: 200px;
+    font-family: 'Cardo', serif;
+    font-size: 10px;
+    background-color:  lightgrey;
+}
+
+.sidenav {
+    font-family: 'Cardo', serif;
+    font-size: 13px;
+    height: 100%;
+    width: 350px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color:  #c3cfe2;
+    overflow-x: hidden;
+    padding-top: 20px;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+
+.visible {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+
+.hidden {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+    100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes slide-in {
+    100% { -webkit-transform: translateX(0%); }
+}
+
+@keyframes slide-out {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+@-webkit-keyframes slide-out {
+    0% { -webkit-transform: translateX(0%); }
+    100% { -webkit-transform: translateX(-100%); }
+}
+
+/*Tooltip*/
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 320px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.onecfg-filter-block {
+    margin: 3px;
+}
+
+.ui.placeholder.segment textarea {
+    max-width: 32rem !important;
+}
+
+.surf-surface .surf-dimmer, .surf-surface .surf-dimmer-dropdown {
+    width: 100%;
+    right: 0;
+    top: 0;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    background-color: black;
+    bottom: 0;
+    transition: z-index 0.3s step-end, opacity 0.3s linear;
+    opacity: 0;
+    left: 0;
+}
+
+.surf-surface .surf-dimmer-dropdown {
+    background-color: rgba(0,0,0,0.1);
+}
+
+.show-element {
+    display: block;
+}
+.hide-element {
+    display: none;
+}
+
+.key-input-width {
+    width: 120px;
+}
+
+.env-input-width {
+    width: 100px;
+}
+
+.version-input-width {
+    width: 80px;
+}
+
+.surf-surface .surf-modal {
+    width: 1100px;
+    height: 500px;
+    top: calc(-40%);
+    overflow-y: auto;
+    position: absolute;
+    z-index: -1;
+    background-color: white;
+    opacity: 0;
+    left: calc(15%);
+}
+
+.surf-surface.surf-surface-modal-active .surf-modal {
+    opacity: 1;
+    /*top: 40px;*/
+    z-index: 18;
+    transition: opacity 0.3s linear, top 0.3s linear;
+}
+
+.surf-surface.surf-surface-modal-active .surf-dimmer {
+    opacity: 0.5;
+    transition: opacity 0.3s linear;
+    z-index: 17;
+}
