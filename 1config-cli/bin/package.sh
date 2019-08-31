@@ -13,7 +13,7 @@ cp $BASE/target/$PACKAGE /tmp/$PACKAGE/
 
 echo '(-) '"preparing Homebrew package for Linux"
 mkdir -p  /tmp/$PACKAGE/hb/bin
-cp $BASE/bin/1cfg /tmp/$PACKAGE/hb/bin/
+cp $BASE/bin/$PACKAGE /tmp/$PACKAGE/hb/bin/
 cp $BASE/target/$PACKAGE /tmp/$PACKAGE/hb/bin/$PACKAGE.jar
 tar -zcvf /tmp/$PACKAGE/$PACKAGE-homebrew.tar.gz -C /tmp/$PACKAGE/hb .
 rm    -fr /tmp/$PACKAGE/hb
