@@ -1,5 +1,5 @@
 (ns com.brunobonacci.oneconfig.ui.server
-  (:use ring.util.response)
+  (:refer-clojure :exclude [find load list])
   (:require [org.httpkit.server :as http-kit]
             [compojure.core :refer [GET POST defroutes routes]]
             [compojure.handler :as hdr]
@@ -23,7 +23,8 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [clojure.tools.nrepl.server :refer [start-server stop-server]])
+            [clojure.tools.nrepl.server :refer [start-server stop-server]]
+            [ring.util.response :refer :all])
   (:gen-class))
 
 (def PORT 5300)

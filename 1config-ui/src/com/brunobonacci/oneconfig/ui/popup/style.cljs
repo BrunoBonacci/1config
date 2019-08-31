@@ -118,7 +118,8 @@
                  :background-color "orange"
                  }}])
 
-(defn- surface [opts-raw]
+
+(defn surface [opts-raw]
   (let [opts (prepare-opts opts-raw)
         {:keys [app-state surface-key surface-registry component-registry]} opts
         {:keys [dimmer modal] :as surface-map} (get surface-registry surface-key)
