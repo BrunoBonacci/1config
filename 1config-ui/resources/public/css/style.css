@@ -27,6 +27,95 @@ body {
     background-color:  lightgrey;
 }
 
+/*override grid style for menu block*/
+.ui.grid {
+    margin-top: 1rem;
+}
+
+.sticky-nav-bar {
+    background: #2382ca;
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+}
+
+.footer {
+    position: fixed;
+    color: grey;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+}
+
+/*slider style*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 49px;
+    height: 21px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #c0c1c1;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 21px;
+    width: 21px;
+    left: 0px;
+    bottom: 0px;
+    background-color: #f9f9f9;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #c0c1c1;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #c0c1c1;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(29px);
+    -ms-transform: translateX(29px);
+    transform: translateX(29px);
+}
+
+.slider.round {
+    border-radius: 60px;
+}
+
+.slider.round:before {
+    border-radius: 70%;
+}
+
+.minified-mode-label {
+    margin-left: 3px;
+}
+/*slider style end*/
+
 .sidenav {
     font-family: 'Cardo', serif;
     font-size: 13px;
@@ -34,11 +123,10 @@ body {
     width: 350px;
     position: fixed;
     z-index: 1;
-    top: 0;
+    top: 42px;
     left: 0;
     background-color:  #c3cfe2;
     overflow-x: hidden;
-    padding-top: 20px;
     transform: translateX(-100%);
     -webkit-transform: translateX(-100%);
 }
@@ -170,7 +258,6 @@ body {
 
 .surf-surface.surf-surface-modal-active .surf-modal {
     opacity: 1;
-    /*top: 40px;*/
     z-index: 18;
     transition: opacity 0.3s linear, top 0.3s linear;
 }

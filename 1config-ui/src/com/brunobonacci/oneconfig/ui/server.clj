@@ -123,7 +123,7 @@
         (response "ok"))
 
 
-  (not-found "Not Found"))
+  (not-found "Not Found")
 
 
 (def handler

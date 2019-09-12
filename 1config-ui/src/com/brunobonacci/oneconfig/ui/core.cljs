@@ -6,9 +6,9 @@
     [ajax.core :refer [GET POST]]
     [cljs.pprint :as pp]
     [com.brunobonacci.oneconfig.ui.comm :as comm]
-    [clojure.string :as string]
     [com.brunobonacci.oneconfig.ui.popup.style :as surface]
     [com.brunobonacci.oneconfig.ui.popup.surface-13 :as surface-13]
+    [clojure.string :as string]
     [cljs.core.async :as a :refer [<!]]))
 
 
@@ -415,8 +415,19 @@
 
 (defn get-label-text []
   (if (= @check-box-toggle "extended-mode")
-    "switch to minified mode"
-    "switch to extended mode"))
+    [:div {:class "ui blue label"}
+     "minified mode"
+      [:span {:class "minified-mode-label"}
+       [:i {:class "inverted arrow alternate circle left outline icon"} ]
+       ]
+     ]
+    [:div {:class "ui blue label"}
+     "extended mode"
+     [:span {:class "minified-mode-label"}
+      [:i {:class "inverted arrow alternate circle right outline icon"} ]
+      ]
+     ]
+    ))
 
 (defn show-extended-table [items]
   [:table {:class "ui selectable celled table"}
@@ -459,25 +470,32 @@
    [:div {:class @sidenav-display-toggle}
     [add-config-entry-form-adv]
     ]
-   [:h2
-    [:div {:class "ui dividing header"}
-     [:i {:class "file code outline icon"}]
-     [:div {:class "content"} "1Config"
-      [:div {:class "sub header"} "manage multiple environments and application configuration safely and effectively"]]]
+   [:div {:class "sticky-nav-bar"}
+    [:div {:class "ui secondary menu"}
+     [:div {:class "item"}
+      [:div {:class "ui inverted button" :on-click #(sidenav-display!)} "New Entry"]
+      ]
+     [:div {:class "right menu"}
+      [:div {:class "item"}
+       [:div
+        (get-label-text)
+        ]
+       ]
+      [:div {:class "item"}
+       [:div
+        [:label {:class "switch"}
+         [:input {:type "checkbox" :on-click #(show-table-mode!)  }   ]
+         [:span {:class "slider round"}]]
+        ]
+       ]
+
+      [:div {:class "item"}
+       [:button {:class "circular ui inverted icon button "}
+        [:i {:class "icon user outline"}]]]
+      ]
+     ]
     ]
-   [:div {:class "ui grid"}
-    [:div {:class "three wide column"}
-     [:div {:class "two wide column"}]
-     ]
-    [:div {:class "ten wide column"}]
-    [:div {:class "three wide column"}
-     [:h2 {:class "ui icon header"}
-      [:i {:class "circular plus square icon" :on-click #(sidenav-display!)}]
-      [:div {:class "content"} "Add Entry Menu"]]
-     [:div {:class "ui toggle checkbox"}
-      [:input {:type "checkbox" :name "public" :on-click #(show-table-mode!)}]
-      [:label (get-label-text)]]
-     ]
+   [:div {:class "ui grid additional-margin"}
     [:div {:class "sixteen wide column"}
      [surface/surface {:app-state          app-state
                        :surface-key        (get @app-state :page-key)
@@ -486,6 +504,9 @@
                        }]
      [list-oneconfig-data]
      ]
+    ]
+   [:div {:class "footer"}
+      "1Config. Manage multiple environments and application configuration safely and effectively. Copyright © 2019 Bruno Bonacci. v0.10.2"
     ]
    ]
   )
