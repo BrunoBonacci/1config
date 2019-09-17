@@ -148,7 +148,7 @@
   [context entries]
   (->> entries
      (map (fn [{:keys [key env version change-num content-type backend] :as e}]
-            (format "1cfg -b '%s' -k '%s' -e '%s' -v '%s' -t '%s' GET -c '%s' "
+            (format "1cfg -b %s -k %s -e %s -v %s -t %s GET -c %s "
                     (name (or backend (:backend context)))
                     key env version
                     (or content-type "") change-num)))
