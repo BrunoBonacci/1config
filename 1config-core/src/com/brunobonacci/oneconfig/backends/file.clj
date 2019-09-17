@@ -104,9 +104,10 @@
    (filesystem-config-backend {:base-dir (home-1config) :force false}))
   ([{:keys [base-dir force]
      :or {base-dir (home-1config) force false}}]
-   (let [dir (io/file base-dir)]
-     (when (or force (and (.exists dir) (.isDirectory dir)))
-       (FileSystemConfigBackend. dir (system-property "file.separator"))))))
+   (let [dir (some-> base-dir io/file)]
+     (when dir ;; protect against home directory not existing (not HOME not set)
+       (when (or force (and (.exists dir) (.isDirectory dir)))
+         (FileSystemConfigBackend. dir (system-property "file.separator")))))))
 
 
 
