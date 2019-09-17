@@ -75,8 +75,15 @@
       (util/apply-restrictions! user-profiles account config-entry))))
 
 
+(defn- validate-backend!
+  [backend]
+  (when-not backend
+    (throw (ex-info "Operation Aborted. Couldn't find a valid backend for this operation."
+                    {}))))
+
 
 (defn set! [backend-type backend config-entry]
+  (validate-backend! backend)
   (validate-version! (:version config-entry))
   (check-user-restrictions backend-type config-entry)
   (safely
@@ -117,6 +124,7 @@
 (defn get! [backend config-entry & {:keys [with-meta pretty-print?]
                                     :or {with-meta false
                                          pretty-print? false} :as opts}]
+  (validate-backend! backend)
   (validate-version! (:version config-entry))
   (safely
    (if-let [result (if (:change-num config-entry)
@@ -188,6 +196,7 @@
 (defn list! [backend filters
              & {:keys [output-format backend-name extended]
                 :or   {output-format :table}}]
+  (validate-backend! backend)
 
   (safely
    (->> (list backend (util/clean-map filters))
