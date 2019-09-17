@@ -77,12 +77,32 @@ Quick start guide to use 1Config.
   ```
 
   * Otherwise use the Manual installation
-  ``` bash
-  mkdir -p ~/bin
-  wget https://github.com/BrunoBonacci/1config/releases/download/0.10.2/1cfg -O ~/bin/1cfg
-  chmod +x ~/bin/1cfg
-  export PATH=~/bin:$PATH
-  ```
+    * OSX and Linux
+    ``` bash
+    mkdir -p ~/bin
+    wget https://github.com/BrunoBonacci/1config/releases/download/0.10.2/1cfg -O ~/bin/1cfg
+    chmod +x ~/bin/1cfg
+    export PATH=~/bin:$PATH
+    ```
+    * Windows
+        - Open a terminal window
+        - Create installation dir `md %userprofile%\1config\bin`
+        - Download https://github.com/BrunoBonacci/1config/releases/download/0.10.2/1cfg and save it in the above folder
+        - Rename file into `1cfg.cmd` with `ren %userprofile%\1config\bin\1cfg %userprofile%\1config\bin\1cfg.cmd`
+        - Add it to the System path:
+            - On the Windows desktop, right-click **My Computer**.
+            - In the pop-up menu, click **Properties**.
+            - In the **System Properties** window, click the **Advanced** tab, and then click **Environment Variables**.
+            - In the **System Variables** window, highlight **Path**, and click **Edit**.
+            - In the **Edit System Variables** window, insert the cursor at the end of the **Variable** value field.
+            - If the last character is not a semi-colon (;), add one.
+            - After the final semi-colon, type `%userprofile%\1config\bin`.
+            - Click **OK** in each open window.
+
+  * **At this point your installation should be complete and you
+    should be able to get the help page by typing `1cfg -h`**
+  * Next you need to provide the credentials for the AWS account you
+    wish to access.
   * Initialize AWS ENV variables
   ``` bash
   export AWS_ACCESS_KEY_ID=xxx
