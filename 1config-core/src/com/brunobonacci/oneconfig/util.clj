@@ -220,14 +220,18 @@
 (defn homedir
   "returns the current home dir or nil if not found"
   []
-  (env "HOME"))
+  (or (env "HOME") (env "userprofile")))
 
 
 
 (defn home-1config
   "returns ~/.1config/"
   []
-  (some-> (homedir) (str "/.1config/")))
+  (let [home (homedir)
+        dir (some-> home io/file)]
+    (when-not (and dir (.exists dir) (.isDirectory dir))
+      (log/warn "HOME directory not set or it doesn't exist."))
+    (some-> home (str "/.1config/"))))
 
 
 
