@@ -9,7 +9,7 @@
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations
-           [com.amazonaws.regions Region Regions]
+           [com.amazonaws.regions Region Regions DefaultAwsRegionProviderChain]
            java.util.Collections))
 
 
@@ -19,8 +19,10 @@
    (or
     ;; for dev mode just use `defcredential` macro
     (some-> #'aws/credential deref deref :endpoint Regions/fromName Region/getRegion)
+    ;; use default prodider chain
+    (some-> (.getRegion (new DefaultAwsRegionProviderChain)) Regions/fromName Region/getRegion)
     ;; check env
-    (some-> (env "AWS_DEFAULT_REGION") Regions/fromName Region/getRegion)
+    (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
     ;; this call blocks and it is slow on non EC2
     (Regions/getCurrentRegion)
     ;; us-west-2 (??)
