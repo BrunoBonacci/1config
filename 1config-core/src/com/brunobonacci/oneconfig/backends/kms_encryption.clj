@@ -5,7 +5,8 @@
             [clojure.string :as str]
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
-            [where.core :refer [where]])
+            [where.core :refer [where]]
+            [safely.core :refer [safely]])
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations
@@ -20,7 +21,9 @@
     ;; for dev mode just use `defcredential` macro
     (some-> #'aws/credential deref deref :endpoint Regions/fromName Region/getRegion)
     ;; use default prodider chain
-    (some-> (.getRegion (new DefaultAwsRegionProviderChain)) Regions/fromName Region/getRegion)
+    (some-> (safely (.getRegion (new DefaultAwsRegionProviderChain))
+                    :on-error :default nil :log-errors false)
+            Regions/fromName Region/getRegion)
     ;; check env
     (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
     ;; this call blocks and it is slow on non EC2
