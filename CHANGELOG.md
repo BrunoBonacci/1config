@@ -1,5 +1,11 @@
 # Changelog
 
+## Release: v0.10.3 (2019-09-18)
+
+  * Fixed various issue with Windows usage
+  * Improved region detection
+  * Improved error messages for when HOME directory is not set
+
 ## Release: v0.10.2 (2019-07-09)
 
   * Fixed issue with regions when running on EC2 when AWS_DEFAULT_REGION is not set
