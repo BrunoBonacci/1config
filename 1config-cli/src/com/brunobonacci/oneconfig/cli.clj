@@ -47,7 +47,7 @@
     (safely
      (dyn/create-configure-table cfg (:table cfg))
      :on-error
-     :max-retry 3
+     :max-retries 3
      :log-stacktrace false
      :message (str "Creating DynamoDB table:" (:table cfg)))))
 

@@ -16,7 +16,7 @@
                  [org.clojure/tools.cli "0.4.1"]
                  [org.slf4j/slf4j-log4j12 "1.7.26"]
                  [doric "0.9.0"]
-                 [com.brunobonacci/safely "0.5.0-alpha6"]]
+                 [com.brunobonacci/safely "0.5.0-alpha7"]]
 
   :global-vars {*warn-on-reflection* true}
 
