@@ -32,6 +32,36 @@ body {
     margin-top: 1rem;
 }
 
+.ui.form textarea:not([rows]) {
+    min-height: 20em;
+    max-height: 55em;
+}
+
+.ui.form input[type=text] {
+    font-family: 'Cardo', serif;
+    font-size: 14px;
+    padding-left: 9px;
+}
+
+select.ui.dropdown {
+    font-family: 'Cardo', serif;
+    font-size: 14px;
+    color: lightgrey;
+}
+
+.ui.divider {
+    text-transform: none;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
 .sticky-nav-bar {
     background: #2382ca;
     position: fixed;
@@ -126,7 +156,8 @@ input:checked + .slider:before {
     top: 42px;
     left: 0;
     background-color:  #c3cfe2;
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
+    overflow-x: scroll;
     transform: translateX(-100%);
     -webkit-transform: translateX(-100%);
 }
@@ -250,6 +281,7 @@ input:checked + .slider:before {
     top: calc(-40%);
     overflow-y: auto;
     position: absolute;
+    margin-top: 250px;
     z-index: -1;
     background-color: white;
     opacity: 0;

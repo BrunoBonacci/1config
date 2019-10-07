@@ -10,9 +10,9 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
                  [com.brunobonacci/oneconfig #=(ver)]
-
-                 [org.clojure/core.async "0.4.500"]
-                 [com.cognitect/transit-clj "0.8.313"]
+                 [figwheel-sidecar "0.5.18"]
+                 ;[org.clojure/core.async "0.4.500"]
+                 ;[com.cognitect/transit-clj "0.8.313"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
                  [cljs-ajax "0.8.0"]
                  [cljsjs/react "16.9.0-0"]
@@ -31,9 +31,9 @@
                  [re-frame "0.10.9"]
 
                  [re-frisk "0.5.4.1"]
-                 [garden "1.3.9"]
+                 [garden "1.3.9"]                           ;; pop up
 
-                 [com.taoensso/sente "1.13.1"]
+                 [com.taoensso/sente "1.13.1"]              ;; http kit
                  [org.clojure/tools.nrepl "0.2.13"]
 
                  [org.slf4j/slf4j-log4j12 "1.7.26"]

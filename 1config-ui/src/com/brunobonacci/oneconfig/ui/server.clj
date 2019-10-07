@@ -10,7 +10,7 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.json :refer [wrap-json-params wrap-json-body wrap-json-response]]
 
-            [clojure.core.async :as a :refer [go-loop <!]]
+            [org.httpkit.client :as http]
 
             [cheshire.core :as json]
             [com.brunobonacci.oneconfig.backend :refer :all]
@@ -32,7 +32,8 @@
 (def NREPL-PORT 5301)
 (def backend-name
   (util/default-backend-name))
-(def server-state (atom {:likes 0}))
+(def repo-base-url "https://api.github.com/repos/BrunoBonacci/1config")
+(def repo-tags-url (str repo-base-url "/git/refs"))
 
 ;;
 ;; 1Config backend used by the UI-server
@@ -49,51 +50,29 @@
     (update :change-num #(Long/parseLong %))))
 
 
+(defn- get-github-data [url]
+  (let [{:keys [body]} @(http/get url)]
+    (json/parse-string body)))
+
+(defn- github-data []
+  (let [general (get-github-data repo-base-url)
+        tags (get-github-data repo-tags-url)]
+    {:description (get general "description" )
+     :license (get-in general ["license" "name"] )
+     :version  (->
+                 (last tags)
+                 (get "ref")
+                 (string/split #"/")
+                 (last))
+     }
+    ))
+
 (defn ping-response [req]
   (println (str "pinging back" req) )
   {:status 200})
 
 
 (defroutes endpoints
-           (POST "/oneconfig-add-entry"  {:keys [headers params body] :as request}
-             (let [value-file (if (nil? (get-in params [:current-files :tempfile]))
-                                ""
-                                (slurp (get-in params [:current-files :tempfile])))
-                   name            (get params :key)
-                   env             (get params  :env)
-                   version         (get params  :version)
-                   content-type    (get params  :content-type)
-                   value-textarea  (get params  :value)
-                   value           (if (string/blank? value-file) value-textarea value-file)]
-               (oneconfig/save (b/backend-factory {:type backend-name})
-                               {:key name :env env :version version :content-type content-type  :value value})
-               (response (oneconfig/list (b/backend-factory {:type backend-name}) {}))
-               ))
-
-           (GET "/oneconfig-list" []
-             (response (oneconfig/list (b/backend-factory {:type backend-name}) {})))
-
-           (GET "/oneconfig-get-item"{{:keys [key env version change-num content-type]}  :params}
-             (response
-               (->
-                 (oneconfig/find (b/backend-factory {:type backend-name}) {:key key :env env :version version})
-                 :encoded-value)))
-
-           (GET "/oneconfig-apply-filter" {{:keys [key env version]}  :params}
-             (response
-               (oneconfig/list (b/backend-factory {:type backend-name}) {:key key :env env :version version})))
-
-           (POST "/oneconfig-add-new-value" request
-             (ping-response request))
-
-           (not-found "Not Found"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                                                                            ;;
-;;                     ----==| N E W   L A Y E R |==----                      ;;
-;;                                                                            ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
   (GET "/configs" {{:keys [change-num] :as params} :params}
        (let [filters (dissoc params :change-num)
              change-num (when change-num (Long/parseLong change-num))
@@ -104,6 +83,8 @@
                        results)]
          (response results)))
 
+  (GET "/footer" []
+    (response (github-data)))
 
   (GET "/configs/keys/:key/envs/:env/versions/:version"
        {:keys [params]}
@@ -111,19 +92,22 @@
        (let [entry  (if (:change-num params)
                       (oneconfig/load backend (normalize params))
                       (oneconfig/find backend params))]
-
          (if entry
            (response entry)
            (not-found "Config entry not found"))))
 
-
-
-  (POST "/configs" {:keys [body]}
-        (oneconfig/save backend body)
-        (response "ok"))
-
+  (POST "/configs" {params :params {referer "referer"} :headers}
+    (try
+      (oneconfig/save backend params)
+      (response {:status "OK" :message "Entry saved."})
+      (catch Exception x
+        {:status  400
+         :body    {:status "ERROR" :message "Unknown error."
+                   :cause (.getMessage x)}}
+        )))
 
   (not-found "Not Found")
+)
 
 
 (def handler
@@ -132,7 +116,7 @@
       (wrap-defaults
         (->
           site-defaults
-          (assoc-in [:security :anti-forgery] false) ;;tODO disable Invalid anti-forgery token
+          (assoc-in [:security :anti-forgery] false) ;;todo disable Invalid anti-forgery token
           ))
       (wrap-cors :access-control-allow-origin [#".*"]
                  :access-control-allow-methods [:get :post])
@@ -148,11 +132,6 @@
 
 
 (comment
-
-  (System/setProperty "aws.accessKeyId" "")
-  (System/setProperty "aws.secretKey"   "")
-  (System/setProperty "aws.region" "")
-
 
   ;; start server for repl
   (def s (http-kit/run-server #'handler {:port PORT}))

@@ -1,5 +1,4 @@
 (ns com.brunobonacci.oneconfig.ui.core
-  (:require-macros [cljs.core.async.macros :refer [go go-loop]])
   (:require
     [reagent.core :as reagent :refer [atom]]
     [re-frisk.core :as rf]
@@ -8,8 +7,7 @@
     [com.brunobonacci.oneconfig.ui.comm :as comm]
     [com.brunobonacci.oneconfig.ui.popup.style :as surface]
     [com.brunobonacci.oneconfig.ui.popup.surface-13 :as surface-13]
-    [clojure.string :as string]
-    [cljs.core.async :as a :refer [<!]]))
+    [clojure.string :as string]))
 
 
 ; for `println` to work
@@ -19,11 +17,29 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Vars
+(defonce state
+         (atom
+           {
+            ;; contains the config entries retrieved from the server
+            :entries []
+            ;; filters
+            :filters {:key "", :env "", :version ""}
+            ;; manages the toggle for the extended mode
+            :extended-mode? false
+            ;; one of :listing, :new-entry-mode, :show-entry-mode
+            :client-mode :listing
+            :new-version-flag? nil
+
+            :new-entry nil
+                      }))
+
 (defonce app-state (atom {:page-key    :surface-13
                           :item-data   nil
                           :item-params nil}))
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
 (defonce app-state-data (atom ""))
+(defonce app-state-data-copy (atom ""))
+(defonce footer-data (atom ""))
 (defonce check-box-toggle (atom "minified-mode"))
 (defonce sidenav-display-toggle (atom "sidenav hidden"))
 (defonce file-upload-name (atom ""))
@@ -54,78 +70,78 @@
   (print response))
 
 (defn get-item-handler [response]
-  (swap! app-state assoc-in [:item-data] response)
+  (swap! app-state assoc-in [:item-data] (get response :value))
   (swap! app-state update :page-key
          (fn [pk]
            (if (= pk :surface-13-modal)
              :surface-13
              :surface-13-modal))))
 
+(defn get-all-configs-handler [data]
+  (reset! app-state-data data)
+  (reset! app-state-data-copy data))
+
+(defn get-footer-text-handler [{:keys [description license version]}]
+  (reset! footer-data (str "1Config." description license ". Bruno Bonacci, 2019, v. " version)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax
 
-(defn load-all-configs! []
-  (GET "/oneconfig-list"
+(defn get-all-configs! []
+  (GET "/configs"
        {
-        :handler         #(reset! app-state-data %)
+        :handler         get-all-configs-handler
         :format          :json
         :response-format :json
         :keywords?       true
         :error-handler   error-handler}))
 
-(defn get-config-item! [item]
-  (let [{:keys [key env version change-num content-type]} item]
+(defn get-config-item-2! [item]
+  (let [{:keys [key env version change-num content-type]} item
+        get-url (str "/configs/keys/" key "/envs/" env "/versions/" version )]
     (swap! app-state assoc-in [:item-params] {:key          key
                                               :env          env
                                               :version      version
                                               :change-num   change-num
                                               :content-type content-type})
-    (GET "/oneconfig-get-item"
-         {:params          {:key          key
-                            :env          env
-                            :version      version
-                            :change-num   change-num
-                            :content-type content-type}
+    (GET get-url {
           :handler         get-item-handler
           :format          :json
           :response-format :json
           :keywords?       true
           :error-handler   error-handler})))
 
-(defn apply-filter! [env]
-  (GET "/oneconfig-apply-filter"
-       {:params          {:key     (get @env :key)
-                          :env     (get @env :env)
-                          :version (get @env :version)
-                          }
-        :handler         #(reset! app-state-data %)
+(defn apply-filter! [search-data]
+  (reset!  app-state-data (comm/filter-entries {:key     (get @search-data :key)
+                                                :env     (get @search-data :env)
+                                                :version (get @search-data :version)
+                                                } @app-state-data-copy)))
+
+(defn add-config-entry! [event form-state]
+  (.preventDefault event)
+  (let [form-data (doto
+                    (js/FormData.)
+                    (.append "key" (get @form-state :key))
+                    (.append "env" (get @form-state :env))
+                    (.append "version" (get @form-state :version))
+                    (.append "content-type" (get @form-state :type))
+                    (.append "value" (get @form-state :val)))]
+    (reset! form-state nil)
+    (POST "/configs" {
+                      :body            form-data
+                      :response-format :json
+                      :keywords?       true
+                      :handler         #(get-all-configs!)
+                      :error-handler   error-handler
+                      })))
+
+(defn get-footer-text []
+  (GET "/footer"
+       {:handler         get-footer-text-handler
         :format          :json
         :response-format :json
         :keywords?       true
         :error-handler   error-handler}))
-
-(defn add-config-entry! [event form-state]
-  (.preventDefault event)
-  (if-let [files (-> (.getElementById js/document "file-input") .-files)]
-    (let [form-data (doto
-                      (js/FormData.)
-                      (.append "current-files" (aget files 0))
-                      (.append "key"  (get @form-state :key))
-                      (.append "env"  (get @form-state :env))
-                      (.append "version"  (get @form-state :version))
-                      (.append "content-type"  (get @form-state :type))
-                      (.append "value"  (get @form-state :val)))]
-      (reset! form-state nil)
-      (POST "/oneconfig-add-entry" {
-                                    :body            form-data
-                                    :response-format :json
-                                    :keywords?       true
-                                    :handler         #(reset! app-state-data %)
-                                    :error-handler   error-handler
-                                    })
-      )
-    )
-  )
 
 (defn create-service-name-row [num sz key]
   (if (zero? num) [:td {:row-span sz} key]))
@@ -142,7 +158,7 @@
        [:td {:data-label "Time"} (comm/parse-date change-num)]
        [:td {:data-label "Type"} (comm/as-label content-type)]
        [:td {:data-label "Value"}
-        [:button {:class "ui icon button" :on-click #(get-config-item! item)}
+        [:button {:class "ui icon button" :on-click #(get-config-item-2! item)}
          [:i {:class "ellipsis horizontal icon"}]]
         ]
        [:td {:data-label "Master Key" :class "master-key-width"}
@@ -170,7 +186,7 @@
        [:td {:data-label "Time"} (comm/parse-date change-num)]
        [:td {:data-label "Type"} (comm/as-label content-type)]
        [:td {:data-label "Value"}
-        [:button {:class "ui icon button" :on-click #(get-config-item! item)}
+        [:button {:class "ui icon button" :on-click #(get-config-item-2! item)}
          [:i {:class "ellipsis horizontal icon"}]]
         ]
        ]
@@ -180,8 +196,8 @@
 
 (defn notify-file-upload! [name]
   (if (= name "")
-    (reset! file-upload-style "ui compact menu hide-element")
-    (reset! file-upload-style "ui compact menu show-element")))
+    (reset! file-upload-style "hide-element")
+    (reset! file-upload-style "show-element")))
 
 
 
@@ -190,6 +206,10 @@
     (reset! sidenav-display-toggle "sidenav hidden")
     (reset! sidenav-display-toggle "sidenav visible"))
   )
+
+
+(defn debug-output!  []
+  (println "click event"))
 
 (defn add-config-entry-form-adv []
   [:form {:class "ui form" :on-submit #(add-config-entry! %1 submit-data)}
@@ -238,52 +258,162 @@
        [:option {:value "txt"} "txt"]
        ]
       ]
+     ;[:div {:class "column"}
+
+     [:div {:class "ui horizontal divider"} "Upload a file"
+      [:div]]
      ]
+
     [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
+    [:div {:class "two wide column"}]
+    [:div {:class "seven wide column"}
+       [:input {:type "file"
+                :name  "file"
+                ;:class "hide-element"
+                :class "inputfile"
+                :id "file-input"
+                :on-change                      (fn [this]
+                                                  (if (not (= "" (-> this .-target .-value)))
+                                                    (let [^js/File file (-> this .-target .-files (aget 0))
+                                                          reader (js/FileReader.)
+                                                          file-name (-> file  .-name) ;;TODO replace with it and rename
+                                                          ]
+                                                      (.readAsText reader file)
+                                                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+                                                      (set! (.-onload reader)
+                                                            (fn [e]
+                                                              (let [xxx (-> e .-target .-result)]
+                                                                (swap! submit-data assoc-in [:val] xxx)
+                                                                )
+                                                              ))
+                                                      (reset! file-upload-name file-name)
+                                                      (notify-file-upload! file-name)
+                                                      )
+                                                    )
+                                                  )
+
+                }
+
+        ]
+       [:label {:for "file-input" :class "ui small button"}
+        [:i {:class "ui upload icon"}]"Upload file"]
+
+
+     ;[:label {:for "file-input"}
+     ; [:a {:class "ui label" :for "file-input"}
+     ;  [:i {:class "cloud upload icon"}] "" ]
+     ; ]
+     ;[:input {
+     ;         :id    "file-input"
+     ;         :class "hide-element"
+     ;         :type  "file"
+     ;         :name  "file"
+     ;         :on-change
+     ;                (fn [this]
+     ;                  (if (not (= "" (-> this .-target .-value)))
+     ;                    (let [^js/File file (-> this .-target .-files (aget 0))
+     ;                          reader (js/FileReader.)
+     ;                          file-name (-> file  .-name) ;;TODO replace with it and rename
+     ;                          ]
+     ;                      (.readAsText reader file)
+     ;                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+     ;                      (set! (.-onload reader)
+     ;                            (fn [e]
+     ;                              (let [xxx (-> e .-target .-result)]
+     ;                                (swap! submit-data assoc-in [:val] xxx)
+     ;                                )
+     ;                              ))
+     ;                      (reset! file-upload-name file-name)
+     ;                      (notify-file-upload! file-name)
+     ;                      )
+     ;                    )
+     ;                  )
+     ;         }]
+     ]
+    [:div {:class "three wide column"}
+
+     ;[:div {:class @file-upload-style}
+     ; @file-upload-name
+     ; ;[:div {:class "ui vertical button"}
+     ; ; [:i {:class "trash icon"}]
+     ; ; ]
+     ; [:i {:class "trash icon"}]
+     ; ]
+
+     [:div {:class @file-upload-style}
+      [:span  [:b @file-upload-name]
+       ;[:i {:class "trash icon" :on-click #(debug-output!)}]
+       ]
+
+      ]
+
+
+     ;[:div {:class @file-upload-style}
+     ; [:input {:type "text", :placeholder "Search..." :value @file-upload-name}]
+     ; [:button {:class "ui button"} "Remove"]
+     ; ]
+     ]
+    [:div {:class "two wide column"}
+     [:div {:class @file-upload-style}
+      [:i {:class "red trash icon" :on-click #(debug-output!)}]
+
+      ]
+     ]
+    ;[:div {:class "four wide column"}
+    ; [:div {:class "ui button"}
+    ;  [:div {:class "visible content"}
+    ;   [:i {:class "trash alternate icon"}]]
+    ;  ]
+    ; ]
+
+    ;;!!!!!!
+    [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
     [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
      [:div {:class "column"}
-
-      [:label {:for "file-input"}
-       [:a {:class "ui label" :for "file-input"}
-        [:i {:class "cloud upload icon"}] "Upload a config file" ]
-       ]
-      [:input {
-               :id    "file-input"
-               :class "hide-element"
-               :type  "file"
-               :name  "file"
-               :on-change
-                      (fn [this]
-                        (if (not (= "" (-> this .-target .-value)))
-                          (let [^js/File file (-> this .-target .-files (aget 0))
-                                reader (js/FileReader.)
-                                file-name (-> file  .-name) ;;TODO replace with it and rename
-                                ]
-                            (.readAsText reader file)
-                            (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
-                            (set! (.-onload reader)
-                                  (fn [e]
-                                    (let [xxx (-> e .-target .-result)]
-                                      (swap! submit-data assoc-in [:val] xxx)
-                                      )
-                                    ))
-                            (reset! file-upload-name file-name)
-                            (notify-file-upload! file-name)
-                            )
-                          )
-                        )
-               }]
-      [:div {:class @file-upload-style}
-       [:a {:class "item"}
-        [:i {:class "icon file alternate outline"}] @file-upload-name
-        [:div {:class "floating ui red label"} "1"]]
-       ]
+      ;
+      ;[:label {:for "file-input"}
+      ; [:a {:class "ui label" :for "file-input"}
+      ;  [:i {:class "cloud upload icon"}] "Upload a config file" ]
+      ; ]
+      ;[:input {
+      ;         :id    "file-input"
+      ;         :class "hide-element"
+      ;         :type  "file"
+      ;         :name  "file"
+      ;         :on-change
+      ;                (fn [this]
+      ;                  (if (not (= "" (-> this .-target .-value)))
+      ;                    (let [^js/File file (-> this .-target .-files (aget 0))
+      ;                          reader (js/FileReader.)
+      ;                          file-name (-> file  .-name) ;;TODO replace with it and rename
+      ;                          ]
+      ;                      (.readAsText reader file)
+      ;                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+      ;                      (set! (.-onload reader)
+      ;                            (fn [e]
+      ;                              (let [xxx (-> e .-target .-result)]
+      ;                                (swap! submit-data assoc-in [:val] xxx)
+      ;                                )
+      ;                              ))
+      ;                      (reset! file-upload-name file-name)
+      ;                      (notify-file-upload! file-name)
+      ;                      )
+      ;                    )
+      ;                  )
+      ;         }]
+      ;[:div {:class @file-upload-style}
+      ; [:a {:class "item"}
+      ;  [:i {:class "icon file alternate outline"}] @file-upload-name
+      ;  [:div {:class "floating ui red label"} "1"]]
+      ; ]
       ]
-     [:div {:class "ui horizontal divider"} "or"]
+     [:div {:class "ui horizontal divider"} "or provide config here"]
      [:div {:class "column"}
       [:textarea {:class "modal-textarea"
-                  :placeholder "Provide config here"
+                  :placeholder "Config data..."
                   :value (get @submit-data :val)
                   :on-change  (fn [evt]
                                 (swap! submit-data assoc-in [:val] (-> evt .-target .-value)))
@@ -291,10 +421,12 @@
       ]
      ]
     [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
     [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
-     [:button {:class "ui primary button"}
-      [:i {:class "plus icon"}] "Save Config Entry"]
+     ;[:button {:class "ui primary button"}
+     ; [:i {:class "plus icon"}] "Save Config Entry"]
+      [:button {:class "ui primary button"} "Save" ]
      ]
     [:div {:class "two wide column"}]
     ]
@@ -458,7 +590,7 @@
     ]])
 
 (defn list-oneconfig-data []
-  (load-all-configs!)
+  (get-all-configs!)
   #(create-table-wrapper (group-by :key @app-state-data)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -495,7 +627,7 @@
       ]
      ]
     ]
-   [:div {:class "ui grid additional-margin"}
+   [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
      [surface/surface {:app-state          app-state
                        :surface-key        (get @app-state :page-key)
@@ -505,9 +637,7 @@
      [list-oneconfig-data]
      ]
     ]
-   [:div {:class "footer"}
-      "1Config. Manage multiple environments and application configuration safely and effectively. Copyright © 2019 Bruno Bonacci. v0.10.2"
-    ]
+   [:div {:class "footer" } @footer-data]
    ]
   )
 
@@ -529,4 +659,5 @@
 (defn ^:export main []
   (dev-setup)
   ;(app-routes app-state)
+  (get-footer-text)
   (reload))

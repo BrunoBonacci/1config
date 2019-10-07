@@ -4,7 +4,8 @@
     [cljs-time.format :as tf]
     [cljs-time.coerce :as tc]
     [clojure.string :as string]
-    [ajax.core :refer [GET POST]]))
+    [ajax.core :refer [GET POST]]
+    [where.core :refer [where]]))
 
 (def one-config-formatter (tf/formatter "yyyy-MM-dd HH:mm:ss"))
 
@@ -46,3 +47,11 @@
 
 (defn get-kms-uuid [kms-line]
   (get-last-of-splitted kms-line #"/"))
+
+(defn filter-entries [{:keys [key env version]} entries]
+  (->> entries
+       (filter
+         (where [:and
+                 [:env     :starts-with? (or env "")]
+                 [:key     :starts-with? (or key "")]
+                 [:version :starts-with? (or version "")]]))))
