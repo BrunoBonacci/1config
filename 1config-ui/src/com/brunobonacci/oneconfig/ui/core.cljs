@@ -253,7 +253,7 @@
                 }
        [:option {:value "" :selected "true" :disabled "disabled" :hidden "true"} "Type"]
        [:option {:value "edn"} "edn"]
-       [:option {:value "yml"} "yml"]
+       [:option {:value "properties"} "properties"]
        [:option {:value "json"} "json"]
        [:option {:value "txt"} "txt"]
        ]
