@@ -31,11 +31,19 @@
             :new-version-flag? nil
 
             :new-entry nil
+
+            ;; modal window (initial as plain, should be nested)
+            :page-key    :surface-13
+            :item-data   nil
+            :item-params nil
+            ;:modal {
+            ;        :page-key    :surface-13
+            ;        :item-data   nil
+            ;        :item-params nil
+            ;        }
+
                       }))
 
-(defonce app-state (atom {:page-key    :surface-13
-                          :item-data   nil
-                          :item-params nil}))
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
 (defonce app-state-data (atom ""))
 (defonce app-state-data-copy (atom ""))
@@ -70,8 +78,8 @@
   (print response))
 
 (defn get-item-handler [response]
-  (swap! app-state assoc-in [:item-data] (get response :value))
-  (swap! app-state update :page-key
+  (swap! state assoc-in [:item-data] (get response :value))
+  (swap! state update :page-key
          (fn [pk]
            (if (= pk :surface-13-modal)
              :surface-13
@@ -99,7 +107,7 @@
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
         get-url (str "/configs/keys/" key "/envs/" env "/versions/" version )]
-    (swap! app-state assoc-in [:item-params] {:key          key
+    (swap! state assoc-in [:item-params] {:key          key
                                               :env          env
                                               :version      version
                                               :change-num   change-num
@@ -522,8 +530,8 @@
     ]
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     [surface/surface {:app-state          app-state
-                       :surface-key        (get @app-state :page-key)
+     [surface/surface {:app-state          state
+                       :surface-key        (get @state :page-key)
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
@@ -540,17 +548,17 @@
   (when ^boolean js/goog.DEBUG
     (enable-console-print!)
     (rf/enable-frisk!)
-    (rf/add-data :app-state app-state)
+    (rf/add-data :app-state state)
     ))
 
 (defn reload []
-  (reagent/render [app-root app-state]
+  (reagent/render [app-root state]
                   (. js/document (getElementById "app"))
                   )
   )
 
 (defn ^:export main []
   (dev-setup)
-  ;(app-routes app-state)
+  ;(app-routes state)
   (get-footer-text)
   (reload))
