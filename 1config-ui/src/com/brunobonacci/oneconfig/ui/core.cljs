@@ -32,7 +32,7 @@
 
             :new-entry nil
 
-            ;; modal window (initial as plain, should be nested)
+            ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
             :page-key    :surface-13
             :item-data   nil
             :item-params nil
