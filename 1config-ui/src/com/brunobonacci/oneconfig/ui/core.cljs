@@ -87,7 +87,9 @@
 
 (defn get-all-configs-handler [data]
   (reset! app-state-data data)
-  (reset! app-state-data-copy data))
+  (reset! app-state-data-copy data)
+  (swap! state assoc-in [:entries] data)                    ;; TODO temp solution
+  )
 
 (defn get-footer-text-handler [{:keys [description license version]}]
   (reset! footer-data (str "1Config." description license ". Bruno Bonacci, 2019, v. " version)))
@@ -482,17 +484,13 @@
    ]
   )
 
-(defn create-table-wrapper [items]
+(defn create-config-table [items]
   [:div {:class "sixteen wide column"}
    [:div {:class "ui grid"}
     (if (= @check-box-toggle "extended-mode")
       (show-extended-table items)
       (show-minified-table items))
     ]])
-
-(defn list-oneconfig-data []
-  (get-all-configs!)
-  #(create-table-wrapper (group-by :key @app-state-data)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Page
@@ -535,7 +533,7 @@
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
-     [list-oneconfig-data]
+     [create-config-table (group-by :key (get @appRootDataState :entries))]
      ]
     ]
    [:div {:class "footer" } @footer-data]
@@ -560,5 +558,6 @@
 (defn ^:export main []
   (dev-setup)
   ;(app-routes state)
+  (get-all-configs!)
   (get-footer-text)
   (reload state))
