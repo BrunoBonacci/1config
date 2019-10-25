@@ -498,7 +498,7 @@
 ;; Page
 ;https://stackoverflow.com/questions/29581359/semantic-ui-ui-grid-best-approach-for-layout-rows-columns-vs-segments
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
-(defn app-root [app-state]
+(defn app-root [app-data-state]
   [:div
    [:div {:class @sidenav-display-toggle}
     [add-config-entry-form]
@@ -530,7 +530,7 @@
     ]
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     [surface/surface {:app-state          state
+     [surface/surface {:app-state          app-data-state
                        :surface-key        (get @state :page-key)
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
