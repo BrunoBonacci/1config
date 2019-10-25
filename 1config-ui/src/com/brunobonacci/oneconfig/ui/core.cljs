@@ -498,7 +498,7 @@
 ;; Page
 ;https://stackoverflow.com/questions/29581359/semantic-ui-ui-grid-best-approach-for-layout-rows-columns-vs-segments
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
-(defn app-root [app-data-state]
+(defn app-root [appRootDataState]
   [:div
    [:div {:class @sidenav-display-toggle}
     [add-config-entry-form]
@@ -530,8 +530,8 @@
     ]
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     [surface/surface {:app-state          app-data-state
-                       :surface-key        (get @state :page-key)
+     [surface/surface {:app-state          appRootDataState
+                       :surface-key        (get @appRootDataState :page-key)
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
@@ -551,8 +551,8 @@
     (rf/add-data :app-state state)
     ))
 
-(defn reload []
-  (reagent/render [app-root state]
+(defn reload [reloadDataState]
+  (reagent/render [app-root reloadDataState]
                   (. js/document (getElementById "app"))
                   )
   )
@@ -561,4 +561,4 @@
   (dev-setup)
   ;(app-routes state)
   (get-footer-text)
-  (reload))
+  (reload state))
