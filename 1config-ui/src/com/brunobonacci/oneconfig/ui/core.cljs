@@ -272,43 +272,37 @@
       [:tbody
        [:tr
         [:td
-         [:input {:type "file"
-                  :name  "file"
-                  ;:class "hide-element"
-                  :class "inputfile"
-                  :id "file-input"
-                  :on-change                      (fn [this]
-                                                    (if (not (= "" (-> this .-target .-value)))
-                                                      (let [^js/File file (-> this .-target .-files (aget 0))
-                                                            reader (js/FileReader.)
-                                                            file-name (-> file  .-name) ;;TODO replace with it and rename
-                                                            ]
-                                                        (.readAsText reader file)
-                                                        (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
-                                                        (set! (.-onload reader)
-                                                              (fn [e]
-                                                                (let [xxx (-> e .-target .-result)]
-                                                                  (swap! submit-data assoc-in [:val] xxx)
-                                                                  )
-                                                                ))
-                                                        (reset! file-upload-name file-name)
-                                                        (notify-file-upload! file-name)
-                                                        )
-                                                      )
-                                                    )
-
+         [:input {:type      "file"
+                  :name      "file"
+                  :class     "inputfile"
+                  :id        "file-input"
+                  :on-change (fn [this]
+                               (if (not (= "" (-> this .-target .-value)))
+                                 (let [^js/File file (-> this .-target .-files (aget 0))
+                                       reader (js/FileReader.)
+                                       file-name (-> file .-name) ;;TODO replace with it and rename
+                                       ]
+                                   (.readAsText reader file)
+                                   (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+                                   (set! (.-onload reader)
+                                         (fn [e]
+                                           (let [xxx (-> e .-target .-result)]
+                                             (swap! submit-data assoc-in [:val] xxx)
+                                             )
+                                           ))
+                                   (reset! file-upload-name file-name)
+                                   (notify-file-upload! file-name)
+                                   )
+                                 )
+                               )
                   }
-
           ]
          [:label {:for "file-input" :class "ui mini blue button"}
           [:i {:class "ui upload icon"}]"Upload"]
          ]
-        [:td
-         "file_name.json"]
+        [:td @file-upload-name]
         [:td
          [:i {:class "red trash icon" :on-click #(debug-output!)}]
-         ;[:i {:class "red trash icon" :on-click #(simple-modal-style-change!)}]
-
          ]]]]
 
      ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
