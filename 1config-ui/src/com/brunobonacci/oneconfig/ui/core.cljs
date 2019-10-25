@@ -45,7 +45,6 @@
                       }))
 
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
-(defonce app-state-data-copy (atom ""))
 (defonce footer-data (atom ""))
 (defonce check-box-toggle (atom "minified-mode"))
 (defonce sidenav-display-toggle (atom "sidenav hidden"))
@@ -79,11 +78,6 @@
              :surface-13
              :surface-13-modal))))
 
-(defn get-all-configs-handler [data]
-  (reset! app-state-data-copy data)
-  (swap! state assoc-in [:entries] data)                    ;; TODO temp solution
-  )
-
 (defn get-footer-text-handler [{:keys [description license version]}]
   (reset! footer-data (str "1Config." description license ". Bruno Bonacci, 2019, v. " version)))
 
@@ -93,7 +87,7 @@
 (defn get-all-configs! []
   (GET "/configs"
        {
-        :handler         get-all-configs-handler
+        :handler         #(swap! state assoc-in [:entries] %)
         :format          :json
         :response-format :json
         :keywords?       true
@@ -114,11 +108,11 @@
           :keywords?       true
           :error-handler   error-handler})))
 
-(defn apply-filter! [search-data]
-  (swap! state assoc-in [:entries] (comm/filter-entries {:key     (get search-data :key)
-                                                         :env     (get search-data :env)
-                                                         :version (get search-data :version)
-                                                         } @app-state-data-copy)))
+(defn apply-filters [filters entries]
+  (comm/filter-entries {:key     (get filters :key)
+                        :env     (get filters :env)
+                        :version (get filters :version)
+                        } entries))
 
 (defn add-config-entry! [event form-state]
   (.preventDefault event)
@@ -350,9 +344,7 @@
                :placeholder "Service Name.."
                :value       (get-in @state [:filters :key])
                :on-change   (fn [evt]
-                             (swap! state assoc-in [:filters :key] (-> evt .-target .-value))
-                             (apply-filter! (get @state :filters))
-                             )
+                             (swap! state assoc-in [:filters :key] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -363,9 +355,7 @@
                :placeholder "Environment.."
                :value       (get-in @state [:filters :env])
                :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value))
-                              (apply-filter! (get @state :filters))
-                              )
+                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -376,9 +366,7 @@
                :placeholder "Version.."
                :value       (get-in @state [:filters :version])
                :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value))
-                              (apply-filter! (get @state :filters))
-                              )
+                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -405,9 +393,7 @@
                :placeholder "Service Name.."
                :value       (get-in @state [:filters :key])
                :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :key] (-> evt .-target .-value))
-                              (apply-filter! (get @state :filters))
-                              )
+                              (swap! state assoc-in [:filters :key] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -418,9 +404,7 @@
                :placeholder "Environment.."
                :value       (get-in @state [:filters :env])
                :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value))
-                              (apply-filter! (get @state :filters))
-                              )
+                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -431,9 +415,7 @@
                :placeholder "Version.."
                :value       (get-in @state [:filters :version])
                :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value))
-                              (apply-filter! (get @state :filters))
-                              )
+                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value)))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -532,7 +514,12 @@
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
-     [create-config-table (group-by :key (get @appRootDataState :entries))]
+     [create-config-table (group-by :key
+                                    (apply-filters
+                                      (get @appRootDataState :filters)
+                                      (get @appRootDataState :entries)
+                                      )
+                                    )]
      ]
     ]
    [:div {:class "footer" } @footer-data]
