@@ -96,7 +96,7 @@
         :keywords?       true
         :error-handler   error-handler}))
 
-(defn get-config-item-2! [item]
+(defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
         get-url (str "/configs/keys/" key "/envs/" env "/versions/" version )]
     (swap! app-state assoc-in [:item-params] {:key          key
@@ -158,7 +158,7 @@
        [:td {:data-label "Time"} (comm/parse-date change-num)]
        [:td {:data-label "Type"} (comm/as-label content-type)]
        [:td {:data-label "Value"}
-        [:button {:class "ui icon button" :on-click #(get-config-item-2! item)}
+        [:button {:class "ui icon button" :on-click #(get-config-item! item)}
          [:i {:class "ellipsis horizontal icon"}]]
         ]
        [:td {:data-label "Master Key" :class "master-key-width"}
@@ -186,7 +186,7 @@
        [:td {:data-label "Time"} (comm/parse-date change-num)]
        [:td {:data-label "Type"} (comm/as-label content-type)]
        [:td {:data-label "Value"}
-        [:button {:class "ui icon button" :on-click #(get-config-item-2! item)}
+        [:button {:class "ui icon button" :on-click #(get-config-item! item)}
          [:i {:class "ellipsis horizontal icon"}]]
         ]
        ]
@@ -235,7 +235,6 @@
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:input {
-               ;:class @check-box-toggle
                :type        "text"
                :placeholder "Version"
                :name        "version"
@@ -257,8 +256,6 @@
        [:option {:value "txt"} "txt"]
        ]
       ]
-     ;[:div {:class "column"}
-
      [:div {:class "ui horizontal divider"} "Upload a file"
       [:div]]
      ]
@@ -304,14 +301,10 @@
         [:td
          [:i {:class "red trash icon" :on-click #(debug-output!)}]
          ]]]]
-
-     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      ]
     [:div {:class "two wide column"}]
     ;;;-------------------------------------------------
-    [:div {:class "two wide column"}
-
-     ]
+    [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
      [:div {:class "ui horizontal divider"} "or provide config here"]
      [:div {:class "column"}
@@ -327,8 +320,6 @@
     ;;;-------------------------------------------------
     [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
-     ;[:button {:class "ui primary button"}
-     ; [:i {:class "plus icon"}] "Save Config Entry"]
       [:button {:class "ui primary button"} "Save" ]
      ]
     [:div {:class "two wide column"}
