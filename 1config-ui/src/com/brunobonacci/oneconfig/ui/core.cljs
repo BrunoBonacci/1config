@@ -59,11 +59,6 @@
                             :val     ""
                             :file     ""
                             }))
-
-(defonce search-data (atom {:key     ""
-                            :env     ""
-                            :version ""
-                            }))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax Handlers
 
@@ -120,9 +115,9 @@
           :error-handler   error-handler})))
 
 (defn apply-filter! [search-data]
-  (swap! state assoc-in [:entries] (comm/filter-entries {:key     (get @search-data :key)
-                                                         :env     (get @search-data :env)
-                                                         :version (get @search-data :version)
+  (swap! state assoc-in [:entries] (comm/filter-entries {:key     (get search-data :key)
+                                                         :env     (get search-data :env)
+                                                         :version (get search-data :version)
                                                          } @app-state-data-copy)))
 
 (defn add-config-entry! [event form-state]
@@ -353,10 +348,11 @@
       [:input {:type        "text"
                :class       "key-input-width"
                :placeholder "Service Name.."
-               :value       (get @search-data :key)
+               :value       (get-in @state [:filters :key])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:key] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                             (swap! state assoc-in [:filters :key] (-> evt .-target .-value))
+                             (apply-filter! (get @state :filters))
+                             )
                }]
       [:i {:class "search icon"}]]
      ]
@@ -365,10 +361,11 @@
       [:input {:type        "text"
                :class       "env-input-width"
                :placeholder "Environment.."
-               :value       (get @search-data :env)
+               :value       (get-in @state [:filters :env])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:env] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value))
+                              (apply-filter! (get @state :filters))
+                              )
                }]
       [:i {:class "search icon"}]]
      ]
@@ -377,10 +374,11 @@
       [:input {:type        "text"
                :class       "version-input-width"
                :placeholder "Version.."
-               :value       (get @search-data :version)
+               :value       (get-in @state [:filters :version])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:version] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value))
+                              (apply-filter! (get @state :filters))
+                              )
                }]
       [:i {:class "search icon"}]]
      ]
@@ -405,10 +403,11 @@
       [:input {:type        "text"
                :class       "key-input-width"
                :placeholder "Service Name.."
-               :value       (get @search-data :key)
+               :value       (get-in @state [:filters :key])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:key] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                              (swap! state assoc-in [:filters :key] (-> evt .-target .-value))
+                              (apply-filter! (get @state :filters))
+                              )
                }]
       [:i {:class "search icon"}]]
      ]
@@ -417,10 +416,11 @@
       [:input {:type        "text"
                :class       "env-input-width"
                :placeholder "Environment.."
-               :value       (get @search-data :env)
+               :value       (get-in @state [:filters :env])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:env] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value))
+                              (apply-filter! (get @state :filters))
+                              )
                }]
       [:i {:class "search icon"}]]
      ]
@@ -429,10 +429,11 @@
       [:input {:type        "text"
                :class       "version-input-width"
                :placeholder "Version.."
-               :value       (get @search-data :version)
+               :value       (get-in @state [:filters :version])
                :on-change   (fn [evt]
-                              (swap! search-data assoc-in [:version] (-> evt .-target .-value))
-                              (apply-filter! search-data))
+                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value))
+                              (apply-filter! (get @state :filters))
+                              )
                }]
       [:i {:class "search icon"}]]
      ]
