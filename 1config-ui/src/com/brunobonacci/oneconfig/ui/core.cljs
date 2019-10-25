@@ -210,7 +210,7 @@
 (defn debug-output!  []
   (println "click event"))
 
-(defn add-config-entry-form-adv []
+(defn add-config-entry-form []
   [:form {:class "ui form" :on-submit #(add-config-entry! %1 submit-data)}
    [:div {:class "ui grid"}
     [:div {:class "two wide column"}]
@@ -256,10 +256,8 @@
        [:option {:value "txt"} "txt"]
        ]
       ]
-     [:div {:class "ui horizontal divider"} "Upload a file"
-      [:div]]
+     [:div {:class "ui horizontal divider"} "Upload a file"]
      ]
-
     [:div {:class "two wide column"}]
     ;;;-------------------------------------------------
     [:div {:class "two wide column"}]
@@ -495,7 +493,7 @@
 (defn app-root [app-state]
   [:div
    [:div {:class @sidenav-display-toggle}
-    [add-config-entry-form-adv]
+    [add-config-entry-form]
     ]
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
