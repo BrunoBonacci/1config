@@ -207,7 +207,6 @@
     (reset! sidenav-display-toggle "sidenav visible"))
   )
 
-
 (defn debug-output!  []
   (println "click event"))
 
@@ -267,149 +266,59 @@
     [:div {:class "two wide column"}]
     ;;;-------------------------------------------------
     [:div {:class "two wide column"}]
-    [:div {:class "seven wide column"}
-       [:input {:type "file"
-                :name  "file"
-                ;:class "hide-element"
-                :class "inputfile"
-                :id "file-input"
-                :on-change                      (fn [this]
-                                                  (if (not (= "" (-> this .-target .-value)))
-                                                    (let [^js/File file (-> this .-target .-files (aget 0))
-                                                          reader (js/FileReader.)
-                                                          file-name (-> file  .-name) ;;TODO replace with it and rename
-                                                          ]
-                                                      (.readAsText reader file)
-                                                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
-                                                      (set! (.-onload reader)
-                                                            (fn [e]
-                                                              (let [xxx (-> e .-target .-result)]
-                                                                (swap! submit-data assoc-in [:val] xxx)
-                                                                )
-                                                              ))
-                                                      (reset! file-upload-name file-name)
-                                                      (notify-file-upload! file-name)
+    [:div {:class "twelve wide column"}
+     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     [:table {:class "ui very basic  table"}
+      [:tbody
+       [:tr
+        [:td
+         [:input {:type "file"
+                  :name  "file"
+                  ;:class "hide-element"
+                  :class "inputfile"
+                  :id "file-input"
+                  :on-change                      (fn [this]
+                                                    (if (not (= "" (-> this .-target .-value)))
+                                                      (let [^js/File file (-> this .-target .-files (aget 0))
+                                                            reader (js/FileReader.)
+                                                            file-name (-> file  .-name) ;;TODO replace with it and rename
+                                                            ]
+                                                        (.readAsText reader file)
+                                                        (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+                                                        (set! (.-onload reader)
+                                                              (fn [e]
+                                                                (let [xxx (-> e .-target .-result)]
+                                                                  (swap! submit-data assoc-in [:val] xxx)
+                                                                  )
+                                                                ))
+                                                        (reset! file-upload-name file-name)
+                                                        (notify-file-upload! file-name)
+                                                        )
                                                       )
                                                     )
-                                                  )
 
-                }
+                  }
 
-        ]
-       [:label {:for "file-input" :class "ui small button"}
-        [:i {:class "ui upload icon"}]"Upload file"]
+          ]
+         [:label {:for "file-input" :class "ui mini blue button"}
+          [:i {:class "ui upload icon"}]"Upload"]
+         ]
+        [:td
+         "file_name.json"]
+        [:td
+         [:i {:class "red trash icon" :on-click #(debug-output!)}]
+         ;[:i {:class "red trash icon" :on-click #(simple-modal-style-change!)}]
 
+         ]]]]
 
-     ;[:label {:for "file-input"}
-     ; [:a {:class "ui label" :for "file-input"}
-     ;  [:i {:class "cloud upload icon"}] "" ]
-     ; ]
-     ;[:input {
-     ;         :id    "file-input"
-     ;         :class "hide-element"
-     ;         :type  "file"
-     ;         :name  "file"
-     ;         :on-change
-     ;                (fn [this]
-     ;                  (if (not (= "" (-> this .-target .-value)))
-     ;                    (let [^js/File file (-> this .-target .-files (aget 0))
-     ;                          reader (js/FileReader.)
-     ;                          file-name (-> file  .-name) ;;TODO replace with it and rename
-     ;                          ]
-     ;                      (.readAsText reader file)
-     ;                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
-     ;                      (set! (.-onload reader)
-     ;                            (fn [e]
-     ;                              (let [xxx (-> e .-target .-result)]
-     ;                                (swap! submit-data assoc-in [:val] xxx)
-     ;                                )
-     ;                              ))
-     ;                      (reset! file-upload-name file-name)
-     ;                      (notify-file-upload! file-name)
-     ;                      )
-     ;                    )
-     ;                  )
-     ;         }]
+     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      ]
-    [:div {:class "three wide column"}
-
-     ;[:div {:class @file-upload-style}
-     ; @file-upload-name
-     ; ;[:div {:class "ui vertical button"}
-     ; ; [:i {:class "trash icon"}]
-     ; ; ]
-     ; [:i {:class "trash icon"}]
-     ; ]
-
-     [:div {:class @file-upload-style}
-      [:span  [:b @file-upload-name]
-       ;[:i {:class "trash icon" :on-click #(debug-output!)}]
-       ]
-
-      ]
-
-
-     ;[:div {:class @file-upload-style}
-     ; [:input {:type "text", :placeholder "Search..." :value @file-upload-name}]
-     ; [:button {:class "ui button"} "Remove"]
-     ; ]
-     ]
-    [:div {:class "two wide column"}
-     [:div {:class @file-upload-style}
-      [:i {:class "red trash icon" :on-click #(debug-output!)}]
-
-      ]
-     ]
-    ;[:div {:class "four wide column"}
-    ; [:div {:class "ui button"}
-    ;  [:div {:class "visible content"}
-    ;   [:i {:class "trash alternate icon"}]]
-    ;  ]
-    ; ]
-
-    ;;!!!!!!
     [:div {:class "two wide column"}]
     ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
+    [:div {:class "two wide column"}
+
+     ]
     [:div {:class "twelve wide column"}
-     [:div {:class "column"}
-      ;
-      ;[:label {:for "file-input"}
-      ; [:a {:class "ui label" :for "file-input"}
-      ;  [:i {:class "cloud upload icon"}] "Upload a config file" ]
-      ; ]
-      ;[:input {
-      ;         :id    "file-input"
-      ;         :class "hide-element"
-      ;         :type  "file"
-      ;         :name  "file"
-      ;         :on-change
-      ;                (fn [this]
-      ;                  (if (not (= "" (-> this .-target .-value)))
-      ;                    (let [^js/File file (-> this .-target .-files (aget 0))
-      ;                          reader (js/FileReader.)
-      ;                          file-name (-> file  .-name) ;;TODO replace with it and rename
-      ;                          ]
-      ;                      (.readAsText reader file)
-      ;                      (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
-      ;                      (set! (.-onload reader)
-      ;                            (fn [e]
-      ;                              (let [xxx (-> e .-target .-result)]
-      ;                                (swap! submit-data assoc-in [:val] xxx)
-      ;                                )
-      ;                              ))
-      ;                      (reset! file-upload-name file-name)
-      ;                      (notify-file-upload! file-name)
-      ;                      )
-      ;                    )
-      ;                  )
-      ;         }]
-      ;[:div {:class @file-upload-style}
-      ; [:a {:class "item"}
-      ;  [:i {:class "icon file alternate outline"}] @file-upload-name
-      ;  [:div {:class "floating ui red label"} "1"]]
-      ; ]
-      ]
      [:div {:class "ui horizontal divider"} "or provide config here"]
      [:div {:class "column"}
       [:textarea {:class "modal-textarea"
@@ -428,7 +337,8 @@
      ; [:i {:class "plus icon"}] "Save Config Entry"]
       [:button {:class "ui primary button"} "Save" ]
      ]
-    [:div {:class "two wide column"}]
+    [:div {:class "two wide column"}
+     ]
     ]
    ]
   )

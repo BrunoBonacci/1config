@@ -299,3 +299,8 @@ input:checked + .slider:before {
     transition: opacity 0.3s linear;
     z-index: 17;
 }
+
+.config-table-scroll {
+    overflow-y: auto;
+    height: 1000px;
+}
