@@ -45,7 +45,6 @@
                       }))
 
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
-(defonce app-state-data (atom ""))
 (defonce app-state-data-copy (atom ""))
 (defonce footer-data (atom ""))
 (defonce check-box-toggle (atom "minified-mode"))
@@ -86,7 +85,6 @@
              :surface-13-modal))))
 
 (defn get-all-configs-handler [data]
-  (reset! app-state-data data)
   (reset! app-state-data-copy data)
   (swap! state assoc-in [:entries] data)                    ;; TODO temp solution
   )
@@ -122,10 +120,10 @@
           :error-handler   error-handler})))
 
 (defn apply-filter! [search-data]
-  (reset!  app-state-data (comm/filter-entries {:key     (get @search-data :key)
-                                                :env     (get @search-data :env)
-                                                :version (get @search-data :version)
-                                                } @app-state-data-copy)))
+  (swap! state assoc-in [:entries] (comm/filter-entries {:key     (get @search-data :key)
+                                                         :env     (get @search-data :env)
+                                                         :version (get @search-data :version)
+                                                         } @app-state-data-copy)))
 
 (defn add-config-entry! [event form-state]
   (.preventDefault event)
