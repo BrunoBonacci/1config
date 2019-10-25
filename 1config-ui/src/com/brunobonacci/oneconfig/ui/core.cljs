@@ -343,8 +343,7 @@
                :class       "key-input-width"
                :placeholder "Service Name.."
                :value       (get-in @state [:filters :key])
-               :on-change   (fn [evt]
-                             (swap! state assoc-in [:filters :key] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -354,8 +353,7 @@
                :class       "env-input-width"
                :placeholder "Environment.."
                :value       (get-in @state [:filters :env])
-               :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -365,8 +363,7 @@
                :class       "version-input-width"
                :placeholder "Version.."
                :value       (get-in @state [:filters :version])
-               :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -392,8 +389,7 @@
                :class       "key-input-width"
                :placeholder "Service Name.."
                :value       (get-in @state [:filters :key])
-               :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :key] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -403,8 +399,7 @@
                :class       "env-input-width"
                :placeholder "Environment.."
                :value       (get-in @state [:filters :env])
-               :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :env] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
@@ -414,8 +409,7 @@
                :class       "version-input-width"
                :placeholder "Version.."
                :value       (get-in @state [:filters :version])
-               :on-change   (fn [evt]
-                              (swap! state assoc-in [:filters :version] (-> evt .-target .-value)))
+               :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
