@@ -46,7 +46,6 @@
 
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
 (defonce footer-data (atom ""))
-(defonce check-box-toggle (atom "minified-mode"))
 (defonce sidenav-display-toggle (atom "sidenav hidden"))
 (defonce file-upload-name (atom ""))
 (defonce file-upload-style (atom "hide-element"))
@@ -370,7 +369,7 @@
     ]
    ]
   )
-
+;; TODO we need to pass state as a parameter here
 (defn table-header []
   [:thead
    [:tr {:class "center aligned"}
@@ -417,24 +416,18 @@
    ]
   )
 
-(defn show-table-mode!  []
-  (if (= @check-box-toggle "extended-mode")
-    (reset! check-box-toggle "minified-mode")
-    (reset! check-box-toggle "extended-mode"))
-  )
-
-(defn get-label-text []
-  (if (= @check-box-toggle "extended-mode")
+(defn get-label-text [extended-mode?]
+  (if (true? extended-mode?)
     [:div {:class "ui blue label"}
-     "minified mode"
-      [:span {:class "minified-mode-label"}
-       [:i {:class "inverted arrow alternate circle left outline icon"} ]
-       ]
-     ]
-    [:div {:class "ui blue label"}
-     "extended mode"
+     "back to extended mode"
      [:span {:class "minified-mode-label"}
       [:i {:class "inverted arrow alternate circle right outline icon"} ]
+      ]
+     ]
+    [:div {:class "ui blue label"}
+     "back to minified mode"
+     [:span {:class "minified-mode-label"}
+      [:i {:class "inverted arrow alternate circle left outline icon"} ]
       ]
      ]
     ))
@@ -459,10 +452,10 @@
    ]
   )
 
-(defn create-config-table [items]
+(defn create-config-table [extended-mode? items]
   [:div {:class "sixteen wide column"}
    [:div {:class "ui grid"}
-    (if (= @check-box-toggle "extended-mode")
+    (if (true? extended-mode?)
       (show-extended-table items)
       (show-minified-table items))
     ]])
@@ -484,13 +477,13 @@
      [:div {:class "right menu"}
       [:div {:class "item"}
        [:div
-        (get-label-text)
+        (get-label-text (get @appRootDataState :extended-mode?))
         ]
        ]
       [:div {:class "item"}
        [:div
         [:label {:class "switch"}
-         [:input {:type "checkbox" :on-click #(show-table-mode!)  }   ]
+         [:input {:type "checkbox" :on-click #(swap! appRootDataState update-in [:extended-mode?] not) }   ]
          [:span {:class "slider round"}]]
         ]
        ]
@@ -508,7 +501,7 @@
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
-     [create-config-table (group-by :key
+     [create-config-table (get @appRootDataState :extended-mode?) (group-by :key
                                     (apply-filters
                                       (get @appRootDataState :filters)
                                       (get @appRootDataState :entries)
