@@ -28,7 +28,8 @@
             :extended-mode? false
             ;; one of :listing, :new-entry-mode, :show-entry-mode
             :client-mode :listing
-            :new-version-flag? nil
+            ;:new-version-flag? nil
+            :1config-version {:current "" :latest ""}
 
             :new-entry nil
 
@@ -45,7 +46,6 @@
                       }))
 
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
-(defonce footer-data (atom ""))
 (defonce sidenav-display-toggle (atom "sidenav hidden"))
 (defonce file-upload-name (atom ""))
 (defonce file-upload-style (atom "hide-element"))
@@ -77,8 +77,13 @@
              :surface-13
              :surface-13-modal))))
 
-(defn get-footer-text-handler [{:keys [description license version]}]
-  (reset! footer-data (str "1Config." description license ". Bruno Bonacci, 2019, v. " version)))
+(defn footer-element [version]
+  [:div {:class "footer" }
+   (str "1Config.A library to manage multiple environments and application configuration safely and effectively.Apache License 2.0. Bruno Bonacci, 2019, v." (get version :current)
+        (if (= (get version :current) (get version :latest))
+          ""
+          (str "(Latest version v." (get version :latest) ")")))
+   ])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax
@@ -131,9 +136,9 @@
                       :error-handler   error-handler
                       })))
 
-(defn get-footer-text []
+(defn get-footer-text [allState]
   (GET "/footer"
-       {:handler         get-footer-text-handler
+       {:handler          #(swap! allState assoc-in [:1config-version] %)
         :format          :json
         :response-format :json
         :keywords?       true
@@ -509,7 +514,7 @@
                                     )]
      ]
     ]
-   [:div {:class "footer" } @footer-data]
+   [footer-element (get @appRootDataState :1config-version)]
    ]
   )
 
@@ -532,5 +537,5 @@
   (dev-setup)
   ;(app-routes state)
   (get-all-configs!)
-  (get-footer-text)
+  (get-footer-text state)
   (reload state))

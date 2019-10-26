@@ -11,6 +11,7 @@
             [ring.middleware.json :refer [wrap-json-params wrap-json-body wrap-json-response]]
 
             [org.httpkit.client :as http]
+            [clojure.java.io :as io]
 
             [cheshire.core :as json]
             [com.brunobonacci.oneconfig.backend :refer :all]
@@ -54,16 +55,23 @@
   (let [{:keys [body]} @(http/get url)]
     (json/parse-string body)))
 
+;;; TODO is it possible to reuse
+(defn- oneconfig-version
+  []
+  (some->
+    (io/resource "1config.version")
+    slurp
+    (string/trim))
+  )
+
 (defn- github-data []
-  (let [general (get-github-data repo-base-url)
-        tags (get-github-data repo-tags-url)]
-    {:description (get general "description" )
-     :license (get-in general ["license" "name"] )
-     :version  (->
+  (let [tags (get-github-data repo-tags-url)]
+    {:latest  (->
                  (last tags)
                  (get "ref")
                  (string/split #"/")
                  (last))
+     :current (oneconfig-version)
      }
     ))
 
