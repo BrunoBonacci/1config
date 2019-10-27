@@ -250,10 +250,9 @@
                              (swap! submit-data assoc-in [:type] (-> evt .-target .-value)))
                 :value (get @submit-data :type)
                 }
-       [:option {:value "" :selected "true" :disabled "disabled" :hidden "true"} "Type"]
+       [:option {:value "json" :selected "true" } "json"]
        [:option {:value "edn"} "edn"]
        [:option {:value "properties"} "properties"]
-       [:option {:value "json"} "json"]
        [:option {:value "txt"} "txt"]
        ]
       ]

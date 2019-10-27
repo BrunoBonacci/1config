@@ -46,7 +46,7 @@ body {
 select.ui.dropdown {
     font-family: 'Cardo', serif;
     font-size: 14px;
-    color: lightgrey;
+    /*color: lightgrey;*/
 }
 
 .ui.divider {
