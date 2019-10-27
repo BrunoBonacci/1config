@@ -326,7 +326,7 @@
    ]
   )
 
-(defn table-header-extended []
+(defn table-header-extended [tableExtendedFiltersData]
   [:thead
    [:tr {:class "center aligned"}
     [:th "Service"]
@@ -345,7 +345,7 @@
       [:input {:type        "text"
                :class       "key-input-width"
                :placeholder "Service Name.."
-               :value       (get-in @state [:filters :key])
+               :value       (get-in tableExtendedFiltersData [:filters :key])
                :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -355,7 +355,7 @@
       [:input {:type        "text"
                :class       "env-input-width"
                :placeholder "Environment.."
-               :value       (get-in @state [:filters :env])
+               :value       (get-in tableExtendedFiltersData [:filters :env])
                :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -365,7 +365,7 @@
       [:input {:type        "text"
                :class       "version-input-width"
                :placeholder "Version.."
-               :value       (get-in @state [:filters :version])
+               :value       (get-in tableExtendedFiltersData [:filters :version])
                :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -373,8 +373,8 @@
     ]
    ]
   )
-;; TODO we need to pass state as a parameter here
-(defn table-header []
+
+(defn table-header [tableFiltersData]
   [:thead
    [:tr {:class "center aligned"}
     [:th "Service"]
@@ -391,7 +391,7 @@
       [:input {:type        "text"
                :class       "key-input-width"
                :placeholder "Service Name.."
-               :value       (get-in @state [:filters :key])
+               :value       (get-in tableFiltersData [:filters :key])
                :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -401,7 +401,7 @@
       [:input {:type        "text"
                :class       "env-input-width"
                :placeholder "Environment.."
-               :value       (get-in @state [:filters :env])
+               :value       (get-in tableFiltersData [:filters :env])
                :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -411,7 +411,7 @@
       [:input {:type        "text"
                :class       "version-input-width"
                :placeholder "Version.."
-               :value       (get-in @state [:filters :version])
+               :value       (get-in tableFiltersData [:filters :version])
                :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
@@ -436,9 +436,9 @@
      ]
     ))
 
-(defn show-extended-table [items]
+(defn show-extended-table [items filtersExtendedData]
   [:table {:class "ui selectable celled table"}
-   [table-header-extended]
+   [table-header-extended filtersExtendedData]
    [:tbody
     (for [itm items]
       (create-table-extended (val itm))
@@ -447,21 +447,21 @@
    ]
   )
 
-(defn show-minified-table [items]
+(defn show-minified-table [items filtersData]
   [:table {:class "ui selectable celled table"}
-   [table-header]
+   [table-header filtersData]
    [:tbody
     (for [itm items]
       (create-minified-table (val itm)))]
    ]
   )
 
-(defn create-config-table [extended-mode? items]
+(defn create-config-table [extended-mode? filters items]
   [:div {:class "sixteen wide column"}
    [:div {:class "ui grid"}
     (if (true? extended-mode?)
-      (show-extended-table items)
-      (show-minified-table items))
+      (show-extended-table items filters)
+      (show-minified-table items filters))
     ]])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -505,12 +505,14 @@
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
-     [create-config-table (get @appRootDataState :extended-mode?) (group-by :key
+     [create-config-table (get @appRootDataState :extended-mode?)
+                          @appRootDataState ;(get @appRootDataState :filters)
+                          (group-by :key
                                     (apply-filters
                                       (get @appRootDataState :filters)
                                       (get @appRootDataState :entries)
-                                      )
-                                    )]
+                                      ))
+      ]
      ]
     ]
    [footer-element (get @appRootDataState :1config-version)]
