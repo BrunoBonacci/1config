@@ -222,8 +222,7 @@
                :placeholder "Service Name"
                :name        "service"
                :value       (get @submit-data :key)
-               :on-change   (fn [evt]
-                              (swap! submit-data assoc-in [:key] (-> evt .-target .-value)))
+               :on-change  #(swap! submit-data assoc-in [:key] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:input {
@@ -231,8 +230,7 @@
                :placeholder "Environment"
                :name        "environment"
                :value       (get @submit-data :env)
-               :on-change   (fn [evt]
-                              (swap! submit-data assoc-in [:env] (-> evt .-target .-value)))
+               :on-change  #(swap! submit-data assoc-in [:env] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:input {
@@ -240,14 +238,11 @@
                :placeholder "Version"
                :name        "version"
                :value       (get @submit-data :version)
-               :on-change   (fn [evt]
-                              (swap! submit-data assoc-in [:version] (-> evt .-target .-value))
-                              )
+               :on-change  #(swap! submit-data assoc-in [:version] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:select {:class "ui dropdown modal-selector "
-                :on-change (fn [evt]
-                             (swap! submit-data assoc-in [:type] (-> evt .-target .-value)))
+                :on-change  #(swap! submit-data assoc-in [:type] (-> % .-target .-value))
                 :value (get @submit-data :type)
                 }
        [:option {:value "json" :selected "true" } "json"]
@@ -309,8 +304,7 @@
       [:textarea {:class "modal-textarea"
                   :placeholder "Config data..."
                   :value (get @submit-data :val)
-                  :on-change  (fn [evt]
-                                (swap! submit-data assoc-in [:val] (-> evt .-target .-value)))
+                  :on-change  #(swap! submit-data assoc-in [:val] (-> % .-target .-value))
                   }]
       ]
      ]
