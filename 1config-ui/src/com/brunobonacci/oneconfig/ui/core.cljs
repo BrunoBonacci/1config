@@ -122,12 +122,12 @@
   (.preventDefault event)
   (let [form-data (doto
                     (js/FormData.)
-                    (.append "key" (get @form-state :key))
-                    (.append "env" (get @form-state :env))
-                    (.append "version" (get @form-state :version))
-                    (.append "content-type" (get @form-state :type))
-                    (.append "value" (get @form-state :val)))]
-    (reset! form-state nil)
+                    (.append "key"          (get form-state :key))
+                    (.append "env"          (get form-state :env))
+                    (.append "version"      (get form-state :version))
+                    (.append "content-type" (get form-state :type))
+                    (.append "value"        (get form-state :val)))]
+    ;(reset! form-state nil) ;; TODO ????
     (POST "/configs" {
                       :body            form-data
                       :response-format :json
@@ -212,7 +212,7 @@
   (println "click event"))
 
 (defn add-config-entry-form []
-  [:form {:class "ui form" :on-submit #(add-config-entry! %1 submit-data)}
+  [:form {:class "ui form" :on-submit #(add-config-entry! %1 @submit-data)}
    [:div {:class "ui grid"}
     [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
