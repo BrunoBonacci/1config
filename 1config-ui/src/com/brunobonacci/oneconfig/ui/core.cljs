@@ -31,7 +31,13 @@
             ;:new-version-flag? nil
             :1config-version {:current "" :latest ""}
 
-            :new-entry nil
+            :new-entry {:key     ""
+                        :env     ""
+                        :version ""
+                        :type    ""
+                        :val     ""
+                        :file     ""
+                        }
 
             ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
             :page-key    :surface-13
@@ -50,13 +56,6 @@
 (defonce file-upload-name (atom ""))
 (defonce file-upload-style (atom "hide-element"))
 
-(defonce submit-data (atom {:key     ""
-                            :env     ""
-                            :version ""
-                            :type    ""
-                            :val     ""
-                            :file     ""
-                            }))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax Handlers
 
@@ -211,8 +210,8 @@
 (defn debug-output!  []
   (println "click event"))
 
-(defn add-config-entry-form []
-  [:form {:class "ui form" :on-submit #(add-config-entry! %1 @submit-data)}
+(defn add-config-entry-form [submitData]
+  [:form {:class "ui form" :on-submit #(add-config-entry! %1 (get @submitData :new-entry))}
    [:div {:class "ui grid"}
     [:div {:class "two wide column"}]
     [:div {:class "twelve wide column"}
@@ -221,29 +220,29 @@
                :type        "text"
                :placeholder "Service Name"
                :name        "service"
-               :value       (get @submit-data :key)
-               :on-change  #(swap! submit-data assoc-in [:key] (-> % .-target .-value))
+               :value       (get-in @submitData [:new-entry :key])
+               :on-change  #(swap! submitData assoc-in [:new-entry :key] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:input {
                :type        "text"
                :placeholder "Environment"
                :name        "environment"
-               :value       (get @submit-data :env)
-               :on-change  #(swap! submit-data assoc-in [:env] (-> % .-target .-value))
+               :value       (get-in @submitData [:new-entry :env])
+               :on-change  #(swap! submitData assoc-in [:new-entry :env] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:input {
                :type        "text"
                :placeholder "Version"
                :name        "version"
-               :value       (get @submit-data :version)
-               :on-change  #(swap! submit-data assoc-in [:version] (-> % .-target .-value))
+               :value       (get-in @submitData [:new-entry :version])
+               :on-change  #(swap! submitData assoc-in [:new-entry :version] (-> % .-target .-value))
                }]]
      [:div {:class "row onecfg-filter-block"}
       [:select {:class "ui dropdown modal-selector "
-                :on-change  #(swap! submit-data assoc-in [:type] (-> % .-target .-value))
-                :value (get @submit-data :type)
+                :value (get-in @submitData [:new-entry :type])
+                :on-change  #(swap! submitData assoc-in [:new-entry :type] (-> % .-target .-value))
                 }
        [:option {:value "json" :selected "true" } "json"]
        [:option {:value "edn"} "edn"]
@@ -273,11 +272,11 @@
                                        file-name (-> file .-name) ;;TODO replace with it and rename
                                        ]
                                    (.readAsText reader file)
-                                   (swap! submit-data assoc-in [:type] (comm/get-extension file-name))
+                                   (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
                                    (set! (.-onload reader)
                                          (fn [e]
                                            (let [xxx (-> e .-target .-result)]
-                                             (swap! submit-data assoc-in [:val] xxx)
+                                             (swap! submitData assoc-in [:new-entry :val] xxx)
                                              )
                                            ))
                                    (reset! file-upload-name file-name)
@@ -303,8 +302,8 @@
      [:div {:class "column"}
       [:textarea {:class "modal-textarea"
                   :placeholder "Config data..."
-                  :value (get @submit-data :val)
-                  :on-change  #(swap! submit-data assoc-in [:val] (-> % .-target .-value))
+                  :value (get-in @submitData [:new-entry :val])
+                  :on-change  #(swap! submitData assoc-in [:new-entry :val] (-> % .-target .-value))
                   }]
       ]
      ]
@@ -465,7 +464,7 @@
 (defn app-root [appRootDataState]
   [:div
    [:div {:class @sidenav-display-toggle}
-    [add-config-entry-form]
+    [add-config-entry-form appRootDataState]
     ]
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
