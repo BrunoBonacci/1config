@@ -7,6 +7,7 @@
     [com.brunobonacci.oneconfig.ui.comm :as comm]
     [com.brunobonacci.oneconfig.ui.popup.style :as surface]
     [com.brunobonacci.oneconfig.ui.popup.surface-13 :as surface-13]
+    [goog.string :as gs]
     [clojure.string :as string]))
 
 
@@ -36,7 +37,8 @@
                         :version ""
                         :type    ""
                         :val     ""
-                        :file     ""
+                        :file    ""
+                        :file-name ""
                         }
 
             ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
@@ -53,8 +55,6 @@
 
 ;TODO maybe all atoms which manage states should be turned into a single "state"-atom
 (defonce sidenav-display-toggle (atom "sidenav hidden"))
-(defonce file-upload-name (atom ""))
-(defonce file-upload-style (atom "hide-element"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax Handlers
@@ -98,12 +98,14 @@
 
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
-        get-url (str "/configs/keys/" key "/envs/" env "/versions/" version )]
+        get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s" key env version)
+        ;TODO gs/urlEncode for params
+        ]
     (swap! state assoc-in [:item-params] {:key          key
-                                              :env          env
-                                              :version      version
-                                              :change-num   change-num
-                                              :content-type content-type})
+                                          :env          env
+                                          :version      version
+                                          :change-num   change-num
+                                          :content-type content-type})
     (GET get-url {
           :handler         get-item-handler
           :format          :json
@@ -150,6 +152,7 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
+      ; TODO is it ok to require 2 strings?
       [:tr {:class "top aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (comm/as-label (comm/colourize-label env) env)]
@@ -194,21 +197,15 @@
     )
   )
 
-(defn notify-file-upload! [name]
-  (if (= name "")
-    (reset! file-upload-style "hide-element")
-    (reset! file-upload-style "show-element")))
-
-
+(defn remove-file! [data]
+  (swap! data assoc-in [:new-entry :val] "")
+  (swap! data assoc-in [:new-entry :file-name] ""))
 
 (defn sidenav-display!  []
   (if (= @sidenav-display-toggle "sidenav visible")
     (reset! sidenav-display-toggle "sidenav hidden")
     (reset! sidenav-display-toggle "sidenav visible"))
   )
-
-(defn debug-output!  []
-  (println "click event"))
 
 (defn add-config-entry-form [submitData]
   [:form {:class "ui form" :on-submit #(add-config-entry! %1 (get @submitData :new-entry))}
@@ -244,7 +241,7 @@
                 :value (get-in @submitData [:new-entry :type])
                 :on-change  #(swap! submitData assoc-in [:new-entry :type] (-> % .-target .-value))
                 }
-       [:option {:value "json" :selected "true" } "json"]
+       [:option {:value "json"} "json"]
        [:option {:value "edn"} "edn"]
        [:option {:value "properties"} "properties"]
        [:option {:value "txt"} "txt"]
@@ -275,12 +272,11 @@
                                    (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
                                    (set! (.-onload reader)
                                          (fn [e]
-                                           (let [xxx (-> e .-target .-result)]
-                                             (swap! submitData assoc-in [:new-entry :val] xxx)
+                                           (let [val (-> e .-target .-result)]
+                                             (swap! submitData assoc-in [:new-entry :val] val)
                                              )
                                            ))
-                                   (reset! file-upload-name file-name)
-                                   (notify-file-upload! file-name)
+                                   (swap! submitData assoc-in [:new-entry :file-name] file-name)
                                    )
                                  )
                                )
@@ -289,9 +285,12 @@
          [:label {:for "file-input" :class "ui mini blue button"}
           [:i {:class "ui upload icon"}]"Upload"]
          ]
-        [:td @file-upload-name]
+        [:td (get-in @submitData [:new-entry :file-name])]
         [:td
-         [:i {:class "red trash icon" :on-click #(debug-output!)}]
+         (if (gs/isEmptyString (get-in @submitData [:new-entry :file-name]))
+           [:i]
+           [:i {:class "red trash icon" :on-click #(remove-file! submitData)}]
+           )
          ]]]]
      ]
     [:div {:class "two wide column"}]
