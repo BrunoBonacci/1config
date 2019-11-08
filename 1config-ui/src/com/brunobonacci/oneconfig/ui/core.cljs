@@ -208,114 +208,116 @@
   )
 
 (defn add-config-entry-form [submitData]
-  [:form {:class "ui form" :on-submit #(add-config-entry! %1 (get @submitData :new-entry))}
-   [:div {:class "ui grid"}
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-     [:div {:class "row onecfg-filter-block"}
-      [:input {
-               :type        "text"
-               :placeholder "Service Name"
-               :name        "service"
-               :value       (get-in @submitData [:new-entry :key])
-               :on-change  #(swap! submitData assoc-in [:new-entry :key] (-> % .-target .-value))
-               }]]
-     [:div {:class "row onecfg-filter-block"}
-      [:input {
-               :type        "text"
-               :placeholder "Environment"
-               :name        "environment"
-               :value       (get-in @submitData [:new-entry :env])
-               :on-change  #(swap! submitData assoc-in [:new-entry :env] (-> % .-target .-value))
-               }]]
-     [:div {:class "row onecfg-filter-block"}
-      [:input {
-               :type        "text"
-               :placeholder "Version"
-               :name        "version"
-               :value       (get-in @submitData [:new-entry :version])
-               :on-change  #(swap! submitData assoc-in [:new-entry :version] (-> % .-target .-value))
-               }]]
-     [:div {:class "row onecfg-filter-block"}
-      [:select {:class "ui dropdown modal-selector "
-                :value (get-in @submitData [:new-entry :type])
-                :on-change  #(swap! submitData assoc-in [:new-entry :type] (-> % .-target .-value))
-                }
-       [:option {:value "json"} "json"]
-       [:option {:value "edn"} "edn"]
-       [:option {:value "properties"} "properties"]
-       [:option {:value "txt"} "txt"]
+  (let [deref-submit-data @submitData]
+    [:form {:class "ui form" :on-submit #(add-config-entry! %1 (get deref-submit-data :new-entry))}
+     [:div {:class "ui grid"}
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       [:div {:class "row onecfg-filter-block"}
+        [:input {
+                 :type        "text"
+                 :placeholder "Service Name"
+                 :name        "service"
+                 :value       (get-in deref-submit-data [:new-entry :key])
+                 :on-change  #(swap! submitData assoc-in [:new-entry :key] (-> % .-target .-value))
+                 }]]
+       [:div {:class "row onecfg-filter-block"}
+        [:input {
+                 :type        "text"
+                 :placeholder "Environment"
+                 :name        "environment"
+                 :value       (get-in deref-submit-data [:new-entry :env])
+                 :on-change  #(swap! submitData assoc-in [:new-entry :env] (-> % .-target .-value))
+                 }]]
+       [:div {:class "row onecfg-filter-block"}
+        [:input {
+                 :type        "text"
+                 :placeholder "Version"
+                 :name        "version"
+                 :value       (get-in deref-submit-data [:new-entry :version])
+                 :on-change  #(swap! submitData assoc-in [:new-entry :version] (-> % .-target .-value))
+                 }]]
+       [:div {:class "row onecfg-filter-block"}
+        [:select {:class "ui dropdown modal-selector "
+                  :value (get-in deref-submit-data [:new-entry :type])
+                  :on-change  #(swap! submitData assoc-in [:new-entry :type] (-> % .-target .-value))
+                  }
+         [:option {:value "json"} "json"]
+         [:option {:value "edn"} "edn"]
+         [:option {:value "properties"} "properties"]
+         [:option {:value "txt"} "txt"]
+         ]
+        ]
+       [:div {:class "ui horizontal divider"} "Upload a file"]
        ]
-      ]
-     [:div {:class "ui horizontal divider"} "Upload a file"]
-     ]
-    [:div {:class "two wide column"}]
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     [:table {:class "ui very basic  table"}
-      [:tbody
-       [:tr
-        [:td
-         [:input {:type      "file"
-                  :name      "file"
-                  :class     "inputfile"
-                  :id        "file-input"
-                  :on-change (fn [this]
-                               (if (not (= "" (-> this .-target .-value)))
-                                 (let [^js/File file (-> this .-target .-files (aget 0))
-                                       reader (js/FileReader.)
-                                       file-name (-> file .-name) ;;TODO replace with it and rename
-                                       ]
-                                   (.readAsText reader file)
-                                   (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
-                                   (set! (.-onload reader)
-                                         (fn [e]
-                                           (let [val (-> e .-target .-result)]
-                                             (swap! submitData assoc-in [:new-entry :val] val)
-                                             )
-                                           ))
-                                   (swap! submitData assoc-in [:new-entry :file-name] file-name)
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       [:table {:class "ui very basic  table"}
+        [:tbody
+         [:tr
+          [:td
+           [:input {:type      "file"
+                    :name      "file"
+                    :class     "inputfile"
+                    :id        "file-input"
+                    :on-change (fn [this]
+                                 (if (not (= "" (-> this .-target .-value)))
+                                   (let [^js/File file (-> this .-target .-files (aget 0))
+                                         reader (js/FileReader.)
+                                         file-name (-> file .-name) ;;TODO replace with it and rename
+                                         ]
+                                     (.readAsText reader file)
+                                     (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
+                                     (set! (.-onload reader)
+                                           (fn [e]
+                                             (let [val (-> e .-target .-result)]
+                                               (swap! submitData assoc-in [:new-entry :val] val)
+                                               )
+                                             ))
+                                     (swap! submitData assoc-in [:new-entry :file-name] file-name)
+                                     )
                                    )
                                  )
-                               )
-                  }
-          ]
-         [:label {:for "file-input" :class "ui mini blue button"}
-          [:i {:class "ui upload icon"}]"Upload"]
-         ]
-        [:td (get-in @submitData [:new-entry :file-name])]
-        [:td
-         (if (gs/isEmptyString (get-in @submitData [:new-entry :file-name]))
-           [:i]
-           [:i {:class "red trash icon" :on-click #(remove-file! submitData)}]
-           )
-         ]]]]
-     ]
-    [:div {:class "two wide column"}]
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-     [:div {:class "ui horizontal divider"} "or provide config here"]
-     [:div {:class "column"}
-      [:textarea {:class "modal-textarea"
-                  :placeholder "Config data..."
-                  :value (get-in @submitData [:new-entry :val])
-                  :on-change  #(swap! submitData assoc-in [:new-entry :val] (-> % .-target .-value))
-                  }]
+                    }
+            ]
+           [:label {:for "file-input" :class "ui mini blue button"}
+            [:i {:class "ui upload icon"}]"Upload"]
+           ]
+          [:td (get-in deref-submit-data [:new-entry :file-name])]
+          [:td
+           (if (gs/isEmptyString (get-in deref-submit-data[:new-entry :file-name]))
+             [:i]
+             [:i {:class "red trash icon" :on-click #(remove-file! submitData)}]
+             )
+           ]]]]
+       ]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       [:div {:class "ui horizontal divider"} "or provide config here"]
+       [:div {:class "column"}
+        [:textarea {:class "modal-textarea"
+                    :placeholder "Config data..."
+                    :value (get-in deref-submit-data [:new-entry :val])
+                    :on-change  #(swap! submitData assoc-in [:new-entry :val] (-> % .-target .-value))
+                    }]
+        ]
+       ]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       [:button {:class "ui primary button"} "Save" ]
+       ]
+      [:div {:class "two wide column"}
+       ]
       ]
      ]
-    [:div {:class "two wide column"}]
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-      [:button {:class "ui primary button"} "Save" ]
-     ]
-    [:div {:class "two wide column"}
-     ]
-    ]
-   ]
+    )
   )
 
 (defn table-header-extended [tableExtendedFiltersData]
