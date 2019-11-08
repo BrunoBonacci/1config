@@ -99,8 +99,8 @@
 
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
-        get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s" key env version)
-        ;TODO gs/urlEncode for params
+        get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s"
+                           (gs/urlEncode key) (gs/urlEncode env) (gs/urlEncode version))
         ]
     (swap! state assoc-in [:item-params] {:key          key
                                           :env          env
@@ -200,8 +200,10 @@
   )
 
 (defn remove-file! [data]
-  (swap! data assoc-in [:new-entry :val] "")
-  (swap! data assoc-in [:new-entry :file-name] ""))
+  (swap! data
+    #(-> %
+        (assoc-in [:new-entry :val] "")
+        (assoc-in [:new-entry :file-name] ""))))
 
 (defn toggle-new-entry-panel!  [sideNavState]
   (if (= :new-entry-mode (get @sideNavState :client-mode))
@@ -273,15 +275,16 @@
                                          reader (js/FileReader.)
                                          file-name (-> file .-name)]
                                      (.readAsText reader file)
-                                     (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
                                      (set! (.-onload reader)
                                            (fn [e]
                                              (let [val (-> e .-target .-result)]
-                                               (swap! submitData assoc-in [:new-entry :val] val)
+                                               (swap! submitData #(-> %
+                                                                     (assoc-in [:new-entry :val] val)
+                                                                     (assoc-in [:new-entry :file-name] file-name)
+                                                                     (assoc-in [:new-entry :type] (comm/get-extension file-name))
+                                                                      ))
                                                )
                                              ))
-                                     (swap! submitData assoc-in [:new-entry :file-name] file-name)
-                                     (println "UPLOAD SAME FILE ISSUE " file-name ) ;; TODO
                                      )
                                    )
                                  )
@@ -328,6 +331,11 @@
     )
   )
 
+
+(defn on-filter-change
+  [type value]
+  (swap! state assoc-in [:filters type] value))
+
 (defn table-header-extended [tableExtendedFiltersData]
   [:thead
    [:tr {:class "center aligned"}
@@ -348,7 +356,7 @@
                :class       "key-input-width"
                :placeholder "Service Name.."
                :value       (get-in tableExtendedFiltersData [:filters :key])
-               :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
+               :on-change   #(on-filter-change :key (-> % .-target .-value))
                }]
       [:i {:class "search icon"}]]
      ]
