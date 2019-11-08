@@ -31,6 +31,7 @@
 
 (def PORT 5300)
 (def NREPL-PORT 5301)
+(def index-page-path "resources/public/index.html")
 (def backend-name
   (util/default-backend-name))
 (def repo-base-url "https://api.github.com/repos/BrunoBonacci/1config")
@@ -81,6 +82,8 @@
 
 
 (defroutes endpoints
+  (GET  "/" [] (slurp index-page-path))
+
   (GET "/configs" {{:keys [change-num] :as params} :params}
        (let [filters (dissoc params :change-num)
              change-num (when change-num (Long/parseLong change-num))
@@ -133,11 +136,8 @@
 ;
 (defn -main [& args]
   (http-kit/run-server handler {:port PORT})
-  (println (str "Server started: http://127.0.0.1:" PORT "/index.html"))
-  (start-server :bind "0.0.0.0" :port NREPL-PORT)
-  (println (str "nRepl server started: `lein repl :connect " NREPL-PORT "`")))
-
-
+  (println (format "Server started: http://127.0.0.1:%d" PORT))
+  (start-server :bind "0.0.0.0" :port NREPL-PORT))
 
 (comment
 
