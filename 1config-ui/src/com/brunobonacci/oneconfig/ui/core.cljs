@@ -70,7 +70,7 @@
   (swap! state assoc-in [:client-mode] :listing))
 
 (defn get-item-handler [response]
-  (swap! state assoc-in [:item-data] (get response :value))
+  (swap! state assoc-in [:item-data] (get response :encoded-value))
   (swap! state update :page-key
          (fn [pk]
            (if (= pk :surface-13-modal)

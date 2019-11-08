@@ -109,7 +109,7 @@
 
   (POST "/configs" {params :params {referer "referer"} :headers}
     (try
-      (oneconfig/save backend params)
+      (oneconfig/save backend (assoc params :encoded true))
       (response {:status "OK" :message "Entry saved."})
       (catch Exception x
         {:status  400
