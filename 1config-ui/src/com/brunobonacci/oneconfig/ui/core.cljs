@@ -52,10 +52,6 @@
             ;        }
 
                       }))
-
-;TODO maybe all atoms which manage states should be turned into a single "state"-atom
-(defonce sidenav-display-toggle (atom "sidenav hidden"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax Handlers
 
@@ -201,11 +197,10 @@
   (swap! data assoc-in [:new-entry :val] "")
   (swap! data assoc-in [:new-entry :file-name] ""))
 
-(defn sidenav-display!  []
-  (if (= @sidenav-display-toggle "sidenav visible")
-    (reset! sidenav-display-toggle "sidenav hidden")
-    (reset! sidenav-display-toggle "sidenav visible"))
-  )
+(defn toggle-new-entry-panel!  [sideNavState]
+  (if (= :new-entry-mode (get @sideNavState :client-mode))
+    (swap! sideNavState assoc-in [:client-mode] :listing)
+    (swap! sideNavState assoc-in [:client-mode] :new-entry-mode)))
 
 (defn add-config-entry-form [submitData]
   (let [deref-submit-data @submitData]
@@ -267,8 +262,7 @@
                                  (if (not (= "" (-> this .-target .-value)))
                                    (let [^js/File file (-> this .-target .-files (aget 0))
                                          reader (js/FileReader.)
-                                         file-name (-> file .-name) ;;TODO replace with it and rename
-                                         ]
+                                         file-name (-> file .-name)]
                                      (.readAsText reader file)
                                      (swap! submitData assoc-in [:new-entry :type] (comm/get-extension file-name))
                                      (set! (.-onload reader)
@@ -278,6 +272,7 @@
                                                )
                                              ))
                                      (swap! submitData assoc-in [:new-entry :file-name] file-name)
+                                     (println "UPLOAD SAME FILE ISSUE " file-name ) ;; TODO
                                      )
                                    )
                                  )
@@ -464,13 +459,15 @@
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
 (defn app-root [appRootDataState]
   [:div
-   [:div {:class @sidenav-display-toggle}
-    [add-config-entry-form appRootDataState]
+   [:div {:class (if (= :new-entry-mode (get @appRootDataState :client-mode) )
+                      "sidenav visible"
+                      "sidenav hidden")}
+      [add-config-entry-form appRootDataState]
     ]
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
      [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(sidenav-display!)} "New Entry"]
+      [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! appRootDataState)} "New Entry"]
       ]
      [:div {:class "right menu"}
       [:div {:class "item"}
