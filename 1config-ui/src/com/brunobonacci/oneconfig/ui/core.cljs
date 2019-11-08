@@ -155,7 +155,7 @@
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
       ; TODO is it ok to require 2 strings?
-      [:tr {:class "top aligned"}
+      [:tr {:class "centered aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (comm/as-label (comm/colourize-label env) env)]
        [:td {:data-label "Version"} version]
@@ -183,7 +183,7 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
-      [:tr {:class "top aligned"}
+      [:tr {:class "centered aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (comm/as-label (comm/colourize-label env) env)]
        [:td {:data-label "Version"} version]
