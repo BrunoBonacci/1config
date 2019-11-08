@@ -1,7 +1,6 @@
 (ns com.brunobonacci.oneconfig.ui.popup.surface-13
   (:require
-    [com.brunobonacci.oneconfig.ui.comm :as comm]
-    [cljs.pprint :as pp]))
+    [com.brunobonacci.oneconfig.ui.comm :as comm]))
 
 (defn dimmer [app-state]
   [:div { :style    {:height "100%" :width  "100%"}

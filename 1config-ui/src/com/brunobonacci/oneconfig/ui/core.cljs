@@ -208,6 +208,9 @@
     (swap! sideNavState assoc-in [:client-mode] :listing)
     (swap! sideNavState assoc-in [:client-mode] :new-entry-mode)))
 
+(defn close-new-entry-panel!  [sideNavState]
+  (swap! sideNavState assoc-in [:client-mode] :listing))
+
 (defn add-config-entry-form [submitData]
   (let [deref-submit-data @submitData]
     [:form {:class "ui form" :on-submit #(add-config-entry! %1 submitData)}
@@ -311,8 +314,12 @@
       [:div {:class "two wide column"}]
       ;;;-------------------------------------------------
       [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
+      [:div {:class "four wide column"}
        [:button {:class "ui primary button"} "Save" ]
+       ]
+      [:div {:class "four wide column"}]
+      [:div {:class "four wide column "}
+       [:button {:class "ui grey button right floated left aligned" :on-click #(close-new-entry-panel! submitData)} "Close" ]
        ]
       [:div {:class "two wide column"}
        ]
