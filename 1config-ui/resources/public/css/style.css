@@ -302,5 +302,5 @@ input:checked + .slider:before {
 
 .config-table-scroll {
     overflow-y: auto;
-    height: 1000px;
+    margin-bottom: 20px;
 }

@@ -18,6 +18,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Vars
+(def empty-new-entry {:key     ""
+                      :env     ""
+                      :version ""
+                      :type    ""
+                      :val     ""
+                      :file    ""
+                      :file-name ""
+                      })
 (defonce state
          (atom
            {
@@ -32,14 +40,7 @@
             ;:new-version-flag? nil
             :1config-version {:current "" :latest ""}
 
-            :new-entry {:key     ""
-                        :env     ""
-                        :version ""
-                        :type    ""
-                        :val     ""
-                        :file    ""
-                        :file-name ""
-                        }
+            :new-entry empty-new-entry
 
             ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
             :page-key    :surface-13
@@ -64,6 +65,10 @@
 (defn error-handler-console [response]
   (print response))
 
+(defn all-configs-handler! [entries]
+  (swap! state assoc-in [:entries] entries)
+  (swap! state assoc-in [:client-mode] :listing))
+
 (defn get-item-handler [response]
   (swap! state assoc-in [:item-data] (get response :value))
   (swap! state update :page-key
@@ -86,7 +91,7 @@
 (defn get-all-configs! []
   (GET "/configs"
        {
-        :handler         #(swap! state assoc-in [:entries] %)
+        :handler         all-configs-handler!
         :format          :json
         :response-format :json
         :keywords?       true
@@ -117,19 +122,20 @@
 
 (defn add-config-entry! [event form-state]
   (.preventDefault event)
-  (let [form-data (doto
+  (let [new-entry (get @form-state :new-entry)
+        form-data (doto
                     (js/FormData.)
-                    (.append "key"          (get form-state :key))
-                    (.append "env"          (get form-state :env))
-                    (.append "version"      (get form-state :version))
-                    (.append "content-type" (get form-state :type))
-                    (.append "value"        (get form-state :val)))]
-    ;(reset! form-state nil) ;; TODO ????
+                    (.append "key"          (get new-entry :key))
+                    (.append "env"          (get new-entry :env))
+                    (.append "version"      (get new-entry :version))
+                    (.append "content-type" (get new-entry :type))
+                    (.append "value"        (get new-entry :val)))]
+    (swap! form-state assoc-in [:new-entry] empty-new-entry)
     (POST "/configs" {
                       :body            form-data
                       :response-format :json
                       :keywords?       true
-                      :handler         #(get-all-configs!)
+                      :handler         get-all-configs!
                       :error-handler   error-handler
                       })))
 
@@ -204,7 +210,7 @@
 
 (defn add-config-entry-form [submitData]
   (let [deref-submit-data @submitData]
-    [:form {:class "ui form" :on-submit #(add-config-entry! %1 (get deref-submit-data :new-entry))}
+    [:form {:class "ui form" :on-submit #(add-config-entry! %1 submitData)}
      [:div {:class "ui grid"}
       [:div {:class "two wide column"}]
       [:div {:class "twelve wide column"}
@@ -446,7 +452,7 @@
   )
 
 (defn create-config-table [extended-mode? filters items]
-  [:div {:class "sixteen wide column"}
+  [:div {:class "sixteen wide column config-table-scroll"}
    [:div {:class "ui grid"}
     (if (true? extended-mode?)
       (show-extended-table items filters)
