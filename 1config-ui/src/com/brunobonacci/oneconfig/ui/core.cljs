@@ -331,12 +331,51 @@
     )
   )
 
+(defn get-input-value
+  [v]
+  (-> v .-target .-value))
 
 (defn on-filter-change
   [type value]
-  (swap! state assoc-in [:filters type] value))
+  (swap! state assoc-in [:filters type] (get-input-value value)))
 
-(defn table-header-extended [tableExtendedFiltersData]
+(defn table-filter-section
+  [dummy filters]
+  [:tr {:class "center aligned"}
+   [:th
+    [:div {:class "ui mini icon input"}
+     [:input {:type        "text"
+              :class       "key-input-width"
+              :placeholder "Service Name.."
+              :value       (get filters :key)
+              :on-change   #(on-filter-change :key %)
+              }]
+     [:i {:class "search icon"}]]
+    ]
+   [:th
+    [:div {:class "ui mini icon input"}
+     [:input {:type        "text"
+              :class       "env-input-width"
+              :placeholder "Environment.."
+              :value       (get filters :env)
+              :on-change   #(on-filter-change :env %)
+              }]
+     [:i {:class "search icon"}]]
+    ]
+   [:th
+    [:div {:class "ui mini icon input"}
+     [:input {:type        "text"
+              :class       "version-input-width"
+              :placeholder "Version.."
+              :value       (get filters :version)
+              :on-change   #(on-filter-change :version %)
+              }]
+     [:i {:class "search icon"}]]
+    ]
+   ]
+  )
+
+(defn table-header-extended [tableExtendedFiltersData filters]
   [:thead
    [:tr {:class "center aligned"}
     [:th "Service"]
@@ -349,42 +388,11 @@
     [:th {:row-span 2} "Master Key"]
     [:th {:row-span 2} "User"]
     ]
-   [:tr {:class "center aligned"}
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "key-input-width"
-               :placeholder "Service Name.."
-               :value       (get-in tableExtendedFiltersData [:filters :key])
-               :on-change   #(on-filter-change :key (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "env-input-width"
-               :placeholder "Environment.."
-               :value       (get-in tableExtendedFiltersData [:filters :env])
-               :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "version-input-width"
-               :placeholder "Version.."
-               :value       (get-in tableExtendedFiltersData [:filters :version])
-               :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    ]
+   [table-filter-section tableExtendedFiltersData filters]
    ]
   )
 
-(defn table-header [tableFiltersData]
+(defn table-header [filtersData filters]
   [:thead
    [:tr {:class "center aligned"}
     [:th "Service"]
@@ -395,38 +403,7 @@
     [:th {:row-span 2} "Type"]
     [:th {:row-span 2} "Value"]
     ]
-   [:tr {:class "center aligned"}
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "key-input-width"
-               :placeholder "Service Name.."
-               :value       (get-in tableFiltersData [:filters :key])
-               :on-change   #(swap! state assoc-in [:filters :key] (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "env-input-width"
-               :placeholder "Environment.."
-               :value       (get-in tableFiltersData [:filters :env])
-               :on-change   #(swap! state assoc-in [:filters :env] (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    [:th
-     [:div {:class "ui mini icon input"}
-      [:input {:type        "text"
-               :class       "version-input-width"
-               :placeholder "Version.."
-               :value       (get-in tableFiltersData [:filters :version])
-               :on-change   #(swap! state assoc-in [:filters :version] (-> % .-target .-value))
-               }]
-      [:i {:class "search icon"}]]
-     ]
-    ]
+   [table-filter-section filtersData filters]
    ]
   )
 
@@ -446,9 +423,9 @@
      ]
     ))
 
-(defn show-extended-table [items filtersExtendedData]
-  [:table {:class "ui selectable celled table"}
-   [table-header-extended filtersExtendedData]
+(defn show-extended-table [items filters]
+  [:table {:class "ui selectable celled fixed table"}
+   [table-header-extended "DUMMY" filters]
    [:tbody
     (for [itm items]
       (create-table-extended (val itm))
@@ -457,21 +434,21 @@
    ]
   )
 
-(defn show-minified-table [items filtersData]
-  [:table {:class "ui selectable celled table"}
-   [table-header filtersData]
+(defn show-minified-table [items filters]
+  [:table {:class "ui selectable celled fixed table"}
+   [table-header "DUMMY" filters]
    [:tbody
     (for [itm items]
       (create-minified-table (val itm)))]
    ]
   )
 
-(defn create-config-table [extended-mode? filters items]
+(defn create-config-table [extended-mode? real-filters items]
   [:div {:class "sixteen wide column config-table-scroll"}
    [:div {:class "ui grid"}
     (if (true? extended-mode?)
-      (show-extended-table items filters)
-      (show-minified-table items filters))
+      (show-extended-table items real-filters)
+      (show-minified-table items real-filters))
     ]])
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -518,7 +495,7 @@
                        :component-registry surface-13/components
                        }]
      [create-config-table (get @appRootDataState :extended-mode?)
-                          @appRootDataState ;(get @appRootDataState :filters)
+                          (get @appRootDataState :filters)
                           (group-by :key
                                     (apply-filters
                                       (get @appRootDataState :filters)
