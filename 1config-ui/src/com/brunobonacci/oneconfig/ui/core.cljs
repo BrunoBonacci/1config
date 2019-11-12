@@ -210,8 +210,7 @@
     (swap! state assoc-in [:client-mode] :new-entry-mode)))
 
 (defn toggle-table-mode!  []
-  (swap! state update-in [:extended-mode?] not)
-  )
+  (swap! state update-in [:extended-mode?] not))
 
 (defn close-new-entry-panel!  []
   (swap! state assoc-in [:client-mode] :listing))
@@ -471,32 +470,31 @@
                      "sidenav hidden")}
       [add-config-entry-form "dummy" (get deref-app-root-data-one :new-entry)]
       ])
-   [:div {:class "sticky-nav-bar"}
-    [:div {:class "ui secondary menu"}
-     [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get @appRootDataState :client-mode))} "New Entry"]
-      ]
-     [:div {:class "right menu"}
-      [:div {:class "item"}
-       [:div
-        (get-label-text (get @appRootDataState :extended-mode?))
+   (let [deref-app-root-data-two @appRootDataState]
+     [:div {:class "sticky-nav-bar"}
+      [:div {:class "ui secondary menu"}
+       [:div {:class "item"}
+        [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-two :client-mode))} "New Entry"]
+        ]
+       [:div {:class "right menu"}
+        [:div {:class "item"}
+         [:div
+          (get-label-text (get deref-app-root-data-two :extended-mode?))
+          ]
+         ]
+        [:div {:class "item"}
+         [:div
+          [:label {:class "switch"}
+           [:input {:type "checkbox" :on-click #(toggle-table-mode!)}]
+           [:span {:class "slider round"}]]
+          ]
+         ]
+        [:div {:class "item"}
+         [:button {:class "circular ui inverted icon button "}
+          [:i {:class "icon user outline"}]]]
         ]
        ]
-      [:div {:class "item"}
-       [:div
-        [:label {:class "switch"}
-         ;[:input {:type "checkbox" :on-click #(swap! appRootDataState update-in [:extended-mode?] not) }   ]
-         [:input {:type "checkbox" :on-click #(toggle-table-mode!) }   ]
-         [:span {:class "slider round"}]]
-        ]
-       ]
-
-      [:div {:class "item"}
-       [:button {:class "circular ui inverted icon button "}
-        [:i {:class "icon user outline"}]]]
-      ]
-     ]
-    ]
+      ])
 
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
