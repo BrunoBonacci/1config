@@ -120,9 +120,9 @@
                         :version (get filters :version)
                         } entries))
 
-(defn add-config-entry! [event form-state]
+(defn add-config-entry! [event]
   (.preventDefault event)
-  (let [new-entry (get @form-state :new-entry)
+  (let [new-entry (get @state :new-entry)
         form-data (doto
                     (js/FormData.)
                     (.append "key"          (get new-entry :key))
@@ -130,7 +130,7 @@
                     (.append "version"      (get new-entry :version))
                     (.append "content-type" (get new-entry :type))
                     (.append "value"        (get new-entry :val)))]
-    (swap! form-state assoc-in [:new-entry] empty-new-entry)
+    (swap! state assoc-in [:new-entry] empty-new-entry)
     (POST "/configs" {
                       :body            form-data
                       :response-format :json
@@ -154,7 +154,6 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
-      ; TODO is it ok to require 2 strings?
       [:tr {:class "centered aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (comm/as-label (comm/colourize-label env) env)]
@@ -199,137 +198,23 @@
     )
   )
 
-(defn remove-file! [data]
-  (swap! data
+(defn remove-file! []
+  (swap! state
     #(-> %
         (assoc-in [:new-entry :val] "")
         (assoc-in [:new-entry :file-name] ""))))
 
-(defn toggle-new-entry-panel!  [sideNavState]
-  (if (= :new-entry-mode (get @sideNavState :client-mode))
-    (swap! sideNavState assoc-in [:client-mode] :listing)
-    (swap! sideNavState assoc-in [:client-mode] :new-entry-mode)))
+(defn toggle-new-entry-panel!  [mode]
+  (if (= :new-entry-mode mode)
+    (swap! state assoc-in [:client-mode] :listing)
+    (swap! state assoc-in [:client-mode] :new-entry-mode)))
 
-(defn close-new-entry-panel!  [sideNavState]
-  (swap! sideNavState assoc-in [:client-mode] :listing))
-
-(defn add-config-entry-form [submitData]
-  (let [deref-submit-data @submitData]
-    [:form {:class "ui form" :on-submit #(add-config-entry! %1 submitData)}
-     [:div {:class "ui grid"}
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       [:div {:class "row onecfg-filter-block"}
-        [:input {
-                 :type        "text"
-                 :placeholder "Service Name"
-                 :name        "service"
-                 :value       (get-in deref-submit-data [:new-entry :key])
-                 :on-change  #(swap! submitData assoc-in [:new-entry :key] (-> % .-target .-value))
-                 }]]
-       [:div {:class "row onecfg-filter-block"}
-        [:input {
-                 :type        "text"
-                 :placeholder "Environment"
-                 :name        "environment"
-                 :value       (get-in deref-submit-data [:new-entry :env])
-                 :on-change  #(swap! submitData assoc-in [:new-entry :env] (-> % .-target .-value))
-                 }]]
-       [:div {:class "row onecfg-filter-block"}
-        [:input {
-                 :type        "text"
-                 :placeholder "Version"
-                 :name        "version"
-                 :value       (get-in deref-submit-data [:new-entry :version])
-                 :on-change  #(swap! submitData assoc-in [:new-entry :version] (-> % .-target .-value))
-                 }]]
-       [:div {:class "row onecfg-filter-block"}
-        [:select {:class "ui dropdown modal-selector "
-                  :value (get-in deref-submit-data [:new-entry :type])
-                  :on-change  #(swap! submitData assoc-in [:new-entry :type] (-> % .-target .-value))
-                  }
-         [:option {:value "json"} "json"]
-         [:option {:value "edn"} "edn"]
-         [:option {:value "properties"} "properties"]
-         [:option {:value "txt"} "txt"]
-         ]
-        ]
-       [:div {:class "ui horizontal divider"} "Upload a file"]
-       ]
-      [:div {:class "two wide column"}]
-      ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       [:table {:class "ui very basic  table"}
-        [:tbody
-         [:tr
-          [:td
-           [:input {:type      "file"
-                    :name      "file"
-                    :class     "inputfile"
-                    :id        "file-input"
-                    :on-change (fn [this]
-                                 (if (not (= "" (-> this .-target .-value)))
-                                   (let [^js/File file (-> this .-target .-files (aget 0))
-                                         reader (js/FileReader.)
-                                         file-name (-> file .-name)]
-                                     (.readAsText reader file)
-                                     (set! (.-onload reader)
-                                           (fn [e]
-                                             (let [val (-> e .-target .-result)]
-                                               (swap! submitData #(-> %
-                                                                     (assoc-in [:new-entry :val] val)
-                                                                     (assoc-in [:new-entry :file-name] file-name)
-                                                                     (assoc-in [:new-entry :type] (comm/get-extension file-name))
-                                                                      ))
-                                               )
-                                             ))
-                                     )
-                                   )
-                                 )
-                    }
-            ]
-           [:label {:for "file-input" :class "ui mini blue button"}
-            [:i {:class "ui upload icon"}]"Upload"]
-           ]
-          [:td (get-in deref-submit-data [:new-entry :file-name])]
-          [:td
-           (if (gs/isEmptyString (get-in deref-submit-data[:new-entry :file-name]))
-             [:i]
-             [:i {:class "red trash icon" :on-click #(remove-file! submitData)}]
-             )
-           ]]]]
-       ]
-      [:div {:class "two wide column"}]
-      ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       [:div {:class "ui horizontal divider"} "or provide config here"]
-       [:div {:class "column"}
-        [:textarea {:class "modal-textarea"
-                    :placeholder "Config data..."
-                    :value (get-in deref-submit-data [:new-entry :val])
-                    :on-change  #(swap! submitData assoc-in [:new-entry :val] (-> % .-target .-value))
-                    }]
-        ]
-       ]
-      [:div {:class "two wide column"}]
-      ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "four wide column"}
-       [:button {:class "ui primary button"} "Save" ]
-       ]
-      [:div {:class "four wide column"}]
-      [:div {:class "four wide column "}
-       [:button {:class "ui grey button right floated left aligned" :on-click #(close-new-entry-panel! submitData)} "Close" ]
-       ]
-      [:div {:class "two wide column"}
-       ]
-      ]
-     ]
-    )
+(defn toggle-table-mode!  []
+  (swap! state update-in [:extended-mode?] not)
   )
+
+(defn close-new-entry-panel!  []
+  (swap! state assoc-in [:client-mode] :listing))
 
 (defn get-input-value
   [v]
@@ -338,6 +223,129 @@
 (defn on-filter-change
   [type value]
   (swap! state assoc-in [:filters type] (get-input-value value)))
+
+(defn update-file-data
+  [val file-name]
+  (swap! state #(-> %
+                  (assoc-in [:new-entry :val] val)
+                  (assoc-in [:new-entry :file-name] file-name)
+                  (assoc-in [:new-entry :type] (comm/get-extension file-name))
+                 )))
+
+(defn on-input-change
+  [type value]
+ (swap! state assoc-in [:new-entry type] (get-input-value value)))
+
+(defn add-config-entry-form [dummy new-entry]
+  [:form {:class "ui form" :on-submit #(add-config-entry! %1)}
+   [:div {:class "ui grid"}
+    [:div {:class "two wide column"}]
+    [:div {:class "twelve wide column"}
+     [:div {:class "row onecfg-filter-block"}
+      [:input {
+               :type        "text"
+               :placeholder "Service Name"
+               :name        "service"
+               :value       (get new-entry :key)
+               :on-change   #(on-input-change :key %)
+               }]]
+     [:div {:class "row onecfg-filter-block"}
+      [:input {
+               :type        "text"
+               :placeholder "Environment"
+               :name        "environment"
+               :value       (get new-entry :env)
+               :on-change   #(on-input-change :env %)
+               }]]
+     [:div {:class "row onecfg-filter-block"}
+      [:input {
+               :type        "text"
+               :placeholder "Version"
+               :name        "version"
+               :value       (get new-entry :version)
+               :on-change   #(on-input-change :version %)
+               }]]
+     [:div {:class "row onecfg-filter-block"}
+      [:select {:class     "ui dropdown modal-selector "
+                :value     (get new-entry :type)
+                :on-change #(on-input-change :type %)
+                }
+       [:option {:value "json"} "json"]
+       [:option {:value "edn"} "edn"]
+       [:option {:value "properties"} "properties"]
+       [:option {:value "txt"} "txt"]
+       ]
+      ]
+     [:div {:class "ui horizontal divider"} "Upload a file"]
+     ]
+    [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
+    [:div {:class "two wide column"}]
+    [:div {:class "twelve wide column"}
+     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     [:table {:class "ui very basic  table"}
+      [:tbody
+       [:tr
+        [:td
+         [:input {:type      "file"
+                  :name      "file"
+                  :class     "inputfile"
+                  :id        "file-input"
+                  :on-change (fn [this]
+                               (if (not (= "" (-> this .-target .-value)))
+                                 (let [^js/File file (-> this .-target .-files (aget 0))
+                                       reader (js/FileReader.)
+                                       file-name (-> file .-name)]
+                                   (.readAsText reader file)
+                                   (set! (.-onload reader)
+                                         (fn [e]
+                                           (let [val (-> e .-target .-result)]
+                                             (update-file-data val file-name)
+                                             )
+                                           ))
+                                   )
+                                 )
+                               )
+                  }
+          ]
+         [:label {:for "file-input" :class "ui mini blue button"}
+          [:i {:class "ui upload icon"}] "Upload"]
+         ]
+        [:td (get new-entry :file-name)]
+        [:td
+         (if (gs/isEmptyString (get new-entry :file-name))
+           [:i]
+           [:i {:class "red trash icon" :on-click #(remove-file!)}])
+         ]]]]
+     ]
+    [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
+    [:div {:class "two wide column"}]
+    [:div {:class "twelve wide column"}
+     [:div {:class "ui horizontal divider"} "or provide config here"]
+     [:div {:class "column"}
+      [:textarea {:class       "modal-textarea"
+                  :placeholder "Config data..."
+                  :value       (get new-entry :val)
+                  :on-change   #(on-input-change :val %)
+                  }]
+      ]
+     ]
+    [:div {:class "two wide column"}]
+    ;;;-------------------------------------------------
+    [:div {:class "two wide column"}]
+    [:div {:class "four wide column"}
+     [:button {:class "ui primary button"} "Save"]
+     ]
+    [:div {:class "four wide column"}]
+    [:div {:class "four wide column "}
+     [:button {:class "ui grey button right floated left aligned" :on-click #(close-new-entry-panel!)} "Close"]
+     ]
+    [:div {:class "two wide column"}
+     ]
+    ]
+   ]
+  )
 
 (defn table-filter-section
   [dummy filters]
@@ -457,15 +465,16 @@
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
 (defn app-root [appRootDataState]
   [:div
-   [:div {:class (if (= :new-entry-mode (get @appRootDataState :client-mode) )
-                      "sidenav visible"
-                      "sidenav hidden")}
-      [add-config-entry-form appRootDataState]
-    ]
+   (let [deref-app-root-data-one @appRootDataState]
+     [:div {:class (if (= :new-entry-mode (get deref-app-root-data-one :client-mode))
+                     "sidenav visible"
+                     "sidenav hidden")}
+      [add-config-entry-form "dummy" (get deref-app-root-data-one :new-entry)]
+      ])
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
      [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! appRootDataState)} "New Entry"]
+      [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get @appRootDataState :client-mode))} "New Entry"]
       ]
      [:div {:class "right menu"}
       [:div {:class "item"}
@@ -476,7 +485,8 @@
       [:div {:class "item"}
        [:div
         [:label {:class "switch"}
-         [:input {:type "checkbox" :on-click #(swap! appRootDataState update-in [:extended-mode?] not) }   ]
+         ;[:input {:type "checkbox" :on-click #(swap! appRootDataState update-in [:extended-mode?] not) }   ]
+         [:input {:type "checkbox" :on-click #(toggle-table-mode!) }   ]
          [:span {:class "slider round"}]]
         ]
        ]
@@ -487,6 +497,7 @@
       ]
      ]
     ]
+
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
      [surface/surface {:app-state          appRootDataState
@@ -494,14 +505,15 @@
                        :surface-registry   surface-13/surfaces
                        :component-registry surface-13/components
                        }]
-     [create-config-table (get @appRootDataState :extended-mode?)
-                          (get @appRootDataState :filters)
-                          (group-by :key
-                                    (apply-filters
-                                      (get @appRootDataState :filters)
-                                      (get @appRootDataState :entries)
-                                      ))
-      ]
+     (let [deref-app-state @appRootDataState]
+       [create-config-table (get deref-app-state :extended-mode?)
+        (get deref-app-state :filters)
+        (group-by :key
+                  (apply-filters
+                    (get deref-app-state :filters)
+                    (get deref-app-state :entries)
+                    ))
+        ])
      ]
     ]
    [footer-element (get @appRootDataState :1config-version)]
