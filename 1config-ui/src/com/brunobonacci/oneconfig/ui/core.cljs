@@ -465,33 +465,34 @@
 (defn app-root [appRootDataState]
   [:div
    (let [deref-app-root-data-one @appRootDataState]
-     [:div {:class (if (= :new-entry-mode (get deref-app-root-data-one :client-mode))
-                     "sidenav visible"
-                     "sidenav hidden")}
-      [add-config-entry-form "dummy" (get deref-app-root-data-one :new-entry)]
-      ])
-   (let [deref-app-root-data-two @appRootDataState]
-     [:div {:class "sticky-nav-bar"}
-      [:div {:class "ui secondary menu"}
-       [:div {:class "item"}
-        [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-two :client-mode))} "New Entry"]
-        ]
-       [:div {:class "right menu"}
+     [:div   ;; TODO wrapper div not needed after bubble up
+      [:div {:class (if (= :new-entry-mode (get deref-app-root-data-one :client-mode))
+                      "sidenav visible"
+                      "sidenav hidden")}
+       [add-config-entry-form "dummy" (get deref-app-root-data-one :new-entry)]
+       ]
+      [:div {:class "sticky-nav-bar"}
+       [:div {:class "ui secondary menu"}
         [:div {:class "item"}
-         [:div
-          (get-label-text (get deref-app-root-data-two :extended-mode?))
-          ]
+         [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-one :client-mode))} "New Entry"]
          ]
-        [:div {:class "item"}
-         [:div
-          [:label {:class "switch"}
-           [:input {:type "checkbox" :on-click #(toggle-table-mode!)}]
-           [:span {:class "slider round"}]]
+        [:div {:class "right menu"}
+         [:div {:class "item"}
+          [:div
+           (get-label-text (get deref-app-root-data-one :extended-mode?))
+           ]
           ]
+         [:div {:class "item"}
+          [:div
+           [:label {:class "switch"}
+            [:input {:type "checkbox" :on-click #(toggle-table-mode!)}]
+            [:span {:class "slider round"}]]
+           ]
+          ]
+         [:div {:class "item"}
+          [:button {:class "circular ui inverted icon button "}
+           [:i {:class "icon user outline"}]]]
          ]
-        [:div {:class "item"}
-         [:button {:class "circular ui inverted icon button "}
-          [:i {:class "icon user outline"}]]]
         ]
        ]
       ])
