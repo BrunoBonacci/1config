@@ -458,38 +458,39 @@
       (show-minified-table items real-filters))
     ]])
 
-(defn modal-window []
-  [:div {:class "ui grid"
-         :style {:padding "16px"}
-         }
+(defn modal-window [item-params item-data]
+  [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
      [:table {:class "ui celled striped table"}
       [:thead
        [:tr
         [:th {:class "center aligned collapsing" :col-span "2"}
-         (get-in @state [:item-params :key])
+         (get item-params :key)
          ]]]
       [:tbody
        [:tr
         [:td {:class "center aligned collapsing"} "Environment"]
         [:td {:class "center aligned collapsing"}
-         (let [env (get-in @state [:item-params :env])]
+         (let [env (get item-params :env)]
            (comm/as-label (comm/colourize-label env) env))
          ]]
        [:tr
         [:td {:class "center aligned collapsing"} "Version"]
-        [:td {:class "center aligned collapsing"} (get-in @state [:item-params :version])  ]]
+        [:td {:class "center aligned collapsing"}
+         (get item-params :version)
+         ]]
        [:tr
         [:td {:class "center aligned collapsing"} "Change num"]
-        [:td {:class "center aligned collapsing"} (get-in @state [:item-params :change-num])
+        [:td {:class "center aligned collapsing"}
+         (get item-params :change-num)
          ]]
        [:tr
         [:td {:class "center aligned collapsing"} "Time"]
-        [:td {:class "center aligned collapsing"} (comm/parse-date (get-in @state [:item-params :change-num]))
+        [:td {:class "center aligned collapsing"} (comm/parse-date (get item-params :change-num))
          ]]
        [:tr
         [:td {:class "center aligned collapsing"} "Type"]
-        [:td {:class "center aligned collapsing"} (comm/as-label (get-in @state [:item-params :content-type]))
+        [:td {:class "center aligned collapsing"} (comm/as-label (get item-params :content-type))
          ]
         ]
        ]]
@@ -498,13 +499,13 @@
     [:div {:class "ui raised segment"}
      [:a {:class "ui blue ribbon label"} "Value"]
      [:div  {:class "overflow-class"}
-      (comm/as-code (get @state :item-data))
+      (comm/as-code item-data)
       ]
      ]
     ]
    [:div {:class "three wide column"}
     [:div {:class "modal-content"}
-     [:span {:class "close-button"  :on-click #(toggle-modal!)} "X"]
+     [:span {:class "close-button" :on-click #(toggle-modal!)} "X"]
      [:h1 "close modal"]
      ]
     ]
@@ -554,25 +555,25 @@
        ]
       ])
 
+   (let [deref-app-state @appRootDataState]
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     (let [deref-app-state @appRootDataState]
        [create-config-table (get deref-app-state :extended-mode?)
         (get deref-app-state :filters)
         (group-by :key
                   (apply-filters
                     (get deref-app-state :filters)
                     (get deref-app-state :entries)
-                    ))
-        ])
-     (if (true? (get @state :show-modal-window?))
+                    ))]
+     (if (true? (get deref-app-state :show-modal-window?))
        [:div {:class "modal show-modal"}
-        [modal-window]
+        [modal-window (get deref-app-state :item-params)  (get deref-app-state :item-data)]
         ]
        [:div {:class "modal"}]
        )
      ]
     ]
+   )
    [footer-element (get @appRootDataState :1config-version)]
    ]
   )
