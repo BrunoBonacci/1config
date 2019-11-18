@@ -69,6 +69,9 @@
   (swap! state assoc-in [:entries] entries)
   (swap! state assoc-in [:client-mode] :listing))
 
+(defn update-version! [version]
+  (swap! state assoc-in [:1config-version] version))
+
 (defn get-item-handler [response]
   (swap! state assoc-in [:item-data] (get response :encoded-value))
   (swap! state update-in [:show-modal-window?] not)
@@ -136,9 +139,9 @@
                       :error-handler   error-handler
                       })))
 
-(defn get-footer-text [allState]
+(defn get-footer-text []
   (GET "/footer"
-       {:handler          #(swap! allState assoc-in [:1config-version] %)
+       {:handler          update-version!
         :format          :json
         :response-format :json
         :keywords?       true
@@ -520,23 +523,23 @@
 ;; Page
 ;https://stackoverflow.com/questions/29581359/semantic-ui-ui-grid-best-approach-for-layout-rows-columns-vs-segments
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
-(defn app-root [appRootDataState]
-  (let [deref-app-root-data-global @appRootDataState]
+(defn app-root [state-atom]
+  (let [current-state @state-atom]
     [:div
-        [:div {:class (if (= :new-entry-mode (get deref-app-root-data-global :client-mode))
+        [:div {:class (if (= :new-entry-mode (get current-state :client-mode))
                         "sidenav visible"
                         "sidenav hidden")}
-         [add-config-entry-form "dummy" (get deref-app-root-data-global :new-entry)]
+         [add-config-entry-form "dummy" (get current-state :new-entry)]
          ]
         [:div {:class "sticky-nav-bar"}
          [:div {:class "ui secondary menu"}
           [:div {:class "item"}
-           [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-global :client-mode))} "New Entry"]
+           [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get current-state :client-mode))} "New Entry"]
            ]
           [:div {:class "right menu"}
            [:div {:class "item"}
             [:div
-             (get-label-text (get deref-app-root-data-global :extended-mode?))
+             (get-label-text (get current-state :extended-mode?))
              ]
             ]
            [:div {:class "item"}
@@ -554,22 +557,22 @@
          ]
        [:div {:class "ui grid"}
         [:div {:class "sixteen wide column"}
-         [create-config-table (get deref-app-root-data-global :extended-mode?)
-          (get deref-app-root-data-global :filters)
+         [create-config-table (get current-state :extended-mode?)
+          (get current-state :filters)
           (group-by :key
                     (apply-filters
-                      (get deref-app-root-data-global :filters)
-                      (get deref-app-root-data-global :entries)
+                      (get current-state :filters)
+                      (get current-state :entries)
                       ))]
-         (if (true? (get deref-app-root-data-global :show-modal-window?))
+         (if (true? (get current-state :show-modal-window?))
            [:div {:class "modal show-modal"}
-            [modal-window (get deref-app-root-data-global :item-params)  (get deref-app-root-data-global :item-data)]
+            [modal-window (get current-state :item-params)  (get current-state :item-data)]
             ]
            [:div {:class "modal"}]
            )
          ]
         ]
-     [footer-element (get deref-app-root-data-global :1config-version)]
+     [footer-element (get current-state :1config-version)]
      ]
     );------------------------------
   )
@@ -583,15 +586,9 @@
     (rf/add-data :app-state state)
     ))
 
-(defn reload [reloadDataState]
-  (reagent/render [app-root reloadDataState]
-                  (. js/document (getElementById "app"))
-                  )
-  )
-
 (defn ^:export main []
   (dev-setup)
-  ;(app-routes state)
   (get-all-configs!)
-  (get-footer-text state)
-  (reload state))
+  (get-footer-text)
+  (reagent/render [app-root state]
+                  (. js/document (getElementById "app"))))
