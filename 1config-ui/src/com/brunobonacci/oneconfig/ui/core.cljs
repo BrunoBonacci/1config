@@ -521,61 +521,57 @@
 ;https://stackoverflow.com/questions/29581359/semantic-ui-ui-grid-best-approach-for-layout-rows-columns-vs-segments
 ;Semantic UI - ui grid best approach for layout (rows/columns vs segments)
 (defn app-root [appRootDataState]
-  [:div
-   (let [deref-app-root-data-one @appRootDataState]
-     [:div   ;; TODO wrapper div not needed after bubble up
-      [:div {:class (if (= :new-entry-mode (get deref-app-root-data-one :client-mode))
-                      "sidenav visible"
-                      "sidenav hidden")}
-       [add-config-entry-form "dummy" (get deref-app-root-data-one :new-entry)]
-       ]
-      [:div {:class "sticky-nav-bar"}
-       [:div {:class "ui secondary menu"}
-        [:div {:class "item"}
-         [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-one :client-mode))} "New Entry"]
+  (let [deref-app-root-data-global @appRootDataState]
+    [:div
+        [:div {:class (if (= :new-entry-mode (get deref-app-root-data-global :client-mode))
+                        "sidenav visible"
+                        "sidenav hidden")}
+         [add-config-entry-form "dummy" (get deref-app-root-data-global :new-entry)]
          ]
-        [:div {:class "right menu"}
-         [:div {:class "item"}
-          [:div
-           (get-label-text (get deref-app-root-data-one :extended-mode?))
+        [:div {:class "sticky-nav-bar"}
+         [:div {:class "ui secondary menu"}
+          [:div {:class "item"}
+           [:div {:class "ui inverted button" :on-click #(toggle-new-entry-panel! (get deref-app-root-data-global :client-mode))} "New Entry"]
+           ]
+          [:div {:class "right menu"}
+           [:div {:class "item"}
+            [:div
+             (get-label-text (get deref-app-root-data-global :extended-mode?))
+             ]
+            ]
+           [:div {:class "item"}
+            [:div
+             [:label {:class "switch"}
+              [:input {:type "checkbox" :on-click #(toggle-table-mode!)}]
+              [:span {:class "slider round"}]]
+             ]
+            ]
+           [:div {:class "item"}
+            [:button {:class "circular ui inverted icon button "}
+             [:i {:class "icon user outline"}]]]
            ]
           ]
-         [:div {:class "item"}
-          [:div
-           [:label {:class "switch"}
-            [:input {:type "checkbox" :on-click #(toggle-table-mode!)}]
-            [:span {:class "slider round"}]]
-           ]
-          ]
-         [:div {:class "item"}
-          [:button {:class "circular ui inverted icon button "}
-           [:i {:class "icon user outline"}]]]
+         ]
+       [:div {:class "ui grid"}
+        [:div {:class "sixteen wide column"}
+         [create-config-table (get deref-app-root-data-global :extended-mode?)
+          (get deref-app-root-data-global :filters)
+          (group-by :key
+                    (apply-filters
+                      (get deref-app-root-data-global :filters)
+                      (get deref-app-root-data-global :entries)
+                      ))]
+         (if (true? (get deref-app-root-data-global :show-modal-window?))
+           [:div {:class "modal show-modal"}
+            [modal-window (get deref-app-root-data-global :item-params)  (get deref-app-root-data-global :item-data)]
+            ]
+           [:div {:class "modal"}]
+           )
          ]
         ]
-       ]
-      ])
-
-   (let [deref-app-state @appRootDataState]
-   [:div {:class "ui grid"}
-    [:div {:class "sixteen wide column"}
-       [create-config-table (get deref-app-state :extended-mode?)
-        (get deref-app-state :filters)
-        (group-by :key
-                  (apply-filters
-                    (get deref-app-state :filters)
-                    (get deref-app-state :entries)
-                    ))]
-     (if (true? (get deref-app-state :show-modal-window?))
-       [:div {:class "modal show-modal"}
-        [modal-window (get deref-app-state :item-params)  (get deref-app-state :item-data)]
-        ]
-       [:div {:class "modal"}]
-       )
+     [footer-element (get deref-app-root-data-global :1config-version)]
      ]
-    ]
-   )
-   [footer-element (get @appRootDataState :1config-version)]
-   ]
+    );------------------------------
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
