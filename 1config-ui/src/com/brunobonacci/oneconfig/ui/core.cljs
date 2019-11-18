@@ -5,8 +5,6 @@
     [ajax.core :refer [GET POST]]
     [cljs.pprint :as pp]
     [com.brunobonacci.oneconfig.ui.comm :as comm]
-    [com.brunobonacci.oneconfig.ui.popup.style :as surface]
-    [com.brunobonacci.oneconfig.ui.popup.surface-13 :as surface-13]
     [goog.string :as gs]
     [clojure.string :as string]))
 
@@ -52,6 +50,8 @@
             ;        :item-params nil
             ;        }
 
+            ;; temp modal window
+            :show-modal-window? false
                       }))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ajax Handlers
@@ -71,11 +71,8 @@
 
 (defn get-item-handler [response]
   (swap! state assoc-in [:item-data] (get response :encoded-value))
-  (swap! state update :page-key
-         (fn [pk]
-           (if (= pk :surface-13-modal)
-             :surface-13
-             :surface-13-modal))))
+  (swap! state update-in [:show-modal-window?] not)
+  )
 
 (defn footer-element [version]
   [:div {:class "footer" }
@@ -211,6 +208,9 @@
 
 (defn toggle-table-mode!  []
   (swap! state update-in [:extended-mode?] not))
+
+(defn toggle-modal!  []
+  (swap! state update-in [:show-modal-window?] not))
 
 (defn close-new-entry-panel!  []
   (swap! state assoc-in [:client-mode] :listing))
@@ -458,6 +458,63 @@
       (show-minified-table items real-filters))
     ]])
 
+(defn modal-window []
+  [:div {:class "ui grid"
+         :style {:padding "16px"}
+         }
+   [:div {:class "three wide column"}
+     [:table {:class "ui celled striped table"}
+      [:thead
+       [:tr
+        [:th {:class "center aligned collapsing" :col-span "2"}
+         (get-in @state [:item-params :key])
+         ]]]
+      [:tbody
+       [:tr
+        [:td {:class "center aligned collapsing"} "Environment"]
+        [:td {:class "center aligned collapsing"}
+         (let [env (get-in @state [:item-params :env])]
+           (comm/as-label (comm/colourize-label env) env))
+         ]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Version"]
+        [:td {:class "center aligned collapsing"} (get-in @state [:item-params :version])  ]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Change num"]
+        [:td {:class "center aligned collapsing"} (get-in @state [:item-params :change-num])
+         ]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Time"]
+        [:td {:class "center aligned collapsing"} (comm/parse-date (get-in @state [:item-params :change-num]))
+         ]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Type"]
+        [:td {:class "center aligned collapsing"} (comm/as-label (get-in @state [:item-params :content-type]))
+         ]
+        ]
+       ]]
+    ]
+   [:div {:class "ten wide column"}
+    [:div {:class "ui raised segment"}
+     [:a {:class "ui blue ribbon label"} "Value"]
+     [:div  {:class "overflow-class"}
+      (comm/as-code (get @state :item-data))
+      ]
+     ]
+    ]
+   [:div {:class "three wide column"}
+    [:div {:class "modal-content"}
+     [:span {:class "close-button"  :on-click #(toggle-modal!)} "X"]
+     [:h1 "close modal"]
+     ]
+    ]
+   ;;-----------------------------------------
+   [:div {:class "three wide column"}]
+   [:div {:class "ten wide column"}]
+   [:div {:class "three wide column"}]
+   ]
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Page
 ;https://stackoverflow.com/questions/29581359/semantic-ui-ui-grid-best-approach-for-layout-rows-columns-vs-segments
@@ -499,11 +556,6 @@
 
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     [surface/surface {:app-state          appRootDataState
-                       :surface-key        (get @appRootDataState :page-key)
-                       :surface-registry   surface-13/surfaces
-                       :component-registry surface-13/components
-                       }]
      (let [deref-app-state @appRootDataState]
        [create-config-table (get deref-app-state :extended-mode?)
         (get deref-app-state :filters)
@@ -513,6 +565,12 @@
                     (get deref-app-state :entries)
                     ))
         ])
+     (if (true? (get @state :show-modal-window?))
+       [:div {:class "modal show-modal"}
+        [modal-window]
+        ]
+       [:div {:class "modal"}]
+       )
      ]
     ]
    [footer-element (get @appRootDataState :1config-version)]

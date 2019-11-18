@@ -29,8 +29,6 @@
                  [re-frame "0.10.9"]
 
                  [re-frisk "0.5.4.1"]
-                 [garden "1.3.9"]                           ;; pop up
-
                  [com.taoensso/sente "1.13.1"]              ;; http kit
 
                  [org.slf4j/slf4j-log4j12 "1.7.26"]

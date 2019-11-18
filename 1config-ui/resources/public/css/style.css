@@ -18,14 +18,56 @@ body {
     width: 30px;
 }
 
-.modal-content {
-    position: fixed;
-    height: 100px;
-    width: 200px;
+.overflow-class {
     font-family: 'Cardo', serif;
-    font-size: 10px;
-    background-color:  lightgrey;
+    font-size: 13px;
+    height: 700px;
+    overflow-y: scroll;
 }
+
+/** MODAL XXXXXXX START */
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+.modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem 1.5rem;
+    width: 24rem;
+    border-radius: 0.5rem;
+}
+.close-button {
+    float: right;
+    width: 1.5rem;
+    line-height: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    background-color: lightgray;
+}
+.close-button:hover {
+    background-color: darkgray;
+}
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+/** MODAL XXXXXXX END */
+
 
 /*override grid style for menu block*/
 .ui.grid {
@@ -238,24 +280,6 @@ input:checked + .slider:before {
     max-width: 32rem !important;
 }
 
-.surf-surface .surf-dimmer, .surf-surface .surf-dimmer-dropdown {
-    width: 100%;
-    right: 0;
-    top: 0;
-    height: 100%;
-    position: fixed;
-    z-index: -1;
-    background-color: black;
-    bottom: 0;
-    transition: z-index 0.3s step-end, opacity 0.3s linear;
-    opacity: 0;
-    left: 0;
-}
-
-.surf-surface .surf-dimmer-dropdown {
-    background-color: rgba(0,0,0,0.1);
-}
-
 .show-element {
     display: block;
 }
@@ -273,31 +297,6 @@ input:checked + .slider:before {
 
 .version-input-width {
     width: 80px;
-}
-
-.surf-surface .surf-modal {
-    width: 1100px;
-    height: 1500px;
-    /*top: calc(-40%);*/
-    overflow-y: auto;
-    position: absolute;
-    /*margin-top: 350px;*/
-    z-index: -1;
-    background-color: white;
-    opacity: 0;
-    left: calc(15%);
-}
-
-.surf-surface.surf-surface-modal-active .surf-modal {
-    opacity: 1;
-    z-index: 18;
-    transition: opacity 0.3s linear, top 0.3s linear;
-}
-
-.surf-surface.surf-surface-modal-active .surf-dimmer {
-    opacity: 0.5;
-    transition: opacity 0.3s linear;
-    z-index: 17;
 }
 
 .config-table-scroll {
