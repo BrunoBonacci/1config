@@ -1,4 +1,4 @@
-(ns com.brunobonacci.oneconfig.ui.comm
+(ns com.brunobonacci.oneconfig.ui.utils
   (:require
     [cljs-time.core :as t]
     [cljs-time.format :as tf]
