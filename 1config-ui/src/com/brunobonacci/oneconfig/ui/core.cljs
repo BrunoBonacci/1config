@@ -405,6 +405,6 @@
 (defn ^:export main []
   (dev-setup)
   (ctl/get-all-configs!)
-  (ctl/get-footer-text)
+  (ctl/get-version!)
   (reagent/render [app-root ctl/state]
                   (. js/document (getElementById "app"))))

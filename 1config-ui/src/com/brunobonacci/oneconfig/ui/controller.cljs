@@ -136,8 +136,8 @@
                       :error-handler   error-handler
                       })))
 
-(defn get-footer-text []
-  (GET "/footer"
+(defn get-version! []
+  (GET "/info/versions"
        {:handler          update-version!
         :format          :json
         :response-format :json

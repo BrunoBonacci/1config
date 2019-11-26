@@ -31,7 +31,7 @@
 
 (def PORT 5300)
 (def NREPL-PORT 5301)
-(def index-page-path "resources/public/index.html")
+(def index-page-path "/index.html")
 (def backend-name
   (util/default-backend-name))
 (def repo-base-url "https://api.github.com/repos/BrunoBonacci/1config")
@@ -82,7 +82,7 @@
 
 
 (defroutes endpoints
-  (GET  "/" [] (slurp index-page-path))
+  (GET  "/" [] (redirect index-page-path (redirect-status-codes :found)))
 
   (GET "/configs" {{:keys [change-num] :as params} :params}
        (let [filters (dissoc params :change-num)
@@ -94,7 +94,7 @@
                        results)]
          (response results)))
 
-  (GET "/footer" []
+  (GET "/info/versions" []
     (response (github-data)))
 
   (GET "/configs/keys/:key/envs/:env/versions/:version"
