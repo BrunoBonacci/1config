@@ -41,14 +41,14 @@
   :cljsbuild {:builds [{:id           "dev"
                         :source-paths ["src"]
                         :figwheel     true
-                        :compiler     {:main       com.brunobonacci.oneconfig.ui.core
+                        :compiler     {:main       com.brunobonacci.oneconfig.ui.view
                                        :asset-path "cljs/out"
                                        :output-to  "resources/public/cljs/main.js"
                                        :output-dir "resources/public/cljs/out"}}
                        {:id           "min"
                         :jar          true
                         :source-paths ["src"]
-                        :compiler     {:main            com.brunobonacci.oneconfig.ui.core
+                        :compiler     {:main            com.brunobonacci.oneconfig.ui.view
                                        :output-to       "resources/public/cljs/main.js"
                                        :optimizations   :advanced
                                        :closure-defines {goog.DEBUG false}

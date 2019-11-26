@@ -1,4 +1,4 @@
-(ns com.brunobonacci.oneconfig.ui.core
+(ns com.brunobonacci.oneconfig.ui.view
   (:require
     [com.brunobonacci.oneconfig.ui.utils :as utils]
     [com.brunobonacci.oneconfig.ui.controller :as ctl]
