@@ -322,18 +322,14 @@
     ]
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label"} "Value"]
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"]
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
      [:div  {:class "overflow-class"}
       (utils/as-code item-data)
       ]
      ]
     ]
-   [:div {:class "three wide column"}
-    [:div {:class "modal-content"}
-     [:span {:class "close-button" :on-click #(ctl/toggle-modal!)} "X"]
-     [:h1 "close modal"]
-     ]
-    ]
+   [:div {:class "three wide column"}]
    ;;-----------------------------------------
    [:div {:class "three wide column"}]
    [:div {:class "ten wide column"}]

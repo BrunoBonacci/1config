@@ -164,6 +164,17 @@
 (defn toggle-modal!  []
   (swap! state update-in [:show-modal-window?] not))
 
+;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
+(defn copy-to-clipboard! [t]
+  (let [e (. js/document (createElement "textarea"))]
+    (.. js/document -body (appendChild e))
+    (set! (.-value e) t)
+    (.select e)
+    (.setSelectionRange e 0 99999)
+    (. js/document (execCommand "copy"))
+    (.. js/document -body (removeChild e)))
+  (js/alert "Copied to clipboard"))
+
 (defn close-new-entry-panel!  []
   (swap! state assoc-in [:client-mode] :listing))
 

@@ -38,16 +38,13 @@ body {
     transform: scale(1.1);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 }
-.modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 1rem 1.5rem;
-    width: 24rem;
-    border-radius: 0.5rem;
+
+.ui[class*="right ribbon"].label {
+    left: calc(100% - 6.5rem);
+    padding-left: 1.2em;
+    padding-right: calc(1rem + 1.2em);
 }
+
 .close-button {
     float: right;
     width: 1.5rem;
