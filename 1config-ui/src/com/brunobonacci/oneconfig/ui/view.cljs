@@ -339,59 +339,66 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Page
-(defn app-root [state-atom]
-  (let [current-state @state-atom]
-    [:div
-        [:div {:class (if (= :new-entry-mode (get current-state :client-mode))
-                        "sidenav visible"
-                        "sidenav hidden")}
-         [add-config-entry-form "dummy" (get current-state :new-entry)]
-         ]
-        [:div {:class "sticky-nav-bar"}
-         [:div {:class "ui secondary menu"}
-          [:div {:class "item"}
-           [:div {:class "ui inverted button" :on-click #(ctl/toggle-new-entry-panel! (get current-state :client-mode))} "New Entry"]
-           ]
-          [:div {:class "right menu"}
-           [:div {:class "item"}
-            [:div
-             (get-label-text (get current-state :extended-mode?))
-             ]
-            ]
-           [:div {:class "item"}
-            [:div
-             [:label {:class "switch"}
-              [:input {:type "checkbox" :on-click #(ctl/toggle-table-mode!)}]
-              [:span {:class "slider round"}]]
-             ]
-            ]
-           [:div {:class "item"}
-            [:button {:class "circular ui inverted icon button "}
-             [:i {:class "icon user outline"}]]]
-           ]
-          ]
-         ]
-       [:div {:class "ui grid"}
-        [:div {:class "sixteen wide column"}
-         [create-config-table (get current-state :extended-mode?)
-          (get current-state :filters)
-          (group-by :key
-                    (ctl/apply-filters
-                      (get current-state :filters)
-                      (get current-state :entries)
-                      ))]
-         (if (true? (get current-state :show-modal-window?))
-           [:div {:class "modal show-modal"}
-            [modal-window (get current-state :item-params)  (get current-state :item-data)]
-            ]
-           [:div {:class "modal"}]
-           )
-         ]
+(defn main-page
+  [current-state]
+  [:div
+   [:div {:class (if (= :new-entry-mode (get current-state :client-mode))
+                   "sidenav visible"
+                   "sidenav hidden")}
+    [add-config-entry-form "dummy" (get current-state :new-entry)]
+    ]
+   [:div {:class "sticky-nav-bar"}
+    [:div {:class "ui secondary menu"}
+     [:div {:class "item"}
+      [:div {:class "ui inverted button" :on-click #(ctl/toggle-new-entry-panel! (get current-state :client-mode))} "New Entry"]
+      ]
+     [:div {:class "right menu"}
+      [:div {:class "item"}
+       [:div
+        (get-label-text (get current-state :extended-mode?))
         ]
-     [ctl/footer-element (get current-state :1config-version)]
+       ]
+      [:div {:class "item"}
+       [:div
+        [:label {:class "switch"}
+         [:input {:type "checkbox" :on-click #(ctl/toggle-table-mode!)}]
+         [:span {:class "slider round"}]]
+        ]
+       ]
+      [:div {:class "item"}
+       [:button {:class "circular ui inverted icon button "}
+        [:i {:class "icon user outline"}]]]
+      ]
      ]
-    );------------------------------
+    ]
+   [:div {:class "ui grid"}
+    [:div {:class "sixteen wide column"}
+     [create-config-table (get current-state :extended-mode?)
+      (get current-state :filters)
+      (group-by :key
+                (ctl/apply-filters
+                 (get current-state :filters)
+                 (get current-state :entries)
+                 ))]
+     (if (true? (get current-state :show-modal-window?))
+       [:div {:class "modal show-modal"}
+        [modal-window (get current-state :item-params)  (get current-state :item-data)]
+        ]
+       [:div {:class "modal"}]
+       )
+     ]
+    ]
+   [ctl/footer-element (get current-state :1config-version)]
+   ]
+
   )
+
+
+;; render app-root with the current state
+(defn app-root
+  []
+  (main-page @ctl/state))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize App
@@ -406,5 +413,5 @@
   (dev-setup)
   (ctl/get-all-configs!)
   (ctl/get-version!)
-  (reagent/render [app-root ctl/state]
+  (reagent/render [app-root]
                   (. js/document (getElementById "app"))))
