@@ -25,22 +25,24 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.cors :refer [wrap-cors]]
-            [clojure.tools.nrepl.server :refer [start-server stop-server]]
             [ring.util.response :refer :all])
   (:gen-class))
 
+
+
 (def PORT 5300)
-(def NREPL-PORT 5301)
 (def index-page-path "/index.html")
-(def backend-name
-  (util/default-backend-name))
+(def backend-name (util/default-backend-name))
 (def repo-base-url "https://api.github.com/repos/BrunoBonacci/1config")
 (def repo-tags-url (str repo-base-url "/git/refs"))
+
+
 
 ;;
 ;; 1Config backend used by the UI-server
 ;;
 (def backend (b/backend-factory {:type backend-name}))
+
 
 
 (defn- normalize
@@ -52,37 +54,44 @@
     (update :change-num #(Long/parseLong %))))
 
 
+
 (defn- get-github-data [url]
   (let [{:keys [body]} @(http/get url)]
     (json/parse-string body)))
+
+
 
 ;;; TODO is it possible to reuse
 (defn- oneconfig-version
   []
   (some->
-    (io/resource "1config.version")
-    slurp
-    (string/trim))
-  )
+   (io/resource "1config.version")
+   slurp
+   (string/trim)))
+
+
 
 (defn- github-data []
   (let [tags (get-github-data repo-tags-url)]
     {:latest  (->
-                 (last tags)
-                 (get "ref")
-                 (string/split #"/")
-                 (last))
-     :current (oneconfig-version)
-     }
-    ))
+               (last tags)
+               (get "ref")
+               (string/split #"/")
+               (last))
+     :current (oneconfig-version)}))
+
+
 
 (defn ping-response [req]
   (println (str "pinging back" req) )
   {:status 200})
 
 
+
 (defroutes endpoints
+
   (GET  "/" [] (redirect index-page-path (redirect-status-codes :found)))
+
 
   (GET "/configs" {{:keys [change-num] :as params} :params}
        (let [filters (dissoc params :change-num)
@@ -94,8 +103,10 @@
                        results)]
          (response results)))
 
+
   (GET "/info/versions" []
-    (response (github-data)))
+       (response (github-data)))
+
 
   (GET "/configs/keys/:key/envs/:env/versions/:version"
        {:keys [params]}
@@ -107,37 +118,40 @@
            (response entry)
            (not-found "Config entry not found"))))
 
-  (POST "/configs" {params :params {referer "referer"} :headers}
-    (try
-      (oneconfig/save backend (assoc params :encoded true))
-      (response {:status "OK" :message "Entry saved."})
-      (catch Exception x
-        {:status  400
-         :body    {:status "ERROR" :message "Unknown error."
-                   :cause (.getMessage x)}}
-        )))
 
-  (not-found "Not Found")
-)
+  (POST "/configs" {params :params {referer "referer"} :headers}
+        (try
+          (oneconfig/save backend (assoc params :encoded true))
+          (response {:status "OK" :message "Entry saved."})
+          (catch Exception x
+            {:status  400
+             :body    {:status "ERROR" :message "Unknown error."
+                       :cause (.getMessage x)}})))
+
+
+  (not-found "Not Found"))
+
 
 
 (def handler
   (-> (hdr/site #'endpoints)
-      (wrap-resource "public")
-      (wrap-defaults
-        (->
-          site-defaults
-          (assoc-in [:security :anti-forgery] false) ;;todo disable Invalid anti-forgery token
-          ))
-      (wrap-cors :access-control-allow-origin [#".*"]
-                 :access-control-allow-methods [:get :post])
-      (wrap-json-body {:keywords? true})
-      wrap-json-response))
-;
+     (wrap-resource "public")
+     (wrap-defaults
+      (-> site-defaults
+         ;; TODO: disable Invalid anti-forgery token
+         (assoc-in [:security :anti-forgery] false)))
+     (wrap-cors :access-control-allow-origin [#".*"]
+                :access-control-allow-methods [:get :post])
+     (wrap-json-body {:keywords? true})
+     wrap-json-response))
+
+
+
 (defn -main [& args]
   (http-kit/run-server handler {:port PORT})
-  (println (format "Server started: http://127.0.0.1:%d" PORT))
-  (start-server :bind "0.0.0.0" :port NREPL-PORT))
+  (println (format "Server started: http://127.0.0.1:%d" PORT)))
+
+
 
 (comment
 

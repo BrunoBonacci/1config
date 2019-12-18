@@ -1,11 +1,19 @@
 (defn ver [] (-> "../ver/1config.version" slurp .trim))
+(defn java-version
+  "It returns the current Java major version as a number"
+  []
+  (as->  (System/getProperty "java.version") $
+    (str/split $ #"\.")
+    (if (= "1" (first $)) (second $) (first $))
+    (Integer/parseInt $)))
+
 (defproject com.brunobonacci/oneconfig-ui #=(ver)
 
-  :jvm-opts ~(let [version (System/getProperty "java.version")
-                   [major _ _] (clojure.string/split version #"\.")]
-               (if (>= (java.lang.Integer/parseInt major) 9)
-                 ["--add-modules" "java.xml.bind"]
-                 []))
+  ;; :jvm-opts ~(if (>= (java-version) 9)
+  ;;              ["--add-modules" "java.xml.bind"]
+  ;;              [])
+
+
 
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
