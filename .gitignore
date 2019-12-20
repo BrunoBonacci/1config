@@ -10,3 +10,4 @@ pom.xml.asc
 .hgignore
 .hg/
 1config-core/dev/kms.clj
+1config-ui/resources/public/cljs
