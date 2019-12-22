@@ -16,7 +16,7 @@ UI for `1Config` library which is meant to simplify `1Config` user experience.
     ```
     lein do clean, cljsbuild once min, run
     ```
- 3. Open the following link http://127.0.0.1:5300/index.html
+ 3. Open the following link http://127.0.0.1:5300/
 
 ## License
 

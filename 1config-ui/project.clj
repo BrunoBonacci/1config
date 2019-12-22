@@ -10,6 +10,8 @@
 (defproject com.brunobonacci/oneconfig-ui #=(ver)
 
   :jvm-opts ~(if (>= (java-version) 9)
+               ;; Illegal reflective access by com.fasterxml.jackson.databind.util.ClassUtil
+               ;; to method java.lang.Throwable.setCause(java.lang.Throwable)
                (vector "--add-opens" "java.base/java.lang=ALL-UNNAMED" "-server")
                (vector "-server"))
 
@@ -25,7 +27,7 @@
 
                  [cheshire "5.9.0"]
 
-                 [http-kit "2.3.0"]
+                 [http-kit "2.4.0-alpha3"]
                  [compojure "1.6.1"]
                  [ring "1.7.1"]
                  [ring/ring-defaults "0.3.2"]
