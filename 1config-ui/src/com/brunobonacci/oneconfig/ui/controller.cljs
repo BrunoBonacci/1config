@@ -88,8 +88,8 @@
 (defn footer-element
   [version]
   [:div {:class "footer" }
-   (str "1Config. A library to manage multiple environments "
-        "and application configuration safely and effectively. "
+   (str "1Config - A library to manage application secrets "
+        "and configuration safely and effectively.  "
         "Apache License 2.0. Bruno Bonacci, 2019, v." (get version :current)
         (if (= (get version :current) (get version :latest))
           ""
@@ -124,15 +124,6 @@
                   :response-format :json
                   :keywords?       true
                   :error-handler   error-handler})))
-
-
-
-(defn apply-filters [filters entries]
-  (utils/filter-entries
-   {:key     (get filters :key)
-    :env     (get filters :env)
-    :version (get filters :version)}
-   entries))
 
 
 

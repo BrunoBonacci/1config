@@ -222,16 +222,8 @@
 
 (defn get-label-text
   [extended-mode?]
-  (if (true? extended-mode?)
-    [:div {:class "ui blue label"}
-     "back to extended mode"
-     [:span {:class "minified-mode-label"}
-      [:i {:class "inverted arrow alternate circle right outline icon"} ]]]
-
-    [:div {:class "ui blue label"}
-     "back to minified mode"
-     [:span {:class "minified-mode-label"}
-      [:i {:class "inverted arrow alternate circle left outline icon"} ]]]))
+  [:div {:class "ui blue label"}
+   (if extended-mode? "extended mode" "minified mode")])
 
 
 
@@ -352,7 +344,7 @@
      [create-config-table (get current-state :extended-mode?)
       (get current-state :filters)
       (group-by :key
-                (ctl/apply-filters
+                (utils/filter-entries
                  (get current-state :filters)
                  (get current-state :entries)))]
 
