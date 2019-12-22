@@ -9,10 +9,9 @@
 
 (defproject com.brunobonacci/oneconfig-ui #=(ver)
 
-  ;; :jvm-opts ~(if (>= (java-version) 9)
-  ;;              ["--add-modules" "java.xml.bind"]
-  ;;              [])
-
+  :jvm-opts ~(if (>= (java-version) 9)
+               (vector "--add-opens" "java.base/java.lang=ALL-UNNAMED" "-server")
+               (vector "-server"))
 
 
   :dependencies [[org.clojure/clojure "1.10.1"]
