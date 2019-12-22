@@ -66,6 +66,6 @@
   (->> entries
        (filter
         (where [:and
-                [:env     :starts-with? (or env "")]
-                [:key     :starts-with? (or key "")]
+                [:env     :CONTAINS? (or env "")]
+                [:key     :CONTAINS? (or key "")]
                 [:version :starts-with? (or version "")]]))))
