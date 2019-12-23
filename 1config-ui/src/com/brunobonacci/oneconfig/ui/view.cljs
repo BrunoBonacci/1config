@@ -352,8 +352,8 @@
        [:div {:class "modal show-modal"}
         [modal-window (get current-state :item-params)  (get current-state :item-data)]]
        [:div {:class "modal"}])]]
-   [ctl/footer-element (get current-state :1config-version)]])
-
+   [:div {:class "footer" }
+    (ctl/footer-element (get current-state :1config-version))]])
 
 
 ;; render app-root with the current state
