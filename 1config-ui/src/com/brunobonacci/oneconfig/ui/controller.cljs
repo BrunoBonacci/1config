@@ -87,13 +87,12 @@
 
 (defn footer-element
   [version]
-  [:div {:class "footer" }
-   (str "1Config - A library to manage application secrets "
-        "and configuration safely and effectively.  "
-        "Apache License 2.0. Bruno Bonacci, 2019, v." (get version :current)
-        (if (= (get version :current) (get version :latest))
-          ""
-          (str "(Latest version v." (get version :latest) ")")))])
+  (str "1Config - A library to manage application secrets "
+       "and configuration safely and effectively.  "
+       "Apache License 2.0. Bruno Bonacci, 2019, v." (get version :current)
+       (if (= (get version :current) (get version :latest))
+         ""
+         (str "(Latest version v." (get version :latest) ")"))))
 
 
 
