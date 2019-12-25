@@ -19,7 +19,7 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
-      [:tr {:class "centered aligned"}
+      [:tr {:class "center aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (utils/as-label (utils/colourize-label env) env)]
        [:td {:data-label "Version"} version]
@@ -43,7 +43,7 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
-      [:tr {:class "centered aligned"}
+      [:tr {:class "center aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
        [:td {:data-label "Environment"} (utils/as-label (utils/colourize-label env) env)]
        [:td {:data-label "Version"} version]
@@ -109,17 +109,7 @@
                   :name      "file"
                   :class     "inputfile"
                   :id        "file-input"
-                  ;; TODO: extract function
-                  :on-change (fn [this]
-                               (if (not (= "" (-> this .-target .-value)))
-                                 (let [^js/File file (-> this .-target .-files (aget 0))
-                                       reader (js/FileReader.)
-                                       file-name (-> file .-name)]
-                                   (.readAsText reader file)
-                                   (set! (.-onload reader)
-                                         (fn [e]
-                                           (let [val (-> e .-target .-result)]
-                                             (ctl/update-file-data val file-name)))))))}]
+                  :on-change #(ctl/upload-file %)}]
 
          [:label {:for "file-input" :class "ui mini blue button"}
           [:i {:class "ui upload icon"}] "Upload"]]
@@ -159,7 +149,7 @@
    [:th
     [:div {:class "ui mini icon input"}
      [:input {:type        "text"
-              :class       "key-input-width"
+              :class       "filter-input-width"
               :placeholder "Service Name.."
               :value       (get filters :key)
               :on-change   #(ctl/on-filter-change :key %)}]
@@ -168,7 +158,7 @@
    [:th
     [:div {:class "ui mini icon input"}
      [:input {:type        "text"
-              :class       "env-input-width"
+              :class       "filter-input-width"
               :placeholder "Environment.."
               :value       (get filters :env)
               :on-change   #(ctl/on-filter-change :env %)}]
@@ -177,7 +167,7 @@
    [:th
     [:div {:class "ui mini icon input"}
      [:input {:type        "text"
-              :class       "version-input-width"
+              :class       "filter-input-width"
               :placeholder "Version.."
               :value       (get filters :version)
               :on-change   #(ctl/on-filter-change :version %)}
@@ -210,12 +200,12 @@
   [:thead
    [:tr {:class "center aligned"}
     [:th "Service"]
-    [:th "Environment"]
-    [:th "Version"]
-    [:th {:row-span 2} "Change num"]
-    [:th {:row-span 2} "Time"]
-    [:th {:row-span 2} "Type"]
-    [:th {:row-span 2} "Value"]]
+    [:th {:class "shrink-column"} "Environment"]
+    [:th {:class "shrink-column"} "Version"]
+    [:th {:class "shrink-column" :row-span 2} "Change num"]
+    [:th {:class "shrink-column" :row-span 2} "Time"]
+    [:th {:class "shrink-column" :row-span 2} "Type"]
+    [:th {:class "shrink-column" :row-span 2} "Value"]]
    [table-filter-section :DUMMY filters]])
 
 

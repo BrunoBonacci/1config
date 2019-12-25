@@ -232,3 +232,14 @@
 (defn on-input-change
   [type value]
   (swap! state assoc-in [:new-entry type] (get-input-value value)))
+
+(defn upload-file [input]
+  (if (not (= "" (-> input .-target .-value)))
+    (let [^js/File file (-> input .-target .-files (aget 0))
+          reader (js/FileReader.)
+          file-name (-> file .-name)]
+      (.readAsText reader file)
+      (set! (.-onload reader)
+            (fn [e]
+              (let [val (-> e .-target .-result)]
+                (update-file-data val file-name)))))))

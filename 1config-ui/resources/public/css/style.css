@@ -284,20 +284,17 @@ input:checked + .slider:before {
     display: none;
 }
 
-.key-input-width {
-    width: 120px;
-}
-
-.env-input-width {
-    width: 100px;
-}
-
-.version-input-width {
-    width: 80px;
+.filter-input-width {
+    width: 115px;
 }
 
 .config-table-scroll {
     overflow-x: hidden;
     overflow-y: auto;
     margin-bottom: 33px;
+}
+
+.shrink-column {
+    width: 10%;
+    white-space: nowrap;
 }
