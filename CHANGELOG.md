@@ -1,5 +1,10 @@
 # Changelog
 
+## Release: v0.15.0 (UNRELEASED: Jan 2020)
+
+  * NEW: 1Config GUI (thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov))
+  * CLI: added ability to read latest configuration without specify the version
+
 ## Release: v0.10.3 (2019-09-18)
 
   * Fixed various issue with Windows usage
