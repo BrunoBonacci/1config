@@ -306,7 +306,9 @@
 (defn main-page
   [current-state]
   [:div
-   [:div {:class (if (= :new-entry-mode (get current-state :client-mode))
+   [:div {:id "entry-mode-menu"
+          :style {:display "block"}
+          :class (if (= :new-entry-mode (get current-state :client-mode))
                    "sidenav visible"
                    "sidenav hidden")}
     [add-config-entry-form :DUMMY (get current-state :new-entry)]]
@@ -369,4 +371,6 @@
   (ctl/get-all-configs!)
   (ctl/get-version!)
   (reagent/render [app-root]
-                  (. js/document (getElementById "app"))))
+                  (. js/document (getElementById "app")))
+  (ctl/hide-element "entry-mode-menu")
+  (ctl/hide-element "loader"))

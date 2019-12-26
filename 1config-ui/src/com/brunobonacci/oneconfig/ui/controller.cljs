@@ -40,13 +40,12 @@
     :extended-mode? false
     ;; one of :listing, :new-entry-mode, :show-entry-mode
     :client-mode :listing
-                                        ;:new-version-flag? nil
+     ;:new-version-flag? nil
     :1config-version {:current "" :latest ""}
 
     :new-entry empty-new-entry
 
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
-    :page-key    :surface-13
     :item-data   nil
     :item-params nil
 
@@ -76,7 +75,6 @@
 
 (defn update-version! [version]
   (swap! state assoc-in [:1config-version] version))
-
 
 
 (defn get-item-handler [response]
@@ -172,7 +170,9 @@
 
 
 
-(defn toggle-new-entry-panel!  [mode]
+(defn toggle-new-entry-panel! [mode]
+  (println mode)
+  (display-entry-panel)
   (if (= :new-entry-mode mode)
     (swap! state assoc-in [:client-mode] :listing)
     (swap! state assoc-in [:client-mode] :new-entry-mode)))
@@ -227,7 +227,16 @@
               (assoc-in [:new-entry :file-name] file-name)
               (assoc-in [:new-entry :type] (utils/get-extension file-name)))))
 
+(defn display-entry-panel []
+  (let [elem  (js/document.getElementById "entry-mode-menu")]
+    (set! (.-display (.-style elem)) "block")))
 
+(defn hide-element [id]
+  (let [elem        (js/document.getElementById id)
+        style       (.-style elem)
+        display     (.-display style)
+        new-display (if (= "none" display) "block" "none")]
+    (set! (.-display style) new-display)))
 
 (defn on-input-change
   [type value]

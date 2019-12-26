@@ -14,9 +14,71 @@
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+    <div id="loader" style="display: block"></div>
     <div id="app">
-        <h2>Figwheel template</h2>
-        <p>Checkout your developer console.</p>
+        <div class="sticky-nav-bar">
+            <div class="ui secondary menu">
+                <div class="item">
+                    <div class="ui inverted button">New Entry</div>
+                </div>
+                <div class="right menu">
+                    <div class="item">
+                        <div>
+                            <div class="ui blue label">minified mode</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div><label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <button class="circular ui inverted icon button "><i class="icon user outline"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui grid">
+            <div class="sixteen wide column">
+                <div class="sixteen wide column config-table-scroll">
+                    <div class="ui grid">
+                        <table class="ui selectable celled fixed table">
+                            <thead>
+                            <tr class="center aligned">
+                                <th>Service</th>
+                                <th class="shrink-column">Environment</th>
+                                <th class="shrink-column">Version</th>
+                                <th class="shrink-column" rowspan="2">Change num</th>
+                                <th class="shrink-column" rowspan="2">Time</th>
+                                <th class="shrink-column" rowspan="2">Type</th>
+                                <th class="shrink-column" rowspan="2">Value</th>
+                            </tr>
+                            <tr class="center aligned">
+                                <th>
+                                    <div class="ui mini icon input"><input type="text" class="filter-input-width"
+                                                                           placeholder="Service Name.." value=""><i
+                                            class="search icon"></i></div>
+                                </th>
+                                <th>
+                                    <div class="ui mini icon input"><input type="text" class="filter-input-width"
+                                                                           placeholder="Environment.." value=""><i
+                                            class="search icon"></i></div>
+                                </th>
+                                <th>
+                                    <div class="ui mini icon input"><input type="text" class="filter-input-width"
+                                                                           placeholder="Version.." value=""><i
+                                            class="search icon"></i></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">1Config - A library to manage application secrets and configuration safely and effectively.
+            Apache License 2.0. Bruno Bonacci, 2019
+        </div>
     </div>
     <script src="cljs/main.js" type="text/javascript"></script>
     <script>com.brunobonacci.oneconfig.ui.view.main();</script>
