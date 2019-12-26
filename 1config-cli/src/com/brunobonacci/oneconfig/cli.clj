@@ -124,7 +124,7 @@
 (defn get! [backend config-entry & {:keys [with-meta pretty-print?]
                                     :or {with-meta false
                                          pretty-print? false} :as opts}]
-  (let [config-entry (merge config-entry {:version "99999.99999.99999"})]
+  (let [config-entry (merge {:version "99999.99999.99999"} config-entry)]
     (validate-backend! backend)
     (validate-version! (:version config-entry))
     (safely
