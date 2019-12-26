@@ -7,7 +7,8 @@ Here some of the key-points and advantages:
 
   * Easy way to retrieve and manage configuration for your AWS deployed services
   * Compatible with AWS Lambdas as well
-  * AWS KMS double encryption based security (same as S3-SSE, EBS and RDS)
+  * AWS KMS envelope encryption for extra security (same as S3-SSE, EBS and RDS)
+  * Support for key-rotation
   * Support for multiple environments in the same AWS account
   * Support for multiple services in the same environment
   * Support for multiple concurrent versions of the same service
@@ -15,9 +16,13 @@ Here some of the key-points and advantages:
   * *Anti-tampering checks for configuration entries*
   * Supports Clojure, Java, Groovy, and other JVM languages (more to come)
   * Command line tool for managing changes to the configuration
+  * Graphical User interface for managing changes to the configuration
   * Support for local development (outside AWS)
   * Highly-configurable and secure authorization.
 
+Now available with a GUI as well:
+![1config ui](./doc/images/1config-ui.gif)
+(*Many thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov)*)
 
 ## Security model
 
@@ -1023,6 +1028,15 @@ Please note that the purpose of `:restrictions` in `user-profiles.edn`
 is to avoid user mistakes not to limit capabilities. For this reason
 the user can bypass a given restriction by commenting it in it's local
 file.
+
+## Contributors
+
+Many thanks to all the contributors to this project, to those who
+helped to shape it with their ideas, testing, suggestions, and PRs.
+
+A very special thanks to:
+
+  - [Eugene Tolbakov @etolbakov](https://github.com/etolbakov)
 
 ## License
 

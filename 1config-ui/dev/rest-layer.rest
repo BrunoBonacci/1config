@@ -1,0 +1,38 @@
+# rest layer for backend server
+
+#list all the config entries
+GET http://127.0.0.1:5300/configs
+Accept: application/json
+
+
+#  - list all the config matching the criteria
+GET http://127.0.0.1:5300/configs?key=pop&change-num=1562598799233
+Accept: application/json
+
+
+
+# 
+#GET /configs/keys/:keyid/envs/:env/versions/:version/[?change-num=123456789]
+#  - metadata and content
+GET http://127.0.0.1:5300/configs/keys/pop-service/envs/dev/versions/0.1.0?change-num=1562598799233
+Accept: application/json
+
+#
+GET http://127.0.0.1:5300/configs/keys/pop-service/envs/dev/versions/0.3.0
+Accept: application/json
+
+
+# 
+# create new config entries
+POST http://127.0.0.1:5300/configs
+Accept: application/json
+Content-type: application/json
+
+{
+  "key": "test-service",
+  "version": "0.1.0",
+  "env": "dev",
+  "content-type": "txt",
+  "value": "very secret"
+}
+
