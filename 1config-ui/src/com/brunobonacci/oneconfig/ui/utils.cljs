@@ -18,16 +18,19 @@
 
 
 
-;; TODO need a configuration point which could maintain correspondence
+;; TODO: add ability to customise color coding via user-profiles
 (defn colourize-label
   "find a color for a label by environment"
   [env]
   (cond
-    (= env "test")    "yellow horizontal"
-    (= env "prod")    "red horizontal"
-    (= env "staging") "green horizontal"
-    (= env "beta")    "blue horizontal"
-    :else             "grey horizontal"))
+    (= env "local")   "white"
+    (= env "dev")     "green"
+    (= env "test")    "blue"
+    (= env "uat")     "yellow"
+    (= env "staging") "yellow"
+    (= env "prod")    "red"
+    (= env "prd")     "red"
+    :else             "grey"))
 
 
 
