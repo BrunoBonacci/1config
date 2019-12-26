@@ -1,9 +1,9 @@
 # 1Config
 [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg)
 
-A library to manage multiple environments and application
-configuration safely and effectively.  Here some of the key-points and
-advantages:
+**A command line tool to manage application secrets and configuration safely and effectively.**
+
+Here some of the key-points and advantages:
 
   * Easy way to retrieve and manage configuration for your AWS deployed services
   * Compatible with AWS Lambdas as well
@@ -604,11 +604,11 @@ Here how to use it:
 
 ``` text
 
-  A command line tool for managing configurations in different environments.
+  A command line tool to manage application secrets and configuration safely and effectively.
 
 Usage:
 
-   1cfg <OPERATION> -e <ENVIRONMENT> -k <SERVICE> -v <VERSION> [-b <BACKEND>] [-t <TYPE>] <VALUE>
+   1cfg <OPERATION> -e <ENVIRONMENT> -k <SERVICE> [-v <VERSION>] [-b <BACKEND>] [-t <TYPE>] <VALUE>
 
    WHERE:
    ---------
@@ -631,6 +631,7 @@ Usage:
    -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
                                : exmaple: 'service1', 'db-pass' etc
    -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
+                               : If not provided, the latest version will be returned.
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
    -f   --content-file FILE    : read the value to SET from the given file.
         --with-meta            : whether to include meta data for GET operation
@@ -659,13 +660,16 @@ Example:
 
    --- configuration entries management  ---
 
-   (*) To initialise a given backend
+   (*) To initialise a given backend (first time only)
    1cfg INIT -b dynamo
 
    (*) To set the configuration value of a service called 'service1' use:
    1cfg SET -b dynamo -e test -k 'service1' -v '1.6.0' -t edn '{:port 8080}'
 
    (*) To read last configuration value for a service called 'service1' use:
+   1cfg GET -b dynamo -e test -k 'service1'
+
+   (*) To read last change for a specific version of 'service1' use:
    1cfg GET -b dynamo -e test -k 'service1' -v '1.6.0'
 
    (*) To read a specific changeset for a service called 'service1' use:

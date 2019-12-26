@@ -124,20 +124,21 @@
 (defn get! [backend config-entry & {:keys [with-meta pretty-print?]
                                     :or {with-meta false
                                          pretty-print? false} :as opts}]
-  (validate-backend! backend)
-  (validate-version! (:version config-entry))
-  (safely
-   (if-let [result (if (:change-num config-entry)
-                     (load backend config-entry)
-                     (find backend (dissoc config-entry :change-num)))]
-     (if with-meta
-       (println (format-with-meta result opts))
-       (println (format-value result opts)))
+  (let [config-entry (merge config-entry {:version "99999.99999.99999"})]
+    (validate-backend! backend)
+    (validate-version! (:version config-entry))
+    (safely
+     (if-let [result (if (:change-num config-entry)
+                       (load backend config-entry)
+                       (find backend (dissoc config-entry :change-num)))]
+       (if with-meta
+         (println (format-with-meta result opts))
+         (println (format-value result opts)))
 
-     (util/println-err "No configuration entry found."))
-   :on-error
-   :log-stacktrace false
-   :message "Retrieving config entry"))
+       (util/println-err "No configuration entry found."))
+     :on-error
+     :log-stacktrace false
+     :message "Retrieving config entry")))
 
 
 

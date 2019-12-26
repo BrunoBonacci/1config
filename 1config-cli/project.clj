@@ -1,4 +1,11 @@
 (defn ver [] (-> "../ver/1config.version" slurp .trim))
+(defn java-version
+  "It returns the current Java major version as a number"
+  []
+  (as->  (System/getProperty "java.version") $
+    (str/split $ #"\.")
+    (if (= "1" (first $)) (second $) (first $))
+    (Integer/parseInt $)))
 (defproject com.brunobonacci/oneconfig-cli #=(ver)
   :description "A command line utility for managing 1config configurations"
 
@@ -20,7 +27,11 @@
 
   :global-vars {*warn-on-reflection* true}
 
-  :jvm-opts ["-server"]
+  :jvm-opts ~(if (>= (java-version) 9)
+               ;; Illegal reflective access by com.fasterxml.jackson.databind.util.ClassUtil
+               ;; to method java.lang.Throwable.setCause(java.lang.Throwable)
+               (vector "--add-opens" "java.base/java.lang=ALL-UNNAMED" "-server")
+               (vector "-server"))
 
   :resource-paths ["resources" "../ver" ]
 
