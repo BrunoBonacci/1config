@@ -171,7 +171,6 @@
 
 
 (defn toggle-new-entry-panel! [mode]
-  (println mode)
   (display-entry-panel)
   (if (= :new-entry-mode mode)
     (swap! state assoc-in [:client-mode] :listing)
