@@ -20,8 +20,8 @@ Here some of the key-points and advantages:
   * Support for local development (outside AWS)
   * Highly-configurable and secure authorization.
 
-Now available with a GUI as well:
-![1config ui](./doc/images/1config-ui.gif)
+*Now available with a GUI as well:*
+![1config ui](./doc/images/1config-ui.gif)</br>
 (*Many thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov)*)
 
 ## Security model
