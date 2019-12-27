@@ -21,9 +21,11 @@ Here some of the key-points and advantages:
   * Highly-configurable and secure authorization.
 
 *Now available with a GUI as well:*
+
 <div style="text-align:center">
-![1config ui](./doc/images/1config-ui.gif)
+<img src="./doc/images/1config-ui.gif">
 </div>
+
 (*Many thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov)*)
 
 ## Security model
