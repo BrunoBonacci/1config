@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backends.kms-encryption
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backends.kms-encryption
   (:refer-clojure :exclude [find load list])
   (:require [amazonica.aws.kms :as kms]
             [amazonica.core :as aws]

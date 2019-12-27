@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backends.dynamo
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backends.dynamo
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends.in-memory :refer [TestStore data]]

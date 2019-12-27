@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backends.iam-user
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backends.iam-user
   (:refer-clojure :exclude [find load list])
   (:require [amazonica.aws.securitytoken :as sts]
             [com.brunobonacci.oneconfig.backend :refer :all]

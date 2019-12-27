@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.util
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.util
   (:require [cheshire.core :as json]
             [clojure.edn :as edn]
             [clojure.java.io :as io]

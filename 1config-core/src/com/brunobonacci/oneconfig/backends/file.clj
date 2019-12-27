@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backends.file
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backends.file
   (:refer-clojure :exclude [find load list])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]

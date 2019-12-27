@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backends.immutable
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backends.immutable
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]))
 

@@ -1,4 +1,5 @@
-(ns com.brunobonacci.oneconfig.backend
+(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+    com.brunobonacci.oneconfig.backend
   (:refer-clojure :exclude [find load list]))
 
 
