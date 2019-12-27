@@ -9,11 +9,12 @@ Here some of the key-points and advantages:
   * Compatible with AWS Lambdas as well
   * AWS KMS envelope encryption for extra security (same as S3-SSE, EBS and RDS)
   * Support for key-rotation
+  * Highly available (as available as DynamoDB + KMS)
   * Support for multiple environments in the same AWS account
   * Support for multiple services in the same environment
   * Support for multiple concurrent versions of the same service
   * Zero config approach (or at most 1 config `;-)`)
-  * *Anti-tampering checks for configuration entries*
+  * *Anti-tampering checks for configuration entries* (entries can't be manipulated manually)
   * Supports Clojure, Java, Groovy, and other JVM languages (more to come)
   * Command line tool for managing changes to the configuration
   * Graphical User interface for managing changes to the configuration
