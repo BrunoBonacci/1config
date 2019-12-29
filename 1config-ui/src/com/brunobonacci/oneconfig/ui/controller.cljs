@@ -199,7 +199,9 @@
     (.. js/document -body (removeChild e)))
   (js/alert "Copied to clipboard"))
 
-
+(defn highlight-code-block []
+  (js/setTimeout #(->> (js/document.querySelector "code")
+                       (js/hljs.highlightBlock)) 90))
 
 (defn close-new-entry-panel!  []
   (swap! state assoc-in [:client-mode] :listing))

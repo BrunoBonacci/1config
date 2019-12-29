@@ -286,7 +286,8 @@
      [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"]
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
      [:div  {:class "overflow-class"}
-      (utils/as-code item-data)]]]
+      (utils/as-code item-data (get item-params :content-type))]]]
+   [ctl/highlight-code-block]
    [:div {:class "three wide column"}]
 
    ;;-----------------------------------------
