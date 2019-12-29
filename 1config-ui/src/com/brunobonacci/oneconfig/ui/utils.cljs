@@ -40,9 +40,8 @@
 
 
 
-(defn as-code [value]
-  [:pre [:code value]])
-
+(defn as-code [value type]
+  [:pre [:code { :class type} value]])
 
 
 (defn get-last-of-splitted [line re]
