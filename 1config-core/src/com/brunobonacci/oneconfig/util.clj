@@ -289,12 +289,18 @@
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn parse-edn
+  [content]
+  (with-open [in (java.io.PushbackReader. (java.io.StringReader. content))]
+    (let [edn-seq (repeatedly (partial edn/read {:eof ::eof} in))]
+      (doall (take-while (partial not= ::eof) edn-seq)))))
+
 
 (defn read-edn-file
   "reads a EDN file and returns its content or nil if invalid"
   [file]
   (safely
-   (some-> file slurp edn/read-string)
+   (some-> file slurp parse-edn last)
    :on-error :default nil))
 
 
@@ -333,11 +339,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+
 (defmulti decode (fn [form value] form))
+
 
 (defmethod decode "edn"
   [_ value]
-  (edn/read-string value))
+  (last (parse-edn value)))
 
 (defmethod decode "json"
   [_ value]
