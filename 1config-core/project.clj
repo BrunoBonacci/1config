@@ -22,6 +22,7 @@
                  [prismatic/schema "1.1.10"]
                  [cheshire "5.8.1"]]
 
+  :source-paths      ["src" "../1config-shared/src"]
   :java-source-paths ["java/src"]
   :javac-options     ["-target" "1.8" "-source" "1.8" ]
 

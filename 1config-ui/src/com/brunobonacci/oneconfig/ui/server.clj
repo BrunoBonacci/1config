@@ -18,6 +18,7 @@
             [com.brunobonacci.oneconfig.backend :as oneconfig]
             [com.brunobonacci.oneconfig.backends :as b]
             [com.brunobonacci.oneconfig.util :as util]
+            [com.brunobonacci.oneconfig.profiles :as prof]
             [clojure.string :as string]
             [where.core :refer [where]]
             [taoensso.sente.server-adapters.http-kit
@@ -106,6 +107,10 @@
 
   (GET "/info/versions" []
        (response (github-data)))
+
+
+  (GET "/preferences" []
+       (response (:preferences (prof/user-profiles))))
 
 
   (GET "/configs/keys/:key/envs/:env/versions/:version"

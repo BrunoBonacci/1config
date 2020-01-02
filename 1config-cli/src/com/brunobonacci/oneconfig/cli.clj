@@ -9,6 +9,7 @@
             [com.brunobonacci.oneconfig.backends.dynamo :as dyn]
             [com.brunobonacci.oneconfig.backends.kms-encryption :as kms]
             [com.brunobonacci.oneconfig.util :as util]
+            [com.brunobonacci.oneconfig.profiles :as prof]
             [doric.core :as table]
             [safely.core :refer [safely]]))
 
@@ -70,9 +71,8 @@
 
 (defn- check-user-restrictions
   [backend-type config-entry]
-  (when-let [user-profiles (util/user-profiles)]
-    (let [account (if (#{:fs :filesystem} backend-type) "local" (aws-account-id))]
-      (util/apply-restrictions! user-profiles account config-entry))))
+  (let [account (if (#{:fs :filesystem} backend-type) "local" (aws-account-id))]
+    (prof/apply-restrictions! (prof/user-profiles) account config-entry)))
 
 
 (defn- validate-backend!

@@ -4,7 +4,8 @@
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends :refer [backend-factory]]
-            [com.brunobonacci.oneconfig.util :refer :all]))
+            [com.brunobonacci.oneconfig.util
+             :refer [sem-ver log-configure-request]]))
 
 
 (defonce ^:private ^com.brunobonacci.oneconfig.backend.IConfigClient one-config-client

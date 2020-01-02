@@ -1,24 +1,33 @@
 # rest layer for backend server
 
-#list all the config entries
+# get version info
+GET http://127.0.0.1:5300/info/versions
+Accept: application/json
+
+
+# get version info
+GET http://127.0.0.1:5300/preferences
+Accept: application/json
+
+
+# list all the config entries
 GET http://127.0.0.1:5300/configs
 Accept: application/json
 
 
 #  - list all the config matching the criteria
-GET http://127.0.0.1:5300/configs?key=pop&change-num=1562598799233
+GET http://127.0.0.1:5300/configs?key=user
 Accept: application/json
-
 
 
 # 
 #GET /configs/keys/:keyid/envs/:env/versions/:version/[?change-num=123456789]
 #  - metadata and content
-GET http://127.0.0.1:5300/configs/keys/pop-service/envs/dev/versions/0.1.0?change-num=1562598799233
+GET http://127.0.0.1:5300/configs/keys/user-service/envs/dev/versions/0.1.2
 Accept: application/json
 
 #
-GET http://127.0.0.1:5300/configs/keys/pop-service/envs/dev/versions/0.3.0
+GET http://127.0.0.1:5300/configs/keys/user-service/envs/dev/versions/0.9.0
 Accept: application/json
 
 

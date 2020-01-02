@@ -13,15 +13,24 @@
   (if (zero? num) [:td {:row-span sz} key]))
 
 
+(defn colourize-label
+  "find a color for a label by environment"
+  [preferences env]
+  ;; TODO: fix transport should be transit format
+  (or (get-in preferences [:colors :env-labels (keyword env)])
+      (get-in preferences [:colors :env-labels :default] "grey")))
+
+
+
 
 (defn create-table-extended
-  [items]
+  [preferences items]
   (for [item items]
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
       [:tr {:class "center aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
-       [:td {:data-label "Environment"} (utils/as-label (utils/colourize-label env) env)]
+       [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]
        [:td {:data-label "Change num"} change-num]
        [:td {:data-label "Time"} (utils/parse-date change-num)]
@@ -39,13 +48,13 @@
 
 
 (defn create-minified-table
-  [items]
+  [preferences items]
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
       [:tr {:class "center aligned"}
        [create-service-name-row (.indexOf items item) (count items) key]
-       [:td {:data-label "Environment"} (utils/as-label (utils/colourize-label env) env)]
+       [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]
        [:td {:data-label "Change num"} change-num]
        [:td {:data-label "Time"} (utils/parse-date change-num)]
@@ -218,36 +227,36 @@
 
 
 (defn show-extended-table
-  [items filters]
+  [preferences items filters]
   [:table {:class "ui selectable celled fixed table"}
    [table-header-extended :DUMMY filters]
    [:tbody
     (for [itm items]
-      (create-table-extended (val itm)))]])
+      (create-table-extended preferences (val itm)))]])
 
 
 
 (defn show-minified-table
-  [items filters]
+  [preferences items filters]
   [:table {:class "ui selectable celled fixed table"}
    [table-header :DUMMY filters]
    [:tbody
     (for [itm items]
-      (create-minified-table (val itm)))]])
+      (create-minified-table preferences (val itm)))]])
 
 
 
 (defn create-config-table
-  [extended-mode? real-filters items]
+  [preferences extended-mode? real-filters items]
   [:div {:class "sixteen wide column config-table-scroll"}
    [:div {:class "ui grid"}
     (if (true? extended-mode?)
-      (show-extended-table items real-filters)
-      (show-minified-table items real-filters))]])
+      (show-extended-table preferences items real-filters)
+      (show-minified-table preferences items real-filters))]])
 
 
 
-(defn modal-window [item-params item-data]
+(defn entry-details-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
     [:table {:class "ui celled striped table"}
@@ -261,7 +270,7 @@
        [:td {:class "center aligned collapsing"} "Environment"]
        [:td {:class "center aligned collapsing"}
         (let [env (get item-params :env)]
-          (utils/as-label (utils/colourize-label env) env))]]
+          (utils/as-label (colourize-label preferences  env) env))]]
 
       [:tr
        [:td {:class "center aligned collapsing"} "Version"]
@@ -334,16 +343,21 @@
 
    [:div {:class "ui grid"}
     [:div {:class "sixteen wide column"}
-     [create-config-table (get current-state :extended-mode?)
-      (get current-state :filters)
+     [create-config-table
+      (:preferences current-state)
+      (:extended-mode? current-state)
+      (:filters current-state)
       (group-by :key
                 (utils/filter-entries
                  (get current-state :filters)
                  (get current-state :entries)))]
 
-     (if (true? (get current-state :show-modal-window?))
+     (if (true? (:show-entry-details-window? current-state))
        [:div {:class "modal show-modal"}
-        [modal-window (get current-state :item-params)  (get current-state :item-data)]]
+        [entry-details-window
+         (:preferences current-state)
+         (:item-params current-state)
+         (:item-data current-state)]]
        [:div {:class "modal"}])]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
@@ -369,6 +383,7 @@
 
 (defn ^:export main []
   #_(dev-setup)
+  (ctl/get-preferences!)
   (ctl/get-all-configs!)
   (ctl/get-version!)
   (reagent/render [app-root]

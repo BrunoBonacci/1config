@@ -19,6 +19,17 @@
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn deep-merge
+  "Like merge, but merges maps recursively. It merges the maps from left
+  to right and the right-most value wins. It is useful to merge the
+  user defined configuration on top of the default configuration."
+  [& maps]
+  (let [maps (filter (comp not nil?) maps)]
+    (if (every? map? maps)
+      (apply merge-with deep-merge maps)
+      (last maps))))
+
+
 
 (defn sem-ver
   "Returns a vector of the numerical components of a 3-leg version number.
@@ -424,92 +435,3 @@
 (defn marshall-value
   [{:keys [content-type] :as config-entry}]
   (update config-entry :value (partial encode content-type)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                                                                            ;;
-;;                 ----==| U S E R - P R O F I L E S |==----                  ;;
-;;                                                                            ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn user-profiles
-  "loads the user-profiles.edn if present."
-  []
-  (some-> (home-1config)
-          (str "user-profiles.edn")
-          (file-exists?)
-          (slurp)
-          (edn/read-string)))
-
-
-(def ^:private condition1-schema
-  [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")])
-
-
-(def ^:private not-condition1-schema
-  [(s/one (s/eq :not) "not") (s/one condition1-schema "cond")])
-
-
-(def ^:private simple-condition-schema
-  (s/either
-   [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")]
-   [(s/one (s/eq :not) "not") (s/one condition1-schema "cond")]))
-
-
-(def ^:private condition-schema
-  (s/either
-   simple-condition-schema
-   [(s/one (s/enum :and :or) "logic") condition-schema]))
-
-
-(def ^:private restriction-schema
-  [[(s/one [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")] "guard")
-    (s/one (s/eq :->) "arrow")
-    (s/one [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")] "restriction")
-    (s/one (s/eq :message) ":message")
-    (s/one s/Str "error message")]])
-
-
-(defn- compile-restriction
-  [[guard _ restriction _ message]]
-  (let [guard* (where guard)
-        restriction* (where restriction)]
-    (fn [rec]
-      ;;(prn "RESTRICTION::" rec :if guard "(" (guard* rec) ")" :-> restriction "("(restriction* rec) ")" :==> (and (guard* rec) (not (restriction* rec))))
-      (when (and (guard* rec) (not (restriction* rec)))
-        (throw
-         (ex-info
-          (str "RESTRICTION: " (or message "Invalid values supplied for request."))
-          {:data rec
-           :guard guard
-           :restriction restriction}))))))
-
-
-(def ^:private restriction-validator
-  (s/validator restriction-schema))
-
-
-(defn- validate-restrictions
-  [restrictions]
-  (try
-    (restriction-validator (partition-all 5 restrictions))
-    (catch Exception x
-      (throw (ex-info "Invalid restrictions in user-profiles"
-                      {:error x :restrictions restrictions})))))
-
-
-(defn- compile-restrictions
-  [restrictions]
-  (let [restrictions (validate-restrictions restrictions)
-        restrx (map compile-restriction restrictions)]
-    (fn [rec]
-      (run! (fn [pred] (pred rec)) restrx)
-      true)))
-
-
-
-(defn apply-restrictions!
-  [{:keys [restrictions] :as user-profiles} account request]
-  (let [rest-checker (compile-restrictions restrictions)]
-    (rest-checker (assoc request :account account))))

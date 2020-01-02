@@ -920,7 +920,64 @@ output "config_table_arn"{
 
 User profiles allow to set common information for a single
 user/operator.  By creating a file `~/.1config/user-profiles.edn` you
-can set some of the following options:
+can set some preferences. Here the general structure of the profile:
+
+
+``` clojure
+{:preferences
+   ;; some defaults which can be changed
+   {
+    ;; The UI display labels for the various environment
+    ;; these are the default colors which can be customized by the user
+    :colors
+    {:env-labels
+     {"dev"     "green"
+      "uat"     "yellow"
+      "prod"    "red"
+      :default  "grey"}}
+    }
+
+   ;; restriction of what can be set in a given account
+   ;; good way to set hygiene rules and naming conventions.
+   ;; the general form is
+   ;;
+   ;; [gurad condition] :-> [restriction] :message "user friendly error message"
+   :restrictions []
+   ;; here some examples
+   ;; [:account :matches? ".*"] :-> [:key :matches-exactly? "[a-z][a-z0-9-]+"]
+   ;; :message "Invalid service name, shoulbe lowercase letters, numbers and hypens (-)"
+   ;;
+   ;; [:account :is? "1234567890"] :-> [:env :in? ["prd" "dr-prd"]]
+   ;; :message "Invalid environment for this account, only prd, and dr-prd are allowed"
+   }
+```
+
+See the following sections for more details
+
+
+### User preferences
+
+You can customize things like the color of the label for each environment
+by creating a file `~/.1config/user-profiles.edn` which contains a map
+with the following structure:
+
+``` clojure
+{:preferences
+   ;; some defaults which can be changed
+   {
+    ;; The UI display labels for the various environment
+    ;; these are the default colors which can be customized by the user
+    ;; The environment names are case sensitive and must be an exact match.
+    :colors
+    {:env-labels
+     {"dev"     "green"
+      "uat"     "yellow"
+      "prod"    "red"
+      :default  "grey"}}
+    }
+   }
+```
+
 
 ### User restrictions
 

@@ -32,6 +32,8 @@
 (defonce state
   (atom
    {
+    ;; user defined preferences
+    :preferences nil
     ;; contains the config entries retrieved from the server
     :entries []
     ;; filters
@@ -50,7 +52,7 @@
     :item-params nil
 
     ;; temp modal window
-    :show-modal-window? false
+    :show-entry-details-window? false
     }))
 
 
@@ -67,19 +69,17 @@
 
 
 
-(defn all-configs-handler! [entries]
-  (swap! state assoc-in [:entries] entries)
-  (swap! state assoc-in [:client-mode] :listing))
-
-
-
 (defn update-version! [version]
-  (swap! state assoc-in [:1config-version] version))
+  (swap! state assoc :1config-version version))
+
 
 
 (defn get-item-handler [response]
-  (swap! state assoc-in [:item-data] (get response :encoded-value))
-  (swap! state update-in [:show-modal-window?] not))
+  (swap! state
+         (fn [s]
+           (-> s
+               (assoc  :item-data (get response :encoded-value))
+               (update :show-entry-details-window? not)))))
 
 
 
@@ -92,6 +92,25 @@
          ""
          (str "(Latest version v." (get version :latest) ")"))))
 
+
+(defn get-preferences! []
+  (GET "/preferences"
+       {
+        :handler         (fn [prefs]
+                           (swap! state assoc :preferences prefs))
+        :format          :json
+        :response-format :json
+        :keywords?       true
+        :error-handler   error-handler}))
+
+
+
+(defn all-configs-handler! [entries]
+  (swap! state
+         (fn [s]
+           (-> s
+               (assoc :entries entries)
+               (assoc :client-mode :listing)))))
 
 
 (defn get-all-configs! []
@@ -184,7 +203,7 @@
 
 
 (defn toggle-modal!  []
-  (swap! state update-in [:show-modal-window?] not))
+  (swap! state update :show-entry-details-window? not))
 
 
 

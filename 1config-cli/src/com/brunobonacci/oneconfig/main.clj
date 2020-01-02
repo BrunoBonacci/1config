@@ -149,7 +149,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
    ["-f"  "--content-file FILENAME"
     :parse-fn io/file
-    :validate [#(.exists %) "The file must exist"]]
+    :validate [#(.exists ^java.io.File %) "The file must exist"]]
 
    ["-o"  "--order-by ORDER"
     :default [:key :env :version :change-num]

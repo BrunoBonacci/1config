@@ -40,11 +40,12 @@
                  [re-frisk "0.5.4.1"]
                  [com.taoensso/sente "1.13.1"]              ;; http kit
 
-                 [org.slf4j/slf4j-log4j12 "1.7.26"]
-                 ]
+                 [org.slf4j/slf4j-log4j12 "1.7.26"]]
+
   :min-lein-version "2.7.1"
-  :source-paths ["src"]
+  :source-paths     ["src" "../1config-shared/src"]
   :main com.brunobonacci.oneconfig.ui.server
+  :global-vars {*warn-on-reflection* true}
 
   :clean-targets ^{:protect false} [:target-path "resources/public/cljs"]
   :cljsbuild {:builds [{:id           "dev"
