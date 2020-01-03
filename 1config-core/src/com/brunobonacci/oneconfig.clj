@@ -18,7 +18,7 @@
 
   example:
   ``` clojure
-  (configure {:key \"system1\" :env \"dev\" :version \"6.2.4\"})
+  (configure {:key \"service1\" :env \"dev\" :version \"6.2.4\"})
 
   ;; => {:key \"service1\",
   ;;      :env \"dev\",
@@ -42,14 +42,16 @@
   ``` clojure
   ;; read the config and merge with defaults
   (->> (configure
-      {:key \"user-service\"
-       :env (or (System/getenv \"ENV\") \"dev\")
-       :version \"6.2.4\"})
-     :value
-     (deep-merge DEFAULT-CONFIG))
+        {:key \"user-service\"
+         :env (or (System/getenv \"ENV\") \"local\")
+         :version \"6.2.4\"})
+       :value
+       (deep-merge DEFAULT-CONFIG))
   ```
 
-  for more information check:
+  for more information check the best practices:
+  https://github.com/BrunoBonacci/1config/doc/best-practices.md
+  and the general documentation:
   https://github.com/BrunoBonacci/1config
   "
   ([{:keys [env key version] :as config-entry}]
@@ -63,7 +65,7 @@
        (find config-client config-entry)))))
 
 
-;; (configure {:key "system1" :env "dev" :version "6.2.4"})
+;; (configure {:key "service1" :env "dev" :version "6.2.4"})
 
 
 (defn deep-merge

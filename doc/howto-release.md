@@ -1,4 +1,4 @@
-# HowTo Release
+# HowTo prepare a Release
 
   - Test release
   - Update version in version file and README

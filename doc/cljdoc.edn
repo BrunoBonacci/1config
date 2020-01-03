@@ -1,0 +1,26 @@
+{:cljdoc.doc/tree
+ [["Readme" {:file "README.md"}]
+  ["Changelog" {:file "CHANGELOG.md"}]
+
+  ["User guides" {}
+   ["Quick Start" {:file "doc/quick-start.md" }]
+   ["Security Model" {:file "doc/security-model.md" }]
+   ["Best practises" {:file "doc/best-practices.md" }]
+   ["Configuration resolution" {:file "doc/config-resolution.md" }]
+   ["Command line tool" {:file "doc/cli-tool.md" }]
+   ["Key management" {:file "doc/key-management.md" }]
+   ["Providers chain" {:file "doc/providers.md" }]
+   ["Local development" {:file "doc/local-development.md" }]
+   ["User profiles" {:file "doc/user-profiles.md" }]]
+
+  ["Application guides" {}
+   ["Usage with Clojure programs" {:file "doc/usage-with-clojure.md" }]
+   ["Usage with Java programs" {:file "doc/usage-with-java.md" }]]
+
+  ["DevOps guides" {}
+   ["Terraform scripts" {:file "doc/terraform.md" }]
+   ["AWS permissions" {:file "doc/aws-permissions.md" }]]
+
+  ["Internal development" {}
+   ["HowTo prepare a release" {:file "doc/howto-release.md" }]]
+  ]}
