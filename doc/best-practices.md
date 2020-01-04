@@ -1,13 +1,20 @@
 # Best practices
 
 In this section we will discuss some of the best practices managing
-configurations for your system.
+configurations for your applications.
 
 Firstly, define a **default configuration**, document the various
 configuration options and set defaults which are best suited for a
 production environment.  **Don't put secrets in here!!!**. If you have
 username, passwords, or appilcation keys don't add them in the
-defaults values (see database username/password)
+defaults values (see database username/password).  A good default
+configuration should contain good default values for all the
+configurable properties with the exception of secrets and endpoints of
+dependencies. In such way the a typical user of your application will
+only have to enter the secrets in most of the cases.
+
+The following is a made-up example of an application which uses
+a database and exposes some api.
 
 ``` clojure
 (ns your.namespace

@@ -10,6 +10,7 @@
   - [Providers chain](./providers.md)
   - [Local development](./local-development.md)
   - [User profiles](./user-profiles.md)
+  - [F.A.Q](./faq.md)
 
 ### Application guides
   - [Usage with Clojure programs](./usage-with-clojure.md)

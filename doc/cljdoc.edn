@@ -11,7 +11,8 @@
    ["Key management" {:file "doc/key-management.md" }]
    ["Providers chain" {:file "doc/providers.md" }]
    ["Local development" {:file "doc/local-development.md" }]
-   ["User profiles" {:file "doc/user-profiles.md" }]]
+   ["User profiles" {:file "doc/user-profiles.md" }]
+   ["F.A.Q." {:file "doc/faq.md" }]]
 
   ["Application guides" {}
    ["Usage with Clojure programs" {:file "doc/usage-with-clojure.md" }]

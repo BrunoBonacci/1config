@@ -49,10 +49,9 @@
        (deep-merge DEFAULT-CONFIG))
   ```
 
-  for more information check the best practices:
-  https://github.com/BrunoBonacci/1config/doc/best-practices.md
-  and the general documentation:
-  https://github.com/BrunoBonacci/1config
+  for more information check:
+  - the best practices: https://github.com/BrunoBonacci/1config/blob/master/doc/best-practices.md
+  - the general documentation: https://github.com/BrunoBonacci/1config
   "
   ([{:keys [env key version] :as config-entry}]
    {:pre [env key (sem-ver version)]}
@@ -69,11 +68,26 @@
 
 
 (defn deep-merge
-  "Like merge, but merges maps recursively. It merges the maps from left
+  "It merges maps recursively. It merges the maps from left
   to right and the right-most value wins. It is useful to merge the
-  user defined configuration on top of the default configuration."
+  user defined configuration on top of the default configuration.
+
+  example:
+
+  ``` clojure
+  (deep-merge {:foo 1 :bar {:baz 2}}
+              {:foo 2 :bar {:baz 1 :qux 3}})
+  ;;=> {:foo 2, :bar {:baz 1, :qux 3}}
+  ```
+
+  "
   [& maps]
   (let [maps (filter (comp not nil?) maps)]
     (if (every? map? maps)
       (apply merge-with deep-merge maps)
       (last maps))))
+
+
+(deep-merge {:foo 1 :bar {:baz 2}}
+            {:foo 2 :bar {:baz 1 :qux 3}})
+{:foo 2, :bar {:baz 1, :qux 3}}

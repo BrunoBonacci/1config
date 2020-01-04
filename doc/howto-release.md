@@ -1,7 +1,7 @@
 # HowTo prepare a Release
 
   - Test release
-  - Update version in version file and README
+  - Update version in version file and README and other articles
   - Update CHANGELOG.md
   - install core library
     ```
@@ -18,6 +18,11 @@
   - build cli packages
     ```
     cd 1config-cli
+    lein do clean, bin, package
+    ```
+  - build UI packages
+    ```
+    cd 1config-ui
     lein do clean, bin, package
     ```
   - release to clojars
