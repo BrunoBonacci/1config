@@ -79,16 +79,16 @@ Example:
    1cfg INIT -b dynamo
 
    (*) To set the configuration value of a service called 'service1' use:
-   1cfg SET -b dynamo -e test -k 'service1' -v '1.6.0' -t edn '{:port 8080}'
+   1cfg SET -b dynamo -e test -k service1 -v 1.6.0 -t edn '{:port 8080}'
 
    (*) To read last configuration value for a service called 'service1' use:
-   1cfg GET -b dynamo -e test -k 'service1'
+   1cfg GET -b dynamo -e test -k service1
 
    (*) To read last change for a specific version of 'service1' use:
-   1cfg GET -b dynamo -e test -k 'service1' -v '1.6.0'
+   1cfg GET -b dynamo -e test -k service1 -v 1.6.0
 
    (*) To read a specific changeset for a service called 'service1' use:
-   1cfg GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
+   1cfg GET -b dynamo -e test -k service1 -v 1.6.0 -c 3563412132
 
    (*) To list configuration with optional filters and ordering
    1cfg LIST -b dynamo -e prod -k ser -v 1. -o env,key
