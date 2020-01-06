@@ -82,12 +82,21 @@
                     {}))))
 
 
+(defn- normalize-entry
+  [{:keys [content-type] :as config-entry}]
+  (as-> config-entry $
+    (if (= content-type "props")
+      (assoc $ :content-type "properties"))
+    (assoc $ :encoded true)))
+
+
+
 (defn set! [backend-type backend config-entry]
   (validate-backend! backend)
   (validate-version! (:version config-entry))
   (check-user-restrictions backend-type config-entry)
   (safely
-   (save backend (assoc config-entry :encoded true))
+   (save backend (normalize-entry config-entry))
    :on-error
    :log-stacktrace false
    :message "Saving config entry"))
