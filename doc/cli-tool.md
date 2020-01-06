@@ -62,7 +62,7 @@ Usage:
    -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
                                : It must be a KMS key alias or an arn identifier for a key.
 
-Example:
+Examples:
 
    --- keys management ---
 
