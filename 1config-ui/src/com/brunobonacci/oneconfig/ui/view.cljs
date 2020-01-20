@@ -65,93 +65,6 @@
 
 
 ;; TODO: fix param
-(defn add-config-entry-form
-  [_ new-entry]
-  [:form {:class "ui form" :on-submit #(ctl/add-config-entry! %1)}
-   [:div {:class "ui grid"}
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-     [:div {:class "row onecfg-filter-block"}
-      [:input {:type        "text"
-               :placeholder "Service Name"
-               :name        "service"
-               :value       (get new-entry :key)
-               :on-change   #(ctl/on-input-change :key %)}]]
-
-     [:div {:class "row onecfg-filter-block"}
-      [:input {:type        "text"
-               :placeholder "Environment"
-               :name        "environment"
-               :value       (get new-entry :env)
-               :on-change   #(ctl/on-input-change :env %)}]]
-
-     [:div {:class "row onecfg-filter-block"}
-      [:input {:type        "text"
-               :placeholder "Version"
-               :name        "version"
-               :value       (get new-entry :version)
-               :on-change   #(ctl/on-input-change :version %)}]]
-
-     [:div {:class "row onecfg-filter-block"}
-      [:select {:class     "ui dropdown modal-selector "
-                :value     (get new-entry :type)
-                :on-change #(ctl/on-input-change :type %)}
-
-       [:option {:value "json"} "json"]
-       [:option {:value "edn"} "edn"]
-       [:option {:value "properties"} "properties"]
-       [:option {:value "txt"} "txt"]]]
-
-     [:div {:class "ui horizontal divider"} "Upload a file"]]
-    [:div {:class "two wide column"}]
-
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-
-     ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     [:table {:class "ui very basic  table"}
-      [:tbody
-       [:tr
-        [:td
-         [:input {:type      "file"
-                  :name      "file"
-                  :class     "inputfile"
-                  :id        "file-input"
-                  :on-change #(ctl/upload-file %)}]
-
-         [:label {:for "file-input" :class "ui mini blue button"}
-          [:i {:class "ui upload icon"}] "Upload"]]
-        [:td (get new-entry :file-name)]
-        [:td
-         (if (gs/isEmptyString (get new-entry :file-name))
-           [:i]
-           [:i {:class "red trash icon" :on-click #(ctl/remove-file!)}])]]]]]
-    [:div {:class "two wide column"}]
-
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "twelve wide column"}
-     [:div {:class "ui horizontal divider"} "or provide config here"]
-     [:div {:class "column"}
-      [:textarea {:class       "modal-textarea"
-                  :placeholder "Config data..."
-                  :value       (get new-entry :val)
-                  :on-change   #(ctl/on-input-change :val %)}]]]
-    [:div {:class "two wide column"}]
-
-    ;;;-------------------------------------------------
-    [:div {:class "two wide column"}]
-    [:div {:class "four wide column"}
-     [:button {:class "ui primary button"} "Save"]]
-    [:div {:class "four wide column"}]
-    [:div {:class "four wide column "}
-     [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel!)} "Close"]]
-    [:div {:class "two wide column"}]]])
-
-
-
-;; TODO: fix param
 (defn table-filter-section
   [_ filters]
   [:tr {:class "center aligned"}
@@ -304,6 +217,96 @@
    [:div {:class "ten wide column"}]
    [:div {:class "three wide column"}]])
 
+(defn new-entry-details-window
+  [_ new-entry]
+  [:form {:class "ui form" :on-submit #(ctl/add-config-entry! %1)}
+  [:div {:class "ui grid" :style {:padding "16px"}}
+   [:div {:class "three wide column"}
+     [:div {:class "edit-background"}
+     [:div {:class "ui grid"}
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       [:div {:class "row onecfg-filter-block"}
+        [:input {:type        "text"
+                 :placeholder "Service Name"
+                 :name        "service"
+                 :value       (get new-entry :key)
+                 :on-change   #(ctl/on-input-change :key %)}]]
+
+       [:div {:class "row onecfg-filter-block"}
+        [:input {:type        "text"
+                 :placeholder "Environment"
+                 :name        "environment"
+                 :value       (get new-entry :env)
+                 :on-change   #(ctl/on-input-change :env %)}]]
+
+       [:div {:class "row onecfg-filter-block"}
+        [:input {:type        "text"
+                 :placeholder "Version"
+                 :name        "version"
+                 :value       (get new-entry :version)
+                 :on-change   #(ctl/on-input-change :version %)}]]
+
+       [:div {:class "row onecfg-filter-block"}
+        [:select {:class     "ui dropdown modal-selector "
+                  :value     (get new-entry :type)
+                  :on-change #(ctl/on-input-change :type %)}
+
+         [:option {:value "json"} "json"]
+         [:option {:value "edn"} "edn"]
+         [:option {:value "properties"} "properties"]
+         [:option {:value "txt"} "txt"]]]
+
+       [:div {:class "ui horizontal divider"} "Upload a file"]]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       [:table {:class "ui very basic  table"}
+        [:tbody
+         [:tr
+          [:td
+           [:input {:type      "file"
+                    :name      "file"
+                    :class     "inputfile"
+                    :id        "file-input"
+                    :on-change #(ctl/upload-file %)}]
+
+           [:label {:for "file-input" :class "ui mini blue button"}
+            [:i {:class "ui upload icon"}] "Upload"]]
+          [:td (get new-entry :file-name)]
+          [:td
+           (if (gs/isEmptyString (get new-entry :file-name))
+             [:i]
+             [:i {:class "red trash icon" :on-click #(ctl/remove-file!)}])]]]]]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "four wide column"}
+       [:button {:class "ui primary button"} "Save"]]
+      [:div {:class "four wide column"}]
+      [:div {:class "four wide column "}
+       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel!)} "Close"]]
+      [:div {:class "two wide column"}]]]]
+
+   [:div {:class "ten wide column"}
+    [:div {:class "ui raised segment"}
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"] ;; TODO fix copy for edit
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
+     [:div  {:class "overflow-class"}
+      [:textarea {:class       "modal-textarea"
+                  :placeholder "Config data..."
+                  :value       (get new-entry :val)
+                  :on-change   #(ctl/on-input-change :val %)}]
+      ]]
+    ]
+   [:div {:class "three wide column"}]
+   ;;-----------------------------------------
+   [:div {:class "three wide column"}]
+   [:div {:class "ten wide column"}]
+   [:div {:class "three wide column"}]
+   ]])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -311,21 +314,22 @@
 ;;                     ----==| M A I N   P A G E |==----                      ;;
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+(defn entry-button-text [mode]
+  (cond
+    (= :listing mode)  "New Entry"
+    (= :new-entry-mode mode) "Edit Entry"
+    (= :show-entry-mode mode) "Edit Entry"
+    (= :edit-entry-mode mode) "New Entry"
+    :else (println (str "unknown mode : " mode))))
 
 (defn main-page
   [current-state]
   [:div
-   [:div {:id "entry-mode-menu"
-          :style {:display "block"}
-          :class (if (= :new-entry-mode (get current-state :client-mode))
-                   "sidenav visible"
-                   "sidenav hidden")}
-    [add-config-entry-form :DUMMY (get current-state :new-entry)]]
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
      [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(ctl/toggle-new-entry-panel! (get current-state :client-mode))} "New Entry"]]
+      [:div {:class "ui inverted button" :on-click #(ctl/toggle-new-entry-panel! (get current-state :client-mode))}
+       [entry-button-text (get current-state :client-mode)]]]
      [:div {:class "right menu"}
       [:div {:class "item"}
        [:div
@@ -352,13 +356,25 @@
                  (get current-state :filters)
                  (get current-state :entries)))]
 
-     (if (true? (:show-entry-details-window? current-state))
-       [:div {:class "modal show-modal"}
-        [entry-details-window
-         (:preferences current-state)
-         (:item-params current-state)
-         (:item-data current-state)]]
-       [:div {:class "modal"}])]]
+     (let [mode (:client-mode current-state )
+           item-params (:item-params current-state)
+           item-data (:item-data current-state)]
+       (cond
+         (= :listing mode) [:div {:class "modal"}]
+         (= :new-entry-mode mode)  [:div {:class "modal show-modal"}
+                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
+                                     ]]
+         (= :edit-entry-mode mode)  [:div {:class "modal show-modal"}
+                                     [:div {:class "hide-element"}
+                                      [ctl/map-to-object item-params item-data]]
+                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
+                                     ]]
+         (= :show-entry-mode mode) [:div {:class "modal show-modal"}
+                                    [entry-details-window
+                                     (:preferences current-state)
+                                     item-params
+                                     item-data]]
+         :else [:div {:class "modal"}]))]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
 
@@ -388,5 +404,4 @@
   (ctl/get-version!)
   (reagent/render [app-root]
                   (. js/document (getElementById "app")))
-  (ctl/hide-element "entry-mode-menu")
   (ctl/hide-element "loader"))

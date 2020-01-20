@@ -40,7 +40,7 @@
     :filters {:key "", :env "", :version ""}
     ;; manages the toggle for the extended mode
     :extended-mode? false
-    ;; one of :listing, :new-entry-mode, :show-entry-mode
+    ;; one of :listing, :new-entry-mode, :show-entry-mode, :edit-entry-mode
     :client-mode :listing
      ;:new-version-flag? nil
     :1config-version {:current "" :latest ""}
@@ -50,9 +50,6 @@
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
-
-    ;; temp modal window
-    :show-entry-details-window? false
     }))
 
 
@@ -78,8 +75,8 @@
   (swap! state
          (fn [s]
            (-> s
-               (assoc  :item-data (get response :encoded-value))
-               (update :show-entry-details-window? not)))))
+               (assoc :item-data (get response :encoded-value))
+               (assoc :client-mode :show-entry-mode)))))
 
 
 
@@ -188,14 +185,31 @@
               (assoc-in [:new-entry :file-name] ""))))
 
 
-
+;;TODO rename
 (defn toggle-new-entry-panel! [mode]
-  (display-entry-panel)
-  (if (= :new-entry-mode mode)
-    (swap! state assoc-in [:client-mode] :listing)
-    (swap! state assoc-in [:client-mode] :new-entry-mode)))
+  (cond
+    (= :listing mode)         (swap! state assoc-in [:client-mode] :new-entry-mode)
+    (= :new-entry-mode mode)  (swap! state assoc-in [:client-mode] :edit-entry-mode)
+    (= :show-entry-mode mode) (swap! state #(-> %
+                                              (assoc-in [:new-entry] empty-new-entry)
+                                              (assoc-in [:client-mode] :edit-entry-mode)))
+    (= :edit-entry-mode mode) (swap! state #(-> %
+                                              (assoc-in [:new-entry] empty-new-entry)
+                                              (assoc-in [:client-mode] :new-entry-mode)))
+    :else (println (str "unknown mode : " mode)))
+  )
 
-
+;;TODO rename
+(defn map-to-object
+  [item-params item-data]
+  (swap! state assoc-in [:new-entry] {:key       (get item-params :key)
+                                      :env       (get item-params :env)
+                                      :version   (get item-params :version)
+                                      :type      (get item-params :content-type)
+                                      :val       item-data
+                                      :file      ""
+                                      :file-name ""
+                                      }))
 
 (defn toggle-table-mode!  []
   (swap! state update-in [:extended-mode?] not))
@@ -203,7 +217,7 @@
 
 
 (defn toggle-modal!  []
-  (swap! state update :show-entry-details-window? not))
+  (swap! state assoc-in [:client-mode] :listing))
 
 
 
@@ -246,10 +260,6 @@
               (assoc-in [:new-entry :val] val)
               (assoc-in [:new-entry :file-name] file-name)
               (assoc-in [:new-entry :type] (utils/get-extension file-name)))))
-
-(defn display-entry-panel []
-  (let [elem  (js/document.getElementById "entry-mode-menu")]
-    (set! (.-display (.-style elem)) "block")))
 
 (defn hide-element [id]
   (let [elem        (js/document.getElementById id)
