@@ -78,6 +78,12 @@ development* but it is not a requirement the name of the environment
 can be anything.
 
 **NOTE:** *Be aware that if a config entry exists in the local
-filesystem (via `-b fs`) **it will supersede the dynamo backend**,
-even if a better match exists in the dynamo backend.* This is to allow
-local overrides of remote configurations.
+filesystem (via `-b fs`) for a key/env which is also in DynamoDB, the
+**local filesystem will supersede the DynamoDB backend**, even if a
+better match exists in the dynamo backend.* This is to allow local
+overrides of remote configurations.
+
+**NOTE:** You can set the filesystem as your *default local backend*
+either using the environment variable `ONECONFIG_DEFAULT_BACKEND`
+(for example `export ONECONFIG_DEFAULT_BACKEND=fs`) or via the Java
+property `1config.default.backend` (ex: `-D1config.default.backend=fs`).
