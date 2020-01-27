@@ -1,5 +1,20 @@
 # HowTo prepare a Release
 
+## Automated
+
+  - `make all`
+  - Tag and push
+  - `make depoly`
+  - Attach release bundles (`/tmp/1cfg`) in github release
+  - Update homebrew-lazy-tools deployment, commit, push
+  - update local installation
+    ```
+    brew update
+    brew upgrade one-config
+    ```
+
+
+## Manual steps
   - Test release
   - Update version in version file and README and other articles
   - Update CHANGELOG.md

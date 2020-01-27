@@ -64,10 +64,18 @@
                                        :closure-defines {goog.DEBUG false}
                                        :pretty-print    false}}]
               }
+
   :figwheel {:server-port 5309}
 
-  :plugins [[lein-cljsbuild "1.1.7"]]
+
+  :bin {:name "1cfg-ui"
+        :skip-realign true
+        :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
+
+
   :profiles {:uberjar {:aot        :all
                        :prep-tasks ["compile" ["cljsbuild" "once" "min"]]}
-             :dev     {:plugins [[lein-figwheel "0.5.19"]]}}
+             :dev     {:plugins [[lein-figwheel "0.5.19"]
+                                 [lein-cljsbuild "1.1.7"]
+                                 [lein-binplus "0.6.6"]]}}
   )
