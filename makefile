@@ -68,8 +68,9 @@ build: check-ver build-core build-cli build-ui
 #
 # Build Core
 #
+core_src = $(shell find 1config-core/src 1config-core/resources 1config-shared/src -type f)
 build-core: check-ver 1config-core/target/oneconfig*.jar
-1config-core/target/oneconfig*.jar:
+1config-core/target/oneconfig*.jar: $(core_src)
 - @printf "#\n# Building 1config-core\n#\n"
 - (cd 1config-core; lein do check, midje, install)
 
@@ -77,8 +78,9 @@ build-core: check-ver 1config-core/target/oneconfig*.jar
 #
 # Build CLI
 #
+cli_src = $(shell find 1config-cli/src 1config-cli/resources 1config-shared/src -type f)
 build-cli: check-ver build-core 1config-cli/target/1cfg
-1config-cli/target/1cfg:
+1config-cli/target/1cfg: $(cli_src)
 - @printf "#\n# Building 1config-cli\n#\n"
 - (cd 1config-cli; lein do check, bin)
 
@@ -87,8 +89,9 @@ build-cli: check-ver build-core 1config-cli/target/1cfg
 #
 # Build UI
 #
+ui_src = $(shell find 1config-ui/src 1config-ui/resources 1config-shared/src -type f)
 build-ui: check-ver build-core 1config-ui/target/1cfg-ui
-1config-ui/target/1cfg-ui:
+1config-ui/target/1cfg-ui: $(ui_src)
 - @printf "#\n# Building 1config-ui\n#\n"
 - (cd 1config-ui; lein do check, bin)
 
@@ -99,11 +102,32 @@ build-ui: check-ver build-core 1config-ui/target/1cfg-ui
 test: build-core 1config-cli/target/1cfg
 - AWS_PROFILE=${AWS_PROFILE} ./test/bin/end-2-end-test.sh
 
+#
+# Package artifacts for homebrew and git release
+#
+PACKAGE := 1cfg
+PKDIR   := /tmp/$(PACKAGE)
+TARGETS := 1config-cli/target/1cfg 1config-ui/target/1cfg-ui
+package: build $(TARGETS)
+- rm -fr $(PKDIR)
+- mkdir -p $(PKDIR)/hb/bin
+- @printf "\n(-) preparing copying artifact\n"
+- chmod +x $(TARGETS)
+- cp $(TARGETS) $(PKDIR)
+- @printf "\n(-) preparing Homebrew package for Linux\n"
+- cp 1config-cli/bin/1cfg $(PKDIR)/hb/bin
+- cp 1config-cli/target/1cfg $(PKDIR)/hb/bin/1cfg.jar
+- cp 1config-ui/target/1cfg-ui $(PKDIR)/hb/bin/1cfg-ui.jar
+- tar -zcvf $(PKDIR)/$(PACKAGE)-homebrew.tar.gz -C /tmp/$(PACKAGE)/hb .
+- rm -fr $(PKDIR)/hb
+- @printf "\n(-) writing checksums\n"
+- shasum -a 256 $(PKDIR)/* > $(PKDIR)/$(PACKAGE).sha
+- @printf "\n(-) packages ready in /tmp/$(PACKAGE)\n"
+- ls -halp $(PKDIR)
 
-package: build
-- 1config-cli/bin/package.sh
-
-
+#
+# Clean target directories
+#
 .PHONY: clean
 clean:
 - @printf "#\n# Cleaning \n#\n"
