@@ -143,13 +143,14 @@
 (defn add-config-entry! [event]
   (.preventDefault event)
   (let [new-entry (get @state :new-entry)
+        ace-instance (.edit js/ace "jsEditor")
         form-data (doto
                       (js/FormData.)
                     (.append "key"          (get new-entry :key))
                     (.append "env"          (get new-entry :env))
                     (.append "version"      (get new-entry :version))
-                    (.append "content-type" (get new-entry :type))
-                    (.append "value"        (get new-entry :val)))]
+                    (.append "content-type" (if (empty? (get new-entry :type)) "json" (get new-entry :type)))
+                    (.append "value"         (.getValue ace-instance)))]
 
     (swap! state assoc-in [:new-entry] empty-new-entry)
 
@@ -185,8 +186,7 @@
               (assoc-in [:new-entry :file-name] ""))))
 
 
-;;TODO rename
-(defn toggle-new-entry-panel! [mode]
+(defn config-entry-management-panel! [mode]
   (cond
     (= :listing mode)         (swap! state assoc-in [:client-mode] :new-entry-mode)
     (= :new-entry-mode mode)  (swap! state assoc-in [:client-mode] :edit-entry-mode)
@@ -199,8 +199,7 @@
     :else (println (str "unknown mode : " mode)))
   )
 
-;;TODO rename
-(defn map-to-object
+(defn copy-data-to-new-entry!
   [item-params item-data]
   (swap! state assoc-in [:new-entry] {:key       (get item-params :key)
                                       :env       (get item-params :env)
@@ -222,7 +221,8 @@
 
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
-(defn copy-to-clipboard! [t]
+(defn copy-to-clipboard!
+  [t]
   (let [e (. js/document (createElement "textarea"))]
     (.. js/document -body (appendChild e))
     (set! (.-value e) t)
@@ -232,9 +232,18 @@
     (.. js/document -body (removeChild e)))
   (js/alert "Copied to clipboard"))
 
-(defn highlight-code-block []
-  (js/setTimeout #(->> (js/document.querySelector "code")
-                       (js/hljs.highlightBlock)) 90))
+(defn highlight-ace-code-block!
+  [editable?]
+  (let [ace-instance (.edit js/ace "jsEditor")]
+    (.setTheme ace-instance "ace/theme/github")
+    (.setMode (.getSession ace-instance) "ace/mode/json")
+    (.setUseWorker (.getSession ace-instance) false)
+    (.setReadOnly ace-instance editable?)
+    (.setHighlightActiveLine ace-instance true)))
+
+(defn highlight-code-block
+  [editable?]
+  (js/setTimeout #(highlight-ace-code-block! editable?) 75))
 
 (defn close-new-entry-panel!  []
   (swap! state assoc-in [:client-mode] :listing))

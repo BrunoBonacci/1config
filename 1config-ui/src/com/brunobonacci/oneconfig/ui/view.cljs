@@ -208,8 +208,8 @@
      [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"]
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
      [:div  {:class "overflow-class"}
-      (utils/as-code item-data (get item-params :content-type))]]]
-   [ctl/highlight-code-block]
+      [:div {:id "jsEditor"} item-data]]]]
+   [ctl/highlight-code-block true]
    [:div {:class "three wide column"}]
 
    ;;-----------------------------------------
@@ -292,13 +292,11 @@
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"] ;; TODO fix copy for edit
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! (get new-entry :val))} "Copy to clipboard"] ;; TODO fix copy for edit
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
      [:div  {:class "overflow-class"}
-      [:textarea {:class       "modal-textarea"
-                  :placeholder "Config data..."
-                  :value       (get new-entry :val)
-                  :on-change   #(ctl/on-input-change :val %)}]
+      [:div {:id "jsEditor"} (get new-entry :val)]
+      [ctl/highlight-code-block false]
       ]]
     ]
    [:div {:class "three wide column"}]
@@ -308,12 +306,6 @@
    [:div {:class "three wide column"}]
    ]])
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                                                                            ;;
-;;                     ----==| M A I N   P A G E |==----                      ;;
-;;                                                                            ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn entry-button-text [mode]
   (cond
     (= :listing mode)  "New Entry"
@@ -322,13 +314,19 @@
     (= :edit-entry-mode mode) "New Entry"
     :else (println (str "unknown mode : " mode))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                     ----==| M A I N   P A G E |==----                      ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn main-page
   [current-state]
   [:div
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
      [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(ctl/toggle-new-entry-panel! (get current-state :client-mode))}
+      [:div {:class "ui inverted button" :on-click #(ctl/config-entry-management-panel! (get current-state :client-mode))}
        [entry-button-text (get current-state :client-mode)]]]
      [:div {:class "right menu"}
       [:div {:class "item"}
@@ -366,7 +364,7 @@
                                      ]]
          (= :edit-entry-mode mode)  [:div {:class "modal show-modal"}
                                      [:div {:class "hide-element"}
-                                      [ctl/map-to-object item-params item-data]]
+                                      [ctl/copy-data-to-new-entry! item-params item-data]]
                                     [new-entry-details-window :DUMMY (get current-state :new-entry)
                                      ]]
          (= :show-entry-mode mode) [:div {:class "modal show-modal"}
