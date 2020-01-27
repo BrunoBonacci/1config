@@ -86,7 +86,8 @@
   [{:keys [content-type] :as config-entry}]
   (as-> config-entry $
     (if (= content-type "props")
-      (assoc $ :content-type "properties"))
+      (assoc $ :content-type "properties")
+      $)
     (assoc $ :encoded true)))
 
 
@@ -133,7 +134,7 @@
 (defn get! [backend config-entry & {:keys [with-meta pretty-print?]
                                     :or {with-meta false
                                          pretty-print? false} :as opts}]
-  (let [config-entry (merge {:version "99999.99999.99999"} config-entry)]
+  (let [config-entry (update config-entry :version (fnil identity "99999.99999.99999"))]
     (validate-backend! backend)
     (validate-version! (:version config-entry))
     (safely

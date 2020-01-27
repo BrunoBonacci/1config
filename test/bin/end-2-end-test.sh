@@ -3,9 +3,6 @@
 export CURR=$(pwd)
 export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
 
-cd $(dirname $0)/../../1config-cli/
-lein do clean, bin
-
 if [ ! -f $CFG1 ] ; then
     echo "ERROR: 1cfg binary executable not present."
     echo "  please run:"
@@ -64,11 +61,12 @@ $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.12.0' -t txt 'value-1120'
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1.7.0')" = "value-1" ] || exit 6
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1.8.0')" = "value-173" ] || exit 7
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '2.8.0')" = "value-1120" ] || exit 8
+[ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1')" = "value-1120" ] || exit 9
 
 
 echo "(*) can use specific encryption key"
 $CFG1 SET -b dynamo -e test1 -k 'test/super-service' -v '1.1.3' -t txt 'super-113' -m 'test/service1'
-[ "$($CFG1 GET -b dynamo -e test1 -k 'test/super-service' -v '2.8.0')" = 'super-113' ] || exit 9
+[ "$($CFG1 GET -b dynamo -e test1 -k 'test/super-service' -v '2.8.0')" = 'super-113' ] || exit 10
 
 
 echo "ALL OK."
