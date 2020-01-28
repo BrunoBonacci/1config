@@ -79,7 +79,7 @@ The diagram explains how to security model works. Here the steps involved:
 
 ## What's next?
   * See the [Quick Start](./doc/quick-start.md) guide to install
-  * Check the [Commnad line tool](./doc/cli-tool.md)
+  * Check the [Command line tool](./doc/cli-tool.md)
   * Read the [Best Practices](./doc/best-practices.md)
   * Check the [full documentation online](https://cljdoc.org/jump/release/com.brunobonacci/oneconfig)
 
