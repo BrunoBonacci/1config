@@ -205,7 +205,7 @@
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"]
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data "show-entry")} "Copy to clipboard"]
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} item-data]]]]
@@ -292,11 +292,12 @@
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! (get new-entry :val))} "Copy to clipboard"] ;; TODO fix copy for edit
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! (get new-entry :val) "new/edit")} "Copy to clipboard"] ;; TODO fix copy for edit
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} (get new-entry :val)]
-      [ctl/highlight-code-block false]
+      ;[ctl/highlight-code-block false]
+      [ctl/highlight-code-block-v2 false (get new-entry :val)]
       ]]
     ]
    [:div {:class "three wide column"}]

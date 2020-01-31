@@ -220,6 +220,7 @@
 (defn discard-changes!
   []
   (println "discard changes!!!!!! ")
+  (swap! state assoc-in [:client-mode] :listing)
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setValue ace-instance "initial-value")
     ))
@@ -231,7 +232,8 @@
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
 (defn copy-to-clipboard!
-  [t]
+  [t s]
+  (println "invoked " s)
   (let [e (. js/document (createElement "textarea"))]
     (.. js/document -body (appendChild e))
     (set! (.-value e) t)
@@ -253,9 +255,36 @@
          )
     (.setHighlightActiveLine ace-instance true)))
 
+
+(defn highlight-ace-code-block-v2!
+  [editable? val]
+  (let [ace-instance (.edit js/ace "jsEditor")]
+    (.setTheme ace-instance "ace/theme/github")
+    (.setMode (.getSession ace-instance) "ace/mode/json")
+    (.setUseWorker (.getSession ace-instance) false)
+    (.setReadOnly ace-instance editable?)
+    ;(.on ace-instance "change" #(println "changed state" (.getValue ace-instance)))
+    ;(.on ace-instance "change" #(println "changed state (actual) : " val))
+    (.on ace-instance "change" #(if (= (.getValue ace-instance) val)
+                                  (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
+                                  (swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")))
+    ;(.on ace-instance "change" #(swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")
+    ;     )
+    (.setHighlightActiveLine ace-instance true)))
+
+;(if (= (.getValue ace-instance) val)
+;  (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
+;  (swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button"))
+
+
 (defn highlight-code-block
   [editable?]
   (js/setTimeout #(highlight-ace-code-block! editable?) 75))
+
+(defn highlight-code-block-v2
+  [editable? val]
+  (js/setTimeout #(highlight-ace-code-block-v2! editable? val) 70))
+  ;(js/setTimeout #(highlight-ace-code-block-v2! editable? val) 75))
 
 
 (defn get-input-value
