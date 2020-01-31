@@ -206,7 +206,7 @@
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
      [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data)} "Copy to clipboard"]
-     [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} item-data]]]]
    [ctl/highlight-code-block true]
@@ -293,7 +293,7 @@
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
      [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! (get new-entry :val))} "Copy to clipboard"] ;; TODO fix copy for edit
-     [:a {:class "ui grey right ribbon label" :on-click #(ctl/toggle-modal!)} "Close details"]
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} (get new-entry :val)]
       [ctl/highlight-code-block false]
@@ -326,7 +326,7 @@
    [:div {:class "sticky-nav-bar"}
     [:div {:class "ui secondary menu"}
      [:div {:class "item"}
-      [:div {:class "ui inverted button" :on-click #(ctl/config-entry-management-panel! (get current-state :client-mode))}
+      [:div {:class (get current-state :entry-management-button-style) :on-click #(ctl/config-entry-management-panel! (get current-state :client-mode))}
        [entry-button-text (get current-state :client-mode)]]]
      [:div {:class "right menu"}
       [:div {:class "item"}

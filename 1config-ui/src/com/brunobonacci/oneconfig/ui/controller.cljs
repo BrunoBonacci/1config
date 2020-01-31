@@ -47,6 +47,8 @@
 
     :new-entry empty-new-entry
 
+    :entry-management-button-style "ui inverted button"
+
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
@@ -214,10 +216,17 @@
   (swap! state update-in [:extended-mode?] not))
 
 
+; we need to get rid of one of them
+(defn discard-changes!
+  []
+  (println "discard changes!!!!!! ")
+  (let [ace-instance (.edit js/ace "jsEditor")]
+    (.setValue ace-instance "initial-value")
+    ))
 
-(defn toggle-modal!  []
-  (swap! state assoc-in [:client-mode] :listing))
-
+(defn close-new-entry-panel!  []
+  (swap! state assoc-in [:client-mode] :listing)
+  (swap! state assoc-in [:entry-management-button-style] "ui inverted button"))
 
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
@@ -239,15 +248,14 @@
     (.setMode (.getSession ace-instance) "ace/mode/json")
     (.setUseWorker (.getSession ace-instance) false)
     (.setReadOnly ace-instance editable?)
+    ;(.on ace-instance "change" #(println "changed state" (.getValue ace-instance)))
+    (.on ace-instance "change" #(swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")
+         )
     (.setHighlightActiveLine ace-instance true)))
 
 (defn highlight-code-block
   [editable?]
   (js/setTimeout #(highlight-ace-code-block! editable?) 75))
-
-(defn close-new-entry-panel!  []
-  (swap! state assoc-in [:client-mode] :listing))
-
 
 
 (defn get-input-value
