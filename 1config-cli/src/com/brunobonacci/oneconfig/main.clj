@@ -169,24 +169,6 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
 
 
-(defn- validate-format
-  "Returns `value` if the format validation is successful according to
-  the `content-type`, otherwise exit(2)."
-  [content-type value]
-
-  ;; parsing value to check if content is valid
-  (safely
-   (util/decode content-type value)
-   :on-error
-   :log-stacktrace false
-   :message (str "Parsing value as " content-type))
-
-  ;; returning the original value to be stored
-  ;; this is to preserve comments
-  value)
-
-
-
 (defn -main [& args]
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
@@ -261,8 +243,7 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
                          (as->
                              {:env env :key key :version version
                               :content-type content-type
-                              :value (validate-format content-type
-                                                      (or value (some-> content-file slurp)))} $
+                              :value (or value (some-> content-file slurp))} $
                            (if master-key (assoc $ :master-key master-key) $)))
 
           ;;

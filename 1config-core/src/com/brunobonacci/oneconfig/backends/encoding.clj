@@ -65,6 +65,12 @@
 
 
   (save [this {:keys [encoded] :as config-entry}]
+    ;; if an encoded value is provided, verify that is formally correct
+    ;; and discard the result. If not correct an exception is raised.
+    (when encoded
+      (unmarshall-value config-entry))
+
+    ;; Otherwise, if not encoded, encode the value and store it.
     (EncodingConfigBackend.
      (as-> config-entry $
        (dissoc $ :encoded)

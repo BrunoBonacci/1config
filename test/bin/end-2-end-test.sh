@@ -69,5 +69,19 @@ $CFG1 SET -b dynamo -e test1 -k 'test/super-service' -v '1.1.3' -t txt 'super-11
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/super-service' -v '2.8.0')" = 'super-113' ] || exit 10
 
 
+echo "(*) verify if the value is a valid value for the given content-type"
+
+echo "(*) testing json"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t json '{"foo":1}'   2>/dev/null || (echo "good json not accepted" ; exit 31)
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t json '{"foo:1}'    2>/dev/null && (echo "bad  json accepted" ; exit 32)
+
+echo "(*) testing edn"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t edn '{:foo 1}'     2>/dev/null || (echo "good edn not accepted" ; exit 35)
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t edn '{foo: 1}'     2>/dev/null && (echo "bad  edn accepted" ; exit 36)
+
+echo "(*) testing properties"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=1'      2>/dev/null || (echo "good edn not accepted" ; exit 38)
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=\uHHHH' 2>/dev/null && (echo "bad  edn accepted" ; exit 39)
+
 echo "ALL OK."
 cd $CURR
