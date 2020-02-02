@@ -7,6 +7,19 @@
             [amazonica.aws.dynamodbv2 :as dyn]
             [clojure.string :as str]))
 
+;;
+;;```
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; dynamo-backend
+;;  | it stores the entry into DynamoDB table called `1Config` in the given
+;;  | region with a conditional insert which it will fail if an entry
+;;  | with the same key exists.
+;; -----------------------------------------------------------------------------
+;;```
+;;
+
 
 (defn default-dynamo-config []
   {:endpoint  nil ;; this is required to by amazonica

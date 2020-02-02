@@ -15,6 +15,28 @@
            java.util.Collections))
 
 
+;;
+;;```
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; kms-encryption-backend
+;;  | It expects a encoded value as a String and it encrypts the value with
+;;  | a generated data keys. Then it uses a master key to encrypt the data key
+;;  | together and it stores them together in the given backend store.
+;;  | If the master key doesn't exists it will create it.
+;;  | additionally it uses a number of values of the config-entry as encryption
+;;  | context to ensure that these values won't be tampered by direct editing
+;;  | into the database. Such values include:
+;;  | `[:key :env :version :change-num :content-type :user]`
+;;  | It finally add the encrypted value back into the entry and add which key
+;;  | and key-alias was used for the encryption (informative only).
+;;  |
+;;  | + {:value (encrypt context value)}
+;;  | + {:master-key "arn", :master-key-alias "key-alias"}
+;;```
+;;
+
 
 (def ^:private aws-region
   (delay

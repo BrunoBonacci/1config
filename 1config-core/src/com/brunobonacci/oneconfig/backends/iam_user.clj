@@ -5,6 +5,20 @@
             [com.brunobonacci.oneconfig.backend :refer :all]
             [safely.core :refer [safely]]))
 
+;;
+;;```
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; iam-user-backend
+;;  | It retrieves the caller-identity via the AWS STS apis and injects it into
+;;  | the config entry so that it is tracked which user performed the action
+;;  |
+;;  | + {:user (sts/get-caller-identity)}
+;;```
+;;
+
+
 (deftype IamUserEnrichmentBackend [store]
 
   IConfigClient

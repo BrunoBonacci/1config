@@ -3,6 +3,20 @@
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]))
 
+;;
+;;```
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; immutable-backend
+;;  | it ensures that a new `change-num` is set so that if it is present in
+;;  | the user request it will be overwritten with a value given by the system.
+;;  | This ensures that if a config entry if returned from a GET operation,
+;;  | updated and the SET (stored) a new config-entry will be created.
+;;  |
+;;  | + {:change-num (new-num)}
+;;```
+;;
 
 (deftype ImmutableBackend [store]
 

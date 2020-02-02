@@ -5,6 +5,18 @@
             [schema.core :as s]
             [com.brunobonacci.oneconfig.util :refer [sem-ver]]))
 
+;;
+;;```
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; validation-backend
+;;  | it ensures that the request (config-entry) has all the necessary
+;;  | information and that it is in the expected type/format
+;;```
+;;
+
+
 (def ^:private common-name-predicate
   (s/pred (partial re-matches #"^[a-zA-Z0-9/_-]+$" )
           "Must match the following pattern: ^[a-zA-Z0-9/_-]+$"))
