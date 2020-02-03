@@ -154,7 +154,9 @@
                     (.append "content-type" (if (empty? (get new-entry :type)) "json" (get new-entry :type)))
                     (.append "value"         (.getValue ace-instance)))]
 
-    (swap! state assoc-in [:new-entry] empty-new-entry)
+    (swap! state #(-> %
+                      (assoc-in [:entry-management-button-style] "ui inverted button")
+                      (assoc-in [:new-entry] empty-new-entry)))
 
     (POST "/configs" {:body            form-data
                       :response-format :json
@@ -187,19 +189,21 @@
               (assoc-in [:new-entry :val] "")
               (assoc-in [:new-entry :file-name] ""))))
 
-
-(defn config-entry-management-panel! [mode]
+(defn config-entry-management-panel!
+  [mode]
   (cond
-    (= :listing mode)         (swap! state assoc-in [:client-mode] :new-entry-mode)
+    (= :listing mode)         (swap! state #(-> %
+                                                (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                                                (assoc-in [:client-mode] :new-entry-mode)))
     (= :new-entry-mode mode)  (swap! state assoc-in [:client-mode] :edit-entry-mode)
     (= :show-entry-mode mode) (swap! state #(-> %
                                               (assoc-in [:new-entry] empty-new-entry)
+                                              (assoc-in [:entry-management-button-style] "ui inverted disabled button")
                                               (assoc-in [:client-mode] :edit-entry-mode)))
     (= :edit-entry-mode mode) (swap! state #(-> %
                                               (assoc-in [:new-entry] empty-new-entry)
                                               (assoc-in [:client-mode] :new-entry-mode)))
-    :else (println (str "unknown mode : " mode)))
-  )
+    :else (println (str "unknown mode : " mode))))
 
 (defn copy-data-to-new-entry!
   [item-params item-data]
@@ -212,31 +216,31 @@
                                       :file-name ""
                                       }))
 
-(defn toggle-table-mode!  []
+(defn toggle-table-mode!
+  []
   (swap! state update-in [:extended-mode?] not))
 
-
-; we need to get rid of one of them
 (defn discard-changes!
-  []
-  (println "discard changes!!!!!! ")
-  (swap! state assoc-in [:client-mode] :listing)
+  [val]
   (let [ace-instance (.edit js/ace "jsEditor")]
-    (.setValue ace-instance "initial-value")
-    ))
+    (.setValue ace-instance val)))
 
-(defn close-new-entry-panel!  []
-  (swap! state assoc-in [:client-mode] :listing)
-  (swap! state assoc-in [:entry-management-button-style] "ui inverted button"))
-
+(defn close-new-entry-panel!  [event]
+  (.preventDefault event)
+  (swap! state #(-> %
+                    (assoc-in [:item-params] nil)
+                    (assoc-in [:item-data] nil)
+                    (assoc-in [:new-entry] empty-new-entry)
+                    (assoc-in [:entry-management-button-style] "ui inverted button")
+                    (assoc-in [:client-mode] :listing))))
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
 (defn copy-to-clipboard!
-  [t s]
-  (println "invoked " s)
-  (let [e (. js/document (createElement "textarea"))]
+  []
+  (let [e (. js/document (createElement "textarea"))
+        ace-instance (.edit js/ace "jsEditor")]
     (.. js/document -body (appendChild e))
-    (set! (.-value e) t)
+    (set! (.-value e) (.getValue ace-instance))
     (.select e)
     (.setSelectionRange e 0 99999)
     (. js/document (execCommand "copy"))
@@ -250,42 +254,12 @@
     (.setMode (.getSession ace-instance) "ace/mode/json")
     (.setUseWorker (.getSession ace-instance) false)
     (.setReadOnly ace-instance editable?)
-    ;(.on ace-instance "change" #(println "changed state" (.getValue ace-instance)))
-    (.on ace-instance "change" #(swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")
-         )
     (.setHighlightActiveLine ace-instance true)))
-
-
-(defn highlight-ace-code-block-v2!
-  [editable? val]
-  (let [ace-instance (.edit js/ace "jsEditor")]
-    (.setTheme ace-instance "ace/theme/github")
-    (.setMode (.getSession ace-instance) "ace/mode/json")
-    (.setUseWorker (.getSession ace-instance) false)
-    (.setReadOnly ace-instance editable?)
-    ;(.on ace-instance "change" #(println "changed state" (.getValue ace-instance)))
-    ;(.on ace-instance "change" #(println "changed state (actual) : " val))
-    (.on ace-instance "change" #(if (= (.getValue ace-instance) val)
-                                  (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
-                                  (swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")))
-    ;(.on ace-instance "change" #(swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button")
-    ;     )
-    (.setHighlightActiveLine ace-instance true)))
-
-;(if (= (.getValue ace-instance) val)
-;  (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
-;  (swap! state assoc-in [:entry-management-button-style] "ui inverted disabled button"))
 
 
 (defn highlight-code-block
   [editable?]
   (js/setTimeout #(highlight-ace-code-block! editable?) 75))
-
-(defn highlight-code-block-v2
-  [editable? val]
-  (js/setTimeout #(highlight-ace-code-block-v2! editable? val) 70))
-  ;(js/setTimeout #(highlight-ace-code-block-v2! editable? val) 75))
-
 
 (defn get-input-value
   [v]
@@ -318,7 +292,8 @@
   [type value]
   (swap! state assoc-in [:new-entry type] (get-input-value value)))
 
-(defn upload-file [input]
+(defn upload-file
+  [input]
   (if (not (= "" (-> input .-target .-value)))
     (let [^js/File file (-> input .-target .-files (aget 0))
           reader (js/FileReader.)

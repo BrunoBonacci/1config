@@ -3,7 +3,6 @@
             [com.brunobonacci.oneconfig.ui.controller :as ctl]
             [reagent.core :as reagent :refer [atom]]
             [re-frisk.core :as rf]
-            [ajax.core :refer [GET POST]]
             [goog.string :as gs]
             [clojure.string :as string]))
 
@@ -169,7 +168,7 @@
 
 
 
-(defn entry-details-window [preferences item-params item-data]
+(defn show-entry-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
     [:table {:class "ui celled striped table"}
@@ -201,12 +200,15 @@
 
       [:tr
        [:td {:class "center aligned collapsing"} "Type"]
-       [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]]]]
+       [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
+      [:tr
+       [:td {:class "center aligned collapsing" :col-span "2"}
+        [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! item-data "show-entry")} "Copy to clipboard"]
-     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard!)} "Copy to clipboard"]
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! item-data)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} item-data]]]]
    [ctl/highlight-code-block true]
@@ -287,25 +289,21 @@
        [:button {:class "ui primary button"} "Save"]]
       [:div {:class "four wide column"}]
       [:div {:class "four wide column "}
-       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel!)} "Close"]]
+       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]
       [:div {:class "two wide column"}]]]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard! (get new-entry :val) "new/edit")} "Copy to clipboard"] ;; TODO fix copy for edit
-     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes!)} "Discard changes"]
+     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard!)} "Copy to clipboard"]
+     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! (get new-entry :val))} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} (get new-entry :val)]
-      ;[ctl/highlight-code-block false]
-      [ctl/highlight-code-block-v2 false (get new-entry :val)]
-      ]]
-    ]
+      [ctl/highlight-code-block false]]]]
    [:div {:class "three wide column"}]
    ;;-----------------------------------------
    [:div {:class "three wide column"}]
    [:div {:class "ten wide column"}]
-   [:div {:class "three wide column"}]
-   ]])
+   [:div {:class "three wide column"}]]])
 
 (defn entry-button-text [mode]
   (cond
@@ -369,7 +367,7 @@
                                     [new-entry-details-window :DUMMY (get current-state :new-entry)
                                      ]]
          (= :show-entry-mode mode) [:div {:class "modal show-modal"}
-                                    [entry-details-window
+                                    [show-entry-window
                                      (:preferences current-state)
                                      item-params
                                      item-data]]

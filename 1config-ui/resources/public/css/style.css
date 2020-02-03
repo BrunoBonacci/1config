@@ -293,9 +293,7 @@ input:checked + .slider:before {
 }
 
 .config-table-scroll {
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin-bottom: 33px;
+    margin-bottom: 34px;
 }
 
 .shrink-column {

@@ -53,6 +53,9 @@
                         :figwheel     true
                         :compiler     {:main       com.brunobonacci.oneconfig.ui.view
                                        :asset-path "cljs/out"
+                                       :externs ["resources/public/js/ace.js"]
+                                       :foreign-libs [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
+                                                       :provides ["ace"]}]
                                        :output-to  "resources/public/cljs/main.js"
                                        :output-dir "resources/public/cljs/out"}}
                        {:id           "min"
@@ -61,6 +64,9 @@
                         :compiler     {:main            com.brunobonacci.oneconfig.ui.view
                                        :output-to       "resources/public/cljs/main.js"
                                        :optimizations   :advanced
+                                       :externs ["resources/public/js/ace.js"]
+                                       :foreign-libs [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
+                                                       :provides ["ace"]}]
                                        :closure-defines {goog.DEBUG false}
                                        :pretty-print    false}}]
               }
