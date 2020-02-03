@@ -21,8 +21,6 @@
             [com.brunobonacci.oneconfig.profiles :as prof]
             [clojure.string :as string]
             [where.core :refer [where]]
-            [taoensso.sente.server-adapters.http-kit
-             :refer (sente-web-server-adapter)]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.cors :refer [wrap-cors]]
