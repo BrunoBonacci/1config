@@ -40,19 +40,18 @@
     :filters {:key "", :env "", :version ""}
     ;; manages the toggle for the extended mode
     :extended-mode? false
-    ;; one of :listing, :new-entry-mode, :show-entry-mode
+    ;; one of :listing, :new-entry-mode, :show-entry-mode, :edit-entry-mode
     :client-mode :listing
      ;:new-version-flag? nil
     :1config-version {:current "" :latest ""}
 
     :new-entry empty-new-entry
 
+    :entry-management-button-style "ui inverted button"
+
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
-
-    ;; temp modal window
-    :show-entry-details-window? false
     }))
 
 
@@ -78,8 +77,8 @@
   (swap! state
          (fn [s]
            (-> s
-               (assoc  :item-data (get response :encoded-value))
-               (update :show-entry-details-window? not)))))
+               (assoc :item-data (get response :encoded-value))
+               (assoc :client-mode :show-entry-mode)))))
 
 
 
@@ -146,15 +145,18 @@
 (defn add-config-entry! [event]
   (.preventDefault event)
   (let [new-entry (get @state :new-entry)
+        ace-instance (.edit js/ace "jsEditor")
         form-data (doto
                       (js/FormData.)
                     (.append "key"          (get new-entry :key))
                     (.append "env"          (get new-entry :env))
                     (.append "version"      (get new-entry :version))
-                    (.append "content-type" (get new-entry :type))
-                    (.append "value"        (get new-entry :val)))]
+                    (.append "content-type" (if (empty? (get new-entry :type)) "json" (get new-entry :type)))
+                    (.append "value"         (.getValue ace-instance)))]
 
-    (swap! state assoc-in [:new-entry] empty-new-entry)
+    (swap! state #(-> %
+                      (assoc-in [:entry-management-button-style] "ui inverted button")
+                      (assoc-in [:new-entry] empty-new-entry)))
 
     (POST "/configs" {:body            form-data
                       :response-format :json
@@ -187,45 +189,77 @@
               (assoc-in [:new-entry :val] "")
               (assoc-in [:new-entry :file-name] ""))))
 
+(defn config-entry-management-panel!
+  [mode]
+  (cond
+    (= :listing mode)         (swap! state #(-> %
+                                                (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                                                (assoc-in [:client-mode] :new-entry-mode)))
+    (= :new-entry-mode mode)  (swap! state assoc-in [:client-mode] :edit-entry-mode)
+    (= :show-entry-mode mode) (swap! state #(-> %
+                                              (assoc-in [:new-entry] empty-new-entry)
+                                              (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                                              (assoc-in [:client-mode] :edit-entry-mode)))
+    (= :edit-entry-mode mode) (swap! state #(-> %
+                                              (assoc-in [:new-entry] empty-new-entry)
+                                              (assoc-in [:client-mode] :new-entry-mode)))
+    :else (println (str "unknown mode : " mode))))
 
+(defn copy-data-to-new-entry!
+  [item-params item-data]
+  (swap! state assoc-in [:new-entry] {:key       (get item-params :key)
+                                      :env       (get item-params :env)
+                                      :version   (get item-params :version)
+                                      :type      (get item-params :content-type)
+                                      :val       item-data
+                                      :file      ""
+                                      :file-name ""
+                                      }))
 
-(defn toggle-new-entry-panel! [mode]
-  (display-entry-panel)
-  (if (= :new-entry-mode mode)
-    (swap! state assoc-in [:client-mode] :listing)
-    (swap! state assoc-in [:client-mode] :new-entry-mode)))
-
-
-
-(defn toggle-table-mode!  []
+(defn toggle-table-mode!
+  []
   (swap! state update-in [:extended-mode?] not))
 
+(defn discard-changes!
+  [val]
+  (let [ace-instance (.edit js/ace "jsEditor")]
+    (.setValue ace-instance val)))
 
-
-(defn toggle-modal!  []
-  (swap! state update :show-entry-details-window? not))
-
-
+(defn close-new-entry-panel!  [event]
+  (.preventDefault event)
+  (swap! state #(-> %
+                    (assoc-in [:item-params] nil)
+                    (assoc-in [:item-data] nil)
+                    (assoc-in [:new-entry] empty-new-entry)
+                    (assoc-in [:entry-management-button-style] "ui inverted button")
+                    (assoc-in [:client-mode] :listing))))
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
-(defn copy-to-clipboard! [t]
-  (let [e (. js/document (createElement "textarea"))]
+(defn copy-to-clipboard!
+  []
+  (let [e (. js/document (createElement "textarea"))
+        ace-instance (.edit js/ace "jsEditor")]
     (.. js/document -body (appendChild e))
-    (set! (.-value e) t)
+    (set! (.-value e) (.getValue ace-instance))
     (.select e)
     (.setSelectionRange e 0 99999)
     (. js/document (execCommand "copy"))
     (.. js/document -body (removeChild e)))
   (js/alert "Copied to clipboard"))
 
-(defn highlight-code-block []
-  (js/setTimeout #(->> (js/document.querySelector "code")
-                       (js/hljs.highlightBlock)) 90))
+(defn highlight-ace-code-block!
+  [editable?]
+  (let [ace-instance (.edit js/ace "jsEditor")]
+    (.setTheme ace-instance "ace/theme/github")
+    (.setMode (.getSession ace-instance) "ace/mode/json")
+    (.setUseWorker (.getSession ace-instance) false)
+    (.setReadOnly ace-instance editable?)
+    (.setHighlightActiveLine ace-instance true)))
 
-(defn close-new-entry-panel!  []
-  (swap! state assoc-in [:client-mode] :listing))
 
-
+(defn highlight-code-block
+  [editable?]
+  (js/setTimeout #(highlight-ace-code-block! editable?) 75))
 
 (defn get-input-value
   [v]
@@ -247,10 +281,6 @@
               (assoc-in [:new-entry :file-name] file-name)
               (assoc-in [:new-entry :type] (utils/get-extension file-name)))))
 
-(defn display-entry-panel []
-  (let [elem  (js/document.getElementById "entry-mode-menu")]
-    (set! (.-display (.-style elem)) "block")))
-
 (defn hide-element [id]
   (let [elem        (js/document.getElementById id)
         style       (.-style elem)
@@ -262,7 +292,8 @@
   [type value]
   (swap! state assoc-in [:new-entry type] (get-input-value value)))
 
-(defn upload-file [input]
+(defn upload-file
+  [input]
   (if (not (= "" (-> input .-target .-value)))
     (let [^js/File file (-> input .-target .-files (aget 0))
           reader (js/FileReader.)

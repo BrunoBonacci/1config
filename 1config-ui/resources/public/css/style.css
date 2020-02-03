@@ -7,12 +7,6 @@ body {
     font-family: 'Cardo', serif;
     font-size: 12px;
 }
-.modal-textarea {
-    height: 350px;
-    width: 250px;
-    font-family: 'Cardo', serif;
-    font-size: 12px;
-}
 
 .master-key-width {
     width: 30px;
@@ -105,6 +99,15 @@ body {
     transform: scale(1.0);
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
+
+.edit-background {
+    width: 284px;
+    height: 420px;
+    background-color: #fff;
+    margin-top: -10px;
+    padding-top: 22px;
+}
+
 /** Modal Window Style end */
 
 
@@ -113,9 +116,9 @@ body {
     margin-top: 1rem;
 }
 
-.ui.form textarea:not([rows]) {
-    min-height: 20em;
-    max-height: 55em;
+#jsEditor {
+    width: 735px;
+    height: 960px;
 }
 
 .ui.form input[type=text] {
@@ -230,50 +233,6 @@ input:checked + .slider:before {
 }
 /*slider style end*/
 
-.sidenav {
-    font-family: 'Cardo', serif;
-    font-size: 13px;
-    height: 100%;
-    width: 350px;
-    position: fixed;
-    z-index: 1;
-    top: 42px;
-    left: 0;
-    background-color:  #c3cfe2;
-    /*overflow-x: hidden;*/
-    overflow-x: scroll;
-    transform: translateX(-100%);
-    -webkit-transform: translateX(-100%);
-}
-
-.visible {
-    animation: slide-in 0.5s forwards;
-    -webkit-animation: slide-in 0.5s forwards;
-}
-
-.hidden {
-    animation: slide-out 0.5s forwards;
-    -webkit-animation: slide-out 0.5s forwards;
-}
-
-@keyframes slide-in {
-    100% { transform: translateX(0%); }
-}
-
-@-webkit-keyframes slide-in {
-    100% { -webkit-transform: translateX(0%); }
-}
-
-@keyframes slide-out {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
-}
-
-@-webkit-keyframes slide-out {
-    0% { -webkit-transform: translateX(0%); }
-    100% { -webkit-transform: translateX(-100%); }
-}
-
 /*Tooltip*/
 .tooltip {
     position: relative;
@@ -334,9 +293,7 @@ input:checked + .slider:before {
 }
 
 .config-table-scroll {
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin-bottom: 33px;
+    margin-bottom: 34px;
 }
 
 .shrink-column {
