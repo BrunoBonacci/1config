@@ -12,9 +12,16 @@ UI for `1Config` library which is meant to simplify `1Config` user experience.
     export AWS_REGION=eu-west-1
     ```
 
-    Build and run the ui backend:
+    Build and run the core:
     ```
-    lein do clean, cljsbuild once min, run
+    cd ../1config-core
+    lein do clean, install
+    ```
+
+Build and run the ui backend:
+    ```
+    cd ../1config-ui
+    lein start
     ```
  3. Open the following link http://127.0.0.1:5300/
 
