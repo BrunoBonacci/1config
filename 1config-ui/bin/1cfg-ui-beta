@@ -15,4 +15,4 @@ if [ "$JAVACMD" = "" ] ; then
    fi
 fi
 
-exec $JAVACMD -server $JVM_OPTS -Dfile.encoding=utf-8 -jar $(dirname $0)/1cfg.jar "$@"
+exec $JAVACMD -server $JVM_OPTS -Dfile.encoding=utf-8 -jar $(dirname $0)/1cfg-ui-beta.jar "$@"

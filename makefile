@@ -90,8 +90,8 @@ build-cli: check-ver build-core 1config-cli/target/1cfg
 # Build UI
 #
 ui_src = $(shell find 1config-ui/src 1config-ui/resources 1config-shared/src -type f)
-build-ui: check-ver build-core 1config-ui/target/1cfg-ui
-1config-ui/target/1cfg-ui: $(ui_src)
+build-ui: check-ver build-core 1config-ui/target/1cfg-ui-beta
+1config-ui/target/1cfg-ui-beta: $(ui_src)
 - @printf "#\n# Building 1config-ui\n#\n"
 - (cd 1config-ui; lein do check, bin)
 
@@ -107,7 +107,7 @@ test: build-core 1config-cli/target/1cfg
 #
 PACKAGE := 1cfg
 PKDIR   := /tmp/$(PACKAGE)
-TARGETS := 1config-cli/target/1cfg 1config-ui/target/1cfg-ui
+TARGETS := 1config-cli/target/1cfg 1config-ui/target/1cfg-ui-beta
 package: build $(TARGETS)
 - rm -fr $(PKDIR)
 - mkdir -p $(PKDIR)/hb/bin
@@ -117,13 +117,18 @@ package: build $(TARGETS)
 - @printf "\n(-) preparing Homebrew package for Linux\n"
 - cp 1config-cli/bin/1cfg $(PKDIR)/hb/bin
 - cp 1config-cli/target/1cfg $(PKDIR)/hb/bin/1cfg.jar
-- cp 1config-ui/target/1cfg-ui $(PKDIR)/hb/bin/1cfg-ui.jar
+- cp 1config-ui/bin/1cfg-ui-beta $(PKDIR)/hb/bin
+- cp 1config-ui/target/1cfg-ui-beta $(PKDIR)/hb/bin/1cfg-ui-beta.jar
 - tar -zcvf $(PKDIR)/$(PACKAGE)-homebrew.tar.gz -C /tmp/$(PACKAGE)/hb .
 - rm -fr $(PKDIR)/hb
 - @printf "\n(-) writing checksums\n"
 - shasum -a 256 $(PKDIR)/* > $(PKDIR)/$(PACKAGE).sha
 - @printf "\n(-) packages ready in /tmp/$(PACKAGE)\n"
+- @printf "#------------------------------------------------------------------#\n"
 - ls -halp $(PKDIR)
+- @printf "#------------------------------------------------------------------#\n"
+- cat $(PKDIR)/1cfg.sha
+- @printf "#------------------------------------------------------------------#\n"
 
 #
 # Clean target directories

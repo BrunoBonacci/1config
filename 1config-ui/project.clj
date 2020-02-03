@@ -68,7 +68,7 @@
   :figwheel {:server-port 5309}
 
 
-  :bin {:name "1cfg-ui"
+  :bin {:name "1cfg-ui-beta"
         :skip-realign true
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
