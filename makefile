@@ -5,11 +5,18 @@ define helpdoc
 # |                                                                            |
 # +----------------------------------------------------------------------------+
 #
-# Requires GNU make 3.82+
+# It requires GNU make 3.82+
 #
 # Install with:
 #   brew install make
-#   echo "alias make=gmake" > ~/.profile
+#   echo "alias make=gmake" >> ~/.profile
+#
+# Run with:
+#   $ make <target> ... <target>
+#
+# Examples:
+#   $ make all
+#   $ make clean build test package
 #
 # Available targets:
 #
