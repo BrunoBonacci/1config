@@ -66,7 +66,13 @@
 (defn error-handler [{:keys [status status-text]}]
   (pp/pprint (str "failure occurred: " status " " status-text)))
 
+(defn backend-error-handler
+  [{:keys [status status-text parse-error]}]
+  (js/alert (str " Operation failed \n status: " status "\n message: " status-text  "\n details: " (:original-text parse-error))))
 
+(defn error-add-config-handler
+  [{:keys [response]}]
+  (js/alert (str " Operation failed \n status: " (:status response) "\n cause: " (:cause response))))
 
 (defn update-version! [version]
   (swap! state assoc :1config-version version))
@@ -119,7 +125,7 @@
         :format          :json
         :response-format :json
         :keywords?       true
-        :error-handler   error-handler}))
+        :error-handler   backend-error-handler}))
 
 
 
@@ -138,7 +144,7 @@
                   :format          :json
                   :response-format :json
                   :keywords?       true
-                  :error-handler   error-handler})))
+                  :error-handler   backend-error-handler})))
 
 
 
@@ -162,7 +168,7 @@
                       :response-format :json
                       :keywords?       true
                       :handler         get-all-configs!
-                      :error-handler   error-handler})))
+                      :error-handler   error-add-config-handler})))
 
 
 
