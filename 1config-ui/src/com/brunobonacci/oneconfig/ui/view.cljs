@@ -211,7 +211,7 @@
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! item-data)} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} item-data]]]]
-   [ctl/highlight-code-block true]
+   [ctl/highlight-code-block true (get item-params :content-type)]
    [:div {:class "three wide column"}]
 
    ;;-----------------------------------------
@@ -298,7 +298,7 @@
      [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! (get new-entry :val))} "Discard changes"]
      [:div  {:class "overflow-class"}
       [:div {:id "jsEditor"} (get new-entry :val)]
-      [ctl/highlight-code-block false]]]]
+      [ctl/highlight-code-block false (get new-entry :type)]]]]
    [:div {:class "three wide column"}]
    ;;-----------------------------------------
    [:div {:class "three wide column"}]

@@ -27,7 +27,7 @@
    :file-name ""
    })
 
-
+(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})
 
 (defonce state
   (atom
@@ -248,18 +248,18 @@
   (js/alert "Copied to clipboard"))
 
 (defn highlight-ace-code-block!
-  [editable?]
+  [editable? type]
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setTheme ace-instance "ace/theme/github")
-    (.setMode (.getSession ace-instance) "ace/mode/json")
+    (.setMode (.getSession ace-instance) (gs/format "ace/mode/%s" (get ace-theme-mapping type "json")))
     (.setUseWorker (.getSession ace-instance) false)
     (.setReadOnly ace-instance editable?)
     (.setHighlightActiveLine ace-instance true)))
 
 
 (defn highlight-code-block
-  [editable?]
-  (js/setTimeout #(highlight-ace-code-block! editable?) 75))
+  [editable? type]
+  (js/setTimeout #(highlight-ace-code-block! editable? type) 75))
 
 (defn get-input-value
   [v]
