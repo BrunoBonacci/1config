@@ -109,11 +109,12 @@
         :error-handler   error-handler}))
 
 
-
-(defn all-configs-handler! [entries]
+(defn all-configs-handler!
+  [entries]
   (swap! state
          (fn [s]
            (-> s
+               (assoc-in [:new-entry] empty-new-entry)
                (assoc :entries entries)
                (assoc :client-mode :listing)))))
 
@@ -160,9 +161,7 @@
                     (.append "content-type" (if (empty? (get new-entry :type)) "json" (get new-entry :type)))
                     (.append "value"         (.getValue ace-instance)))]
 
-    (swap! state #(-> %
-                      (assoc-in [:entry-management-button-style] "ui inverted button")
-                      (assoc-in [:new-entry] empty-new-entry)))
+    (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
 
     (POST "/configs" {:body            form-data
                       :response-format :json
