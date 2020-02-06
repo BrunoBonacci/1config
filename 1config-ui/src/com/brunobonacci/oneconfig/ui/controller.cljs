@@ -66,7 +66,13 @@
 (defn error-handler [{:keys [status status-text]}]
   (pp/pprint (str "failure occurred: " status " " status-text)))
 
+(defn backend-error-handler
+  [{:keys [status status-text parse-error]}]
+  (js/alert (str " Operation failed \n status: " status "\n message: " status-text  "\n details: " (:original-text parse-error))))
 
+(defn error-add-config-handler
+  [{:keys [response]}]
+  (js/alert (str " Operation failed \n status: " (:status response) "\n cause: " (:cause response))))
 
 (defn update-version! [version]
   (swap! state assoc :1config-version version))
@@ -103,11 +109,12 @@
         :error-handler   error-handler}))
 
 
-
-(defn all-configs-handler! [entries]
+(defn all-configs-handler!
+  [entries]
   (swap! state
          (fn [s]
            (-> s
+               (assoc-in [:new-entry] empty-new-entry)
                (assoc :entries entries)
                (assoc :client-mode :listing)))))
 
@@ -119,7 +126,7 @@
         :format          :json
         :response-format :json
         :keywords?       true
-        :error-handler   error-handler}))
+        :error-handler   backend-error-handler}))
 
 
 
@@ -138,7 +145,7 @@
                   :format          :json
                   :response-format :json
                   :keywords?       true
-                  :error-handler   error-handler})))
+                  :error-handler   backend-error-handler})))
 
 
 
@@ -154,15 +161,13 @@
                     (.append "content-type" (if (empty? (get new-entry :type)) "json" (get new-entry :type)))
                     (.append "value"         (.getValue ace-instance)))]
 
-    (swap! state #(-> %
-                      (assoc-in [:entry-management-button-style] "ui inverted button")
-                      (assoc-in [:new-entry] empty-new-entry)))
+    (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
 
     (POST "/configs" {:body            form-data
                       :response-format :json
                       :keywords?       true
                       :handler         get-all-configs!
-                      :error-handler   error-handler})))
+                      :error-handler   error-add-config-handler})))
 
 
 
