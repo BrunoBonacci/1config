@@ -232,6 +232,7 @@
 
 (defn close-new-entry-panel!  [event]
   (.preventDefault event)
+  (enable-body-scroll)
   (swap! state #(-> %
                     (assoc-in [:item-params] nil)
                     (assoc-in [:item-data] nil)
@@ -254,6 +255,7 @@
 
 (defn highlight-ace-code-block!
   [editable?]
+  (disable-body-scroll)
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setTheme ace-instance "ace/theme/github")
     (.setMode (.getSession ace-instance) "ace/mode/json")
@@ -296,6 +298,14 @@
 (defn on-input-change
   [type value]
   (swap! state assoc-in [:new-entry type] (get-input-value value)))
+
+(defn enable-body-scroll
+  []
+  (js/document.body.classList.remove "disable-body-scroll"))
+
+(defn disable-body-scroll
+  []
+  (js/document.body.classList.add "disable-body-scroll"))
 
 (defn upload-file
   [input]
