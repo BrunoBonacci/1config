@@ -16,7 +16,7 @@ brew install one-config
 
 ``` bash
 mkdir -p ~/bin
-wget https://github.com/BrunoBonacci/1config/releases/download/0.10.3/1cfg -O ~/bin/1cfg
+wget https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg -O ~/bin/1cfg
 chmod +x ~/bin/1cfg
 export PATH=~/bin:$PATH
 ```
@@ -25,8 +25,10 @@ export PATH=~/bin:$PATH
 
  - Open a terminal window
  - Create installation dir `md %userprofile%\1config\bin`
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.10.3/1cfg and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg-ui-beta and save it in the above folder
  - Rename file into `1cfg.cmd` with `ren %userprofile%\1config\bin\1cfg %userprofile%\1config\bin\1cfg.cmd`
+ - Rename file into `1cfg-ui-beta.cmd` with `ren %userprofile%\1config\bin\1cfg-ui-beta %userprofile%\1config\bin\1cfg-ui-beta.cmd`
  - Add it to the System path:
      - On the Windows desktop, right-click **My Computer**.
      - In the pop-up menu, click **Properties**.
@@ -73,3 +75,16 @@ export PATH=~/bin:$PATH
 
 There is support for `edn`, `txt`, `json` and Java `properties` format.
 and supports Clojure, Java, Groovy, and other JVM languages (more to come)
+
+## UI Setup
+
+If you managed to do the above step successfully you are ready to run
+the web UI with:
+
+``` bash
+1cfg-ui-beta
+Server started: http://127.0.0.1:5300
+```
+
+Once the `Server started` message appeared you are ready to open your
+favourite browser at: [http://127.0.0.1:5300](http://127.0.0.1:5300)

@@ -1,6 +1,6 @@
 # Changelog
 
-## Release: v0.15.0 (UNRELEASED: Jan 2020)
+## Release: v0.15.0 (2020-02-09)
 
   * NEW: **1Config GUI (thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov))**
   * UI: Added syntax highlighting (thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov))
