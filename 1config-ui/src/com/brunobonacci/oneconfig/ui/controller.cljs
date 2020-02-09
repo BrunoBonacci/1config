@@ -251,7 +251,7 @@
   [editable? type]
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setTheme ace-instance "ace/theme/github")
-    (.setMode (.getSession ace-instance) (gs/format "ace/mode/%s" (get ace-theme-mapping type "json")))
+    (.setMode (.getSession ace-instance) (gs/format "ace/mode/%s" type))
     (.setUseWorker (.getSession ace-instance) false)
     (.setReadOnly ace-instance editable?)
     (.setHighlightActiveLine ace-instance true)))
@@ -259,7 +259,7 @@
 
 (defn highlight-code-block
   [editable? type]
-  (js/setTimeout #(highlight-ace-code-block! editable? type) 75))
+  (js/setTimeout #(highlight-ace-code-block! editable? (get ace-theme-mapping type "json")) 75))
 
 (defn get-input-value
   [v]
@@ -271,10 +271,21 @@
   [type value]
   (swap! state assoc-in [:filters type] (get-input-value value)))
 
-
-
 (defn update-file-data
   [val file-name]
+  (let [wrapper (-> js/document
+                    (.getElementsByClassName "overflow-class")
+                    (aget 0))
+        text    (.createTextNode js/document val)
+        div     (.createElement js/document "div")
+         _      (.setAttribute
+                      div
+                      "id"
+                      "jsEditor")]
+      (aset wrapper "textContent" "")
+      (.appendChild div text)
+      (.appendChild wrapper div))
+  (highlight-ace-code-block! false (get ace-theme-mapping (utils/get-extension file-name) "json"))
   (swap! state
          #(-> %
               (assoc-in [:new-entry :val] val)
