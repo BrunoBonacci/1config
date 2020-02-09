@@ -27,7 +27,7 @@
    :file-name ""
    })
 
-
+(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})
 
 (defonce state
   (atom
@@ -255,19 +255,19 @@
   (js/alert "Copied to clipboard"))
 
 (defn highlight-ace-code-block!
-  [editable?]
+  [editable? type]
   (disable-body-scroll)
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setTheme ace-instance "ace/theme/github")
-    (.setMode (.getSession ace-instance) "ace/mode/json")
+    (.setMode (.getSession ace-instance) (gs/format "ace/mode/%s" type))
     (.setUseWorker (.getSession ace-instance) false)
     (.setReadOnly ace-instance editable?)
     (.setHighlightActiveLine ace-instance true)))
 
 
 (defn highlight-code-block
-  [editable?]
-  (js/setTimeout #(highlight-ace-code-block! editable?) 75))
+  [editable? type]
+  (js/setTimeout #(highlight-ace-code-block! editable? (get ace-theme-mapping type "json")) 75))
 
 (defn get-input-value
   [v]
@@ -279,10 +279,21 @@
   [type value]
   (swap! state assoc-in [:filters type] (get-input-value value)))
 
-
-
 (defn update-file-data
   [val file-name]
+  (let [wrapper (-> js/document
+                    (.getElementsByClassName "overflow-class")
+                    (aget 0))
+        text    (.createTextNode js/document val)
+        div     (.createElement js/document "div")
+         _      (.setAttribute
+                      div
+                      "id"
+                      "jsEditor")]
+      (aset wrapper "textContent" "")
+      (.appendChild div text)
+      (.appendChild wrapper div))
+  (highlight-ace-code-block! false (get ace-theme-mapping (utils/get-extension file-name) "json"))
   (swap! state
          #(-> %
               (assoc-in [:new-entry :val] val)
