@@ -132,8 +132,9 @@
 
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
-        get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s"
-                           (gs/urlEncode key) (gs/urlEncode env) (gs/urlEncode version))]
+        get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
+                           (gs/urlEncode key) (gs/urlEncode env)
+                           (gs/urlEncode version) change-num)]
 
     (swap! state assoc-in [:item-params] {:key          key
                                           :env          env
