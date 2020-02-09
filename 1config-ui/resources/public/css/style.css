@@ -3,6 +3,10 @@ body {
     font-family: 'Cardo', serif;
 }
 
+.disable-body-scroll {
+    overflow: hidden;
+}
+
 .modal-selector {
     font-family: 'Cardo', serif;
     font-size: 12px;
@@ -12,12 +16,6 @@ body {
     width: 30px;
 }
 
-.overflow-class {
-    font-family: 'Cardo', serif;
-    font-size: 13px;
-    height: 700px;
-    overflow-y: scroll;
-}
 
 /*Loader start*/
 #loader {
@@ -117,8 +115,18 @@ body {
 }
 
 #jsEditor {
-    width: 735px;
-    height: 960px;
+    height: 83vh;
+}
+
+.overflow-class {
+    overflow-y: scroll;
+    color: white; /*workaround for  '[ctl/highlight-code-block true]' which produces the value */
+}
+
+/* Hides scrollbar*/
+.overflow-class::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 .ui.form input[type=text] {

@@ -8,10 +8,6 @@
 
 
 
-(defn create-service-name-row [num sz key]
-  (if (zero? num) [:td {:row-span sz} key]))
-
-
 (defn colourize-label
   "find a color for a label by environment"
   [preferences env]
@@ -28,7 +24,7 @@
     (let [{:keys [key env version change-num content-type master-key user]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
       [:tr {:class "center aligned"}
-       [create-service-name-row (.indexOf items item) (count items) key]
+       [:td {:data-label "Key"} key]
        [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]
        [:td {:data-label "Change num"} change-num]
@@ -52,7 +48,7 @@
     (let [{:keys [key env version change-num content-type]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
       [:tr {:class "center aligned"}
-       [create-service-name-row (.indexOf items item) (count items) key]
+       [:td {:data-label "Key"} key]
        [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]
        [:td {:data-label "Change num"} change-num]
