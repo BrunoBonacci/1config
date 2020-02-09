@@ -4,7 +4,6 @@
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.tools.logging :as log]
-            [amazonica.aws.securitytoken :as sts]
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends.dynamo :as dyn]
             [com.brunobonacci.oneconfig.backends.kms-encryption :as kms]
@@ -60,20 +59,6 @@
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn- aws-account-id
-  []
-  (safely
-   (-> (sts/get-caller-identity {}) :account)
-   :on-error
-   :log-errors false
-   :default nil))
-
-
-(defn- check-user-restrictions
-  [backend-type config-entry]
-  (let [account (if (#{:fs :filesystem} backend-type) "local" (aws-account-id))]
-    (prof/apply-restrictions! (prof/user-profiles) account config-entry)))
-
 
 (defn- validate-backend!
   [backend]
@@ -95,7 +80,6 @@
 (defn set! [backend-type backend config-entry]
   (validate-backend! backend)
   (validate-version! (:version config-entry))
-  (check-user-restrictions backend-type config-entry)
   (safely
    (save backend (normalize-entry config-entry))
    :on-error

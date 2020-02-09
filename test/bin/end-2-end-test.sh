@@ -11,7 +11,8 @@ if [ ! -f $CFG1 ] ; then
     exit 1
 fi
 
-
+# user-profiles
+export USER_PROFILE=~/.1config/user-profiles.edn
 # defining test table
 export ONECONFIG_DYNAMO_TABLE=1ConfigTest
 
@@ -82,6 +83,29 @@ $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t edn '{foo: 1}'    
 echo "(*) testing properties"
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=1'      2>/dev/null || (echo "good edn not accepted" ; exit 38)
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=\uHHHH' 2>/dev/null && (echo "bad  edn accepted" ; exit 39)
+
+
+echo "(*) verify if the restrictions are taken into account"
+
+
+if [ ! -f "$USER_PROFILE" ] ; then
+    echo "User Profile file doesn't exists. creating one."
+    cat > "$USER_PROFILE" <<\EOF
+;; restriction file used for 1config automated test
+{:restrictions
+ [;; guard   -> restriction :message "Display message"
+  [:account :matches? ".*"] :->  [:env :is-not? "restricted"]
+  :message "Invalid env name. RESTRICTION TEST"
+ ]
+}
+EOF
+fi
+
+if [ "$(grep -o 'RESTRICTION TEST' $USER_PROFILE)" == "RESTRICTION TEST" ] ; then
+    $CFG1 -k mysql-database -e restricted -v '1.1.1' -t txt SET 'impossible' && exit 50
+else
+    echo "WARNING: RESTRICTION ENTRY MISSING in $USER_PROFILE, skipping restriction tests"
+fi
 
 echo "ALL OK."
 cd $CURR

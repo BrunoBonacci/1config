@@ -3,16 +3,17 @@
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends
-             [dynamo         :refer [dynamo-config-backend default-dynamo-config]]
-             [encoding       :refer [make-encoding-wrapper]]
-             [file           :refer [filesystem-config-backend]]
-             [file1          :refer [file1-config-backend]]
-             [hierarchical   :refer [hierarchical-backend]]
-             [iam-user       :refer [iam-user-backend]]
-             [immutable      :refer [immutable-backend]]
-             [kms-encryption :refer [kms-encryption-backend]]
-             [logging        :refer [logging-backend]]
-             [validation     :refer [validation-backend]]]
+             [dynamo           :refer [dynamo-config-backend default-dynamo-config]]
+             [encoding         :refer [make-encoding-wrapper]]
+             [file             :refer [filesystem-config-backend]]
+             [file1            :refer [file1-config-backend]]
+             [hierarchical     :refer [hierarchical-backend]]
+             [iam-user         :refer [iam-user-backend]]
+             [immutable        :refer [immutable-backend]]
+             [kms-encryption   :refer [kms-encryption-backend]]
+             [logging          :refer [logging-backend]]
+             [user-restriction :refer [user-restriction-backend]]
+             [validation       :refer [validation-backend]]]
             [com.brunobonacci.oneconfig.util :refer :all]))
 
 
@@ -49,6 +50,14 @@
 ;; validation-backend
 ;;  | it ensures that the request (config-entry) has all the necessary
 ;;  | information and that it is in the expected type/format
+;;  |
+;;  |
+;;  V
+;; -|---------------------------------------------------------------------------
+;; user-restriction-backend
+;;  | If the user has defined some restriction, this backend
+;;  | will ensure that the entry conforms to the restrictions
+;;  | defined by the user.
 ;;  |
 ;;  |
 ;;  V
@@ -114,6 +123,7 @@
 (def common-wrappers
   (comp make-encoding-wrapper
      validation-backend
+     user-restriction-backend
      immutable-backend))
 
 
