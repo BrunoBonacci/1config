@@ -162,7 +162,7 @@
                     (.append "value"         (.getValue ace-instance)))]
 
     (swap! state assoc-in [:entry-management-button-style] "ui inverted button")
-
+    (enable-body-scroll)
     (POST "/configs" {:body            form-data
                       :response-format :json
                       :keywords?       true
