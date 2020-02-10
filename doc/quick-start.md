@@ -10,6 +10,13 @@ brew tap BrunoBonacci/lazy-tools
 brew install one-config
 ```
 
+or update with
+
+``` bash
+brew update && brew upgrade one-config
+```
+
+
 ## Manual installation
 
 ### OSX and Linux
@@ -17,6 +24,7 @@ brew install one-config
 ``` bash
 mkdir -p ~/bin
 wget https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg -O ~/bin/1cfg
+wget https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
 chmod +x ~/bin/1cfg
 export PATH=~/bin:$PATH
 ```
