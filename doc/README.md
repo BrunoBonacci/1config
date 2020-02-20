@@ -3,7 +3,7 @@
 ### User guides
   - [Quick Start](./quick-start.md)
   - [Security Model](./security-model.md)
-  - [Best practises](./best-practices.md)
+  - [Best practices](./best-practices.md)
   - [Configuration resolution](./config-resolution.md)
   - [Command line tool](./cli-tool.md)
   - [Key management](./key-management.md)
