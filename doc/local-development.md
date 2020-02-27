@@ -7,7 +7,8 @@ Providers](./providers.md) for the details.
 
 If you wish to use `1config` for local development (without a
 connection to AWS DynamoDB) it is possible by creating entries
-in your `1config` home directory (`~/.1config/`)
+in your `1config` home directory (`~/.1config/`). You can override
+this directory by setting `ONECONFIG_HOME` in the environment.
 
 You can create a files under `~/.1config/` (in your home) and put the
 configuration for one or more services in one or more environments

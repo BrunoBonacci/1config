@@ -8,7 +8,7 @@
             [where.core :refer [where]]
             [clojure.string :as str]
             [clojure.tools.logging :as log])
-  (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream]
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream File]
            java.util.zip.GZIPInputStream
            java.util.Properties java.util.Map))
 
@@ -235,15 +235,27 @@
   (or (env "HOME") (env "userprofile")))
 
 
+(defn dir-exists?
+  [path]
+  (when-let [dir (some-> path io/file)]
+    (and (.exists ^File dir) (.isDirectory ^File dir))))
+
 
 (defn home-1config
-  "returns ~/.1config/"
+  "if ONECONFIG_HOME is set in the environment, it returns
+  <ONECONFIG_HOME>/.1config, otherwise it returns ~/.1config"
   []
   (let [home (homedir)
-        dir (some-> home io/file)]
-    (when-not (and dir (.exists dir) (.isDirectory dir))
+        oneconfig-home (env "ONECONFIG_HOME")]
+    (cond
+      (and oneconfig-home (not (dir-exists? oneconfig-home)))
+      (log/warn "ONECONFIG_HOME is set, but its either not a directory or it doesn't exist.")
+
+      (not (dir-exists? home))
       (log/warn "HOME directory not set or it doesn't exist."))
-    (some-> home (str "/.1config/"))))
+
+    (some-> (or oneconfig-home home)
+            (str "/.1config/"))))
 
 
 
