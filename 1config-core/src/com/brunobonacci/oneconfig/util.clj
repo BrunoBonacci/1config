@@ -242,8 +242,8 @@
 
 
 (defn home-1config
-  "if ONECONFIG_HOME is set in the environment, it returns
-  <ONECONFIG_HOME>/.1config, otherwise it returns ~/.1config"
+  "returns ONECONFIG_HOME from the environment if it is set otherwise it
+  returns ~/.1config"
   []
   (let [home (homedir)
         oneconfig-home (env "ONECONFIG_HOME")]
@@ -254,8 +254,8 @@
       (not (dir-exists? home))
       (log/warn "HOME directory not set or it doesn't exist."))
 
-    (some-> (or oneconfig-home home)
-            (str "/.1config/"))))
+    (or oneconfig-home
+       (some-> home (str "/.1config/")))))
 
 
 
