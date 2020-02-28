@@ -32,7 +32,7 @@
 (def index-page-path "/index.html")
 (def backend-name (util/default-backend-name))
 (def repo-base-url "https://api.github.com/repos/BrunoBonacci/1config")
-(def repo-tags-url (str repo-base-url "/git/refs"))
+(def repo-tags-url (str repo-base-url "/releases"))
 
 
 
@@ -53,9 +53,13 @@
 
 
 
-(defn- get-github-data [url]
+(defn- github-latest-release
+  "Retrieve 1config latest version from Github repo"
+  [url]
   (let [{:keys [body]} @(http/get url)]
-    (json/parse-string body)))
+    (->> (json/parse-string body true)
+       (map :tag_name)
+       first)))
 
 
 
@@ -69,14 +73,9 @@
 
 
 
-(defn- github-data []
-  (let [tags (get-github-data repo-tags-url)]
-    {:latest  (->
-               (last tags)
-               (get "ref")
-               (string/split #"/")
-               (last))
-     :current (oneconfig-version)}))
+(defn- releases-info []
+  {:latest  (github-latest-release repo-tags-url)
+   :current (oneconfig-version)})
 
 
 
@@ -103,7 +102,7 @@
 
 
   (GET "/info/versions" []
-       (response (github-data)))
+       (response (releases-info)))
 
 
   (GET "/preferences" []
