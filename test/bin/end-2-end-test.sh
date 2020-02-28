@@ -11,8 +11,6 @@ if [ ! -f $CFG1 ] ; then
     exit 1
 fi
 
-# user-profiles
-export USER_PROFILE=~/.1config/user-profiles.edn
 # defining test table
 export ONECONFIG_DYNAMO_TABLE=1ConfigTest
 
@@ -86,7 +84,10 @@ $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=\uHHHH'
 
 
 echo "(*) verify if the restrictions are taken into account"
-
+rm -fr /tmp/end2end-test/
+mkdir /tmp/end2end-test/
+export ONECONFIG_HOME=/tmp/end2end-test/
+export USER_PROFILE=$ONECONFIG_HOME/user-profiles.edn
 
 if [ ! -f "$USER_PROFILE" ] ; then
     echo "User Profile file doesn't exists. creating one."
