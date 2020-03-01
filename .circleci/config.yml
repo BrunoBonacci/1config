@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/clojure:lein-2.9.1
+
+    working_directory: ~/repo
+
+    environment:
+      LEIN_ROOT: "true"
+
+    steps:
+      - checkout
+      - run: make clean build
