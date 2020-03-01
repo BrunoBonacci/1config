@@ -20,6 +20,26 @@ if [ "$(aws dynamodb list-tables --output=text | grep -q $ONECONFIG_DYNAMO_TABLE
 fi
 
 
+# setup user-profiles for testing
+rm -fr /tmp/end2end-test/
+mkdir /tmp/end2end-test/
+export ONECONFIG_HOME=/tmp/end2end-test/
+export USER_PROFILE=$ONECONFIG_HOME/user-profiles.edn
+
+if [ ! -f "$USER_PROFILE" ] ; then
+    echo "User Profile file doesn't exists. creating one."
+    cat > "$USER_PROFILE" <<\EOF
+;; restriction file used for 1config automated test
+{:restrictions
+ [;; guard   -> restriction :message "Display message"
+  [:account :matches? ".*"] :->  [:env :is-not? "restricted"]
+  :message "Invalid env name. RESTRICTION TEST"
+ ]
+}
+EOF
+fi
+
+
 # fail on error
 set -xe
 
@@ -41,9 +61,6 @@ $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' -t txt 'value-1'
 
 echo "(*) To read last configuration value for a service called 'service1'"
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1.6.0')" = "value-1" ] || exit 2
-
-#echo "(*) To read a specific changeset for a service called 'service1'"
-#$CFG1 GET -b dynamo -e test -k 'service1' -v '1.6.0' -c '3563412132'
 
 echo '(*) To list configuration with optional filters and ordering'
 $CFG1 SET -b dynamo -e int1 -k 'test/service1' -v '1.6.0' -t txt 'int-value-1'
@@ -68,6 +85,17 @@ $CFG1 SET -b dynamo -e test1 -k 'test/super-service' -v '1.1.3' -t txt 'super-11
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/super-service' -v '2.8.0')" = 'super-113' ] || exit 10
 
 
+echo "(*) To read a specific changeset for a service called 'service1'"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' -t txt 'value-a'
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' -t txt 'value-b'
+output=$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' --with-meta)
+changenum=$(echo "$output" | grep -q value-b && echo $output | grep -Eo ':change-num ([0-9]+)' | grep -Eo '[0-9+]+')
+[ "$changenum" == '' ] && exit 11
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' -t txt 'value-c'
+[ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1.6.0' -c $changenum)" = "value-b" ] || exit 12
+
+
+
 echo "(*) verify if the value is a valid value for the given content-type"
 
 echo "(*) testing json"
@@ -82,31 +110,14 @@ echo "(*) testing properties"
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=1'      2>/dev/null || (echo "good edn not accepted" ; exit 38)
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=\uHHHH' 2>/dev/null && (echo "bad  edn accepted" ; exit 39)
 
-
 echo "(*) verify if the restrictions are taken into account"
-rm -fr /tmp/end2end-test/
-mkdir /tmp/end2end-test/
-export ONECONFIG_HOME=/tmp/end2end-test/
-export USER_PROFILE=$ONECONFIG_HOME/user-profiles.edn
+$CFG1 -k mysql-database -e restricted -v '1.1.1' -t txt SET 'impossible' && exit 50
 
-if [ ! -f "$USER_PROFILE" ] ; then
-    echo "User Profile file doesn't exists. creating one."
-    cat > "$USER_PROFILE" <<\EOF
-;; restriction file used for 1config automated test
-{:restrictions
- [;; guard   -> restriction :message "Display message"
-  [:account :matches? ".*"] :->  [:env :is-not? "restricted"]
-  :message "Invalid env name. RESTRICTION TEST"
- ]
-}
-EOF
-fi
-
-if [ "$(grep -o 'RESTRICTION TEST' $USER_PROFILE)" == "RESTRICTION TEST" ] ; then
-    $CFG1 -k mysql-database -e restricted -v '1.1.1' -t txt SET 'impossible' && exit 50
-else
-    echo "WARNING: RESTRICTION ENTRY MISSING in $USER_PROFILE, skipping restriction tests"
-fi
+echo "(*) testing diffs"
+$CFG1 SET -b dynamo -e diff1 -k 'test/service1' -v '1.2.0' -t txt 'Hello World, This is cool!'
+$CFG1 SET -b dynamo -e diff1 -k 'test/service1' -v '1.5.0' -t txt 'Hello 1Config, This is cool!'
+[ "$($CFG1 DIFF -b dynamo -e diff1 -k 'test/service1' -v '1.2.0' -v '1.2.0' --DC)" == "No differences found." ] || exit 60
+[ "$($CFG1 DIFF -b dynamo -e diff1 -k 'test/service1' -v '1.2.0' -v '1.5.0' --DC | tr -d '\33')" == '[0mHello [41mWorld[0m[42m1Config[0m[0m, This is cool![0m' ] || exit 61
 
 echo "ALL OK."
 cd $CURR

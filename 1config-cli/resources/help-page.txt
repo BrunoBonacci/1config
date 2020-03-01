@@ -1,26 +1,7 @@
-# Command line tool (`1cfg`)
-
-`1Config` comes with a command line tool which allows you to
-initialise and set values in the given backend.
-
-You can install the tool via Homebrew or manually, please check the
-[Quick Start](quick-start.md) page.
-
-Download latest release from github and save it in your `~/bin` folder:
-
-  * https://github.com/BrunoBonacci/1config/releases
-
-**NOTE: It requires JDK/JRE 8+ to be installed and in the PATH.**
-
-Then give it permissions to run:
-
-``` shell
-chmod -x ~/bin/1cfg
-```
-
-Here how to use it:
-
-``` text
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   ;                                 ----==| 1 C O N F I G |==----                                  ;
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                (c) Bruno Bonacci - 2019-2020 - v%s
 
    A command line tool to manage application secrets and configuration safely and effectively.
 
@@ -205,5 +186,3 @@ Here how to use it:
    NOTE: - set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to provide authentication
            and access to the target AWS account.
          - set AWS_DEFAULT_REGION to set the AWS region to use.
-
-```

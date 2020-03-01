@@ -33,6 +33,8 @@
                (vector "--add-opens" "java.base/java.lang=ALL-UNNAMED" "-server")
                (vector "-server"))
 
+  :java-source-paths ["java/src"]
+
   :resource-paths ["resources" "../ver" ]
 
   :bin {:name "1cfg"

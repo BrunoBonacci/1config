@@ -9,8 +9,11 @@
             [com.brunobonacci.oneconfig.backends.kms-encryption :as kms]
             [com.brunobonacci.oneconfig.util :as util]
             [com.brunobonacci.oneconfig.profiles :as prof]
+            [com.brunobonacci.oneconfig.diff :as diff]
             [doric.core :as table]
             [safely.core :refer [safely]]))
+
+
 
 (defn timestamp-format
   [^long ts]
@@ -21,6 +24,7 @@
 (defn- validate-version! [version]
   (when-not (re-find #"^\d+\.\d+\.\d+$" version)
     (throw (ex-info "Version must be in the form: 1.3.23" {}))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,6 +71,7 @@
                     {}))))
 
 
+
 (defn- normalize-entry
   [{:keys [content-type] :as config-entry}]
   (as-> config-entry $
@@ -87,6 +92,7 @@
    :message "Saving config entry"))
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
 ;;                            ---==| G E T |==----                            ;;
@@ -98,10 +104,10 @@
   (if-not pretty-print?
     (or encoded-value value)
     (case content-type
-        "json"       (json/generate-string value {:pretty true})
-        "edn"        (pp/write value :stream nil)
-        "txt"        value
-        ("properties" "props") (util/properties->str value))))
+      "json"       (json/generate-string value {:pretty true})
+      "edn"        (pp/write value :stream nil)
+      "txt"        value
+      ("properties" "props") (util/properties->str value))))
 
 
 
@@ -115,24 +121,30 @@
 
 
 
-(defn get! [backend config-entry & {:keys [with-meta pretty-print?]
-                                    :or {with-meta false
-                                         pretty-print? false} :as opts}]
+(defn- retrieve-entry
+  [backend config-entry]
   (let [config-entry (update config-entry :version (fnil identity "99999.99999.99999"))]
     (validate-backend! backend)
     (validate-version! (:version config-entry))
     (safely
-     (if-let [result (if (:change-num config-entry)
-                       (load backend config-entry)
-                       (find backend (dissoc config-entry :change-num)))]
-       (if with-meta
-         (println (format-with-meta result opts))
-         (println (format-value result opts)))
-
-       (util/println-err "No configuration entry found."))
+     (if (:change-num config-entry)
+       (load backend config-entry)
+       (find backend (dissoc config-entry :change-num)))
      :on-error
      :log-stacktrace false
      :message "Retrieving config entry")))
+
+
+
+(defn get! [backend config-entry & {:keys [with-meta pretty-print?]
+                                    :or {with-meta false
+                                         pretty-print? false} :as opts}]
+  (if-let [result (retrieve-entry backend config-entry)]
+    (if with-meta
+      (println (format-with-meta result opts))
+      (println (format-value result opts)))
+
+    (util/println-err "No configuration entry found.")))
 
 
 
@@ -171,6 +183,7 @@
                   (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
 
 
+
 (defmethod format-output :tablex
   [{:keys [backend] :as context} entries]
   (table/table [{:name :key              :title "Config key"}
@@ -201,7 +214,6 @@
    :on-error
    :log-stacktrace false
    :message "Listing config entry"))
-
 
 
 
@@ -246,3 +258,29 @@
    :on-error
    :log-stacktrace false
    :message "Creating key"))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                          ----==| D I F F |==----                           ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(defn diff! [[backend1 config-entry1] [backend2 config-entry2]
+             & {:keys [mode] :or {mode :line}}]
+  (let [entry1 (retrieve-entry backend1 config-entry1)
+        entry2 (retrieve-entry backend2 config-entry2)]
+
+    (cond
+      (not entry1) (util/println-err "Configuration entry not found:" config-entry1)
+      (not entry2) (util/println-err "Configuration entry not found:" config-entry2)
+
+      :else
+      (let [differ (if (= mode :char) diff/diff-strings diff/diff-lines)
+            diffs (differ (:encoded-value entry1) (:encoded-value entry2))]
+        (if (> (count diffs) 1)
+          (println (diff/colorize-diff diffs))
+          (println "No differences found."))))))

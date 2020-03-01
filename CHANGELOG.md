@@ -1,5 +1,10 @@
 # Changelog
 
+## Release: v0.16.0 (unreleased)
+
+  * CLI: Added ability to compare two entries
+
+
 ## Release: v0.15.0 (2020-02-09)
 
   * NEW: **1Config GUI (thanks to [Eugene Tolbakov @etolbakov](https://github.com/etolbakov))**

@@ -8,7 +8,11 @@
             [safely.core :refer [safely]]
             [clojure.java.io :as io]))
 
+
+
 (def ^:dynamic *repl-session* false)
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
@@ -16,95 +20,20 @@
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+
+;;                       ----==| 1 C O N F I G |==----                        ;;
+
+
+
+
 (defn help! [errors]
   (println
-   (format "
-      1config cli
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                     v%s
-
-  A command line tool to manage application secrets and configuration safely and effectively.
-
-Usage:
-
-   1cfg <OPERATION> -e <ENVIRONMENT> -k <SERVICE> [-v <VERSION>] [-b <BACKEND>] [-t <TYPE>] <VALUE>
-
-   WHERE:
-   ---------
-
-   OPERATION:
-      - GET        : retrieve the current configuration value for
-                   : the given env/service/version combination
-      - SET        : sets the value of the given env/service/version combination
-      - LIST       : lists the available keys for the given backend
-      - INIT       : initialises the given backend (like create the table if necessary)
-      - LIST-KEYS  : lists the master encryption keys created by 1Config.
-      - CREATE-KEY : creates an master encryption key.
-
-   OPTIONS:
-   ---------
-   -h   --help                 : this help
-        --stacktrace           : To show the full stacktrace of an error
-   -b   --backend   BACKEND    : Must be one of: hierarchical, dynamo, fs. Default: hierarchical
-   -e   --env   ENVIRONMENT    : the name of the environment like 'prod', 'dev', 'st1' etc
-   -k   --key       SERVICE    : the name of the system or key for which the configuration if for,
-                               : exmaple: 'service1', 'db-pass' etc
-   -v   --version   VERSION    : a version number for the given key in the following format: '2.12.4'
-                               : If not provided, the latest version will be returned.
-   -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
-   -f   --content-file FILE    : read the value to SET from the given file.
-        --with-meta            : whether to include meta data for GET operation
-        --output-format FORMAT : either 'table' or 'cli' default is 'table' (only for list)
-   -C                          : same as '--output-format=cli'
-   -X   --extended             : whether to display an extended table (more columns)
-   -P   --pretty-print         : whether to pretty print the configuration values
-   -o   --order-by     ORDER   : The listing order, must be a comma-separated list
-                               : of one or more of: 'key', 'env', 'version', 'change-num'
-                               : default order: 'key,env,version,change-num'
-   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', 'properties' or 'props'
-                               : default is 'edn'
-   -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
-                               : It must be a KMS key alias or an arn identifier for a key.
-
-Examples:
-
-   --- keys management ---
-
-   (*) List KMS encryption keys managed by 1Config
-   1cfg LIST-KEYS
-
-   (*) Create a master encryption key, the key name must be the same
-       and the configuration key to be used automatically.
-   1cfg CREATE-KEY -m 'service1'
-
-   --- configuration entries management  ---
-
-   (*) To initialise a given backend (first time only)
-   1cfg INIT -b dynamo
-
-   (*) To set the configuration value of a service called 'service1' use:
-   1cfg SET -b dynamo -e test -k service1 -v 1.6.0 -t edn '{:port 8080}'
-
-   (*) To read last configuration value for a service called 'service1' use:
-   1cfg GET -b dynamo -e test -k service1
-
-   (*) To read last change for a specific version of 'service1' use:
-   1cfg GET -b dynamo -e test -k service1 -v 1.6.0
-
-   (*) To read a specific changeset for a service called 'service1' use:
-   1cfg GET -b dynamo -e test -k service1 -v 1.6.0 -c 3563412132
-
-   (*) To list configuration with optional filters and ordering
-   1cfg LIST -b dynamo -e prod -k ser -v 1. -o env,key
-
-
-NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
-      provide authentication access to the target AWS account.
-      set AWS_DEFAULT_REGION to set the AWS region to use.
-
-" (util/oneconfig-version))
+   (format (str (slurp (io/resource "help-page.txt")) \newline)
+           (util/oneconfig-version))
    (str/join "\n" errors))
   (System/exit 1))
+
 
 
 (defn normal-exit!
@@ -114,50 +43,62 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
     (System/exit 0)))
 
 
+
 (def cli-options
-  [["-h"  "--help"]
-   [nil  "--stacktrace"]
+  (let [repeated-key* (fn [m k v] (update m k #(conj (or % []) v)))]
+    [["-h"  "--help"]
+     [nil  "--stacktrace"]
 
-   ["-b"  "--backend BACKEND"
-    :validate [#{"hierarchical" "dynamo" "fs"} "Must be one of: hierarchical, dynamo, fs"]]
+     ["-b"  "--backend BACKEND"
+      :assoc-fn repeated-key*
+      :validate [#{"hierarchical" "dynamo" "fs"} "Must be one of: hierarchical, dynamo, fs"]]
 
 
-   [nil "--with-meta"]
+     [nil "--with-meta"]
 
-   [nil "--output-format OUTPUT"
-    :parse-fn keyword
-    :validate [#{:table :cli}]
-    :default :table]
+     [nil "--output-format OUTPUT"
+      :parse-fn keyword
+      :validate [#{:table :cli}]
+      :default :table]
 
-   ["-C" "--cli-format"]
-   ["-P" "--pretty-print"]
-   ["-X" "--extended"]
+     ["-D" "--diff-mode MODE"
+      :parse-fn keyword
+      :validate [#{:line :char}]
+      :default :line]
 
-   ["-e"  "--env ENV"]
+     [nil "--DC"
+      :assoc-fn (fn [m k v] (assoc m :diff-mode :char))]
 
-   ["-k"  "--key KEY"]
+     ["-C" "--cli-format"]
+     ["-P" "--pretty-print"]
+     ["-X" "--extended"]
 
-   ["-v"  "--version VER"]
+     ["-e"  "--env ENV" :assoc-fn repeated-key*]
 
-   ["-c"  "--change-num CHANGENUM"
-    :parse-fn (fn [num-str] (when num-str (Long/parseLong num-str)))]
+     ["-k"  "--key KEY" :assoc-fn repeated-key*]
 
-   ["-t"  "--content-type TYPE"
-    :default "edn"
-    :validate [#{"edn" "txt" "json" "properties" "props"}
-               "Must be one of: edn, txt, json, properties, props"]]
+     ["-v"  "--version VER" :assoc-fn repeated-key*]
 
-   ["-f"  "--content-file FILENAME"
-    :parse-fn io/file
-    :validate [#(.exists ^java.io.File %) "The file must exist"]]
+     ["-c"  "--change-num CHANGENUM"
+      :assoc-fn repeated-key*
+      :parse-fn (fn [num-str] (when num-str (Long/parseLong num-str)))]
 
-   ["-o"  "--order-by ORDER"
-    :default [:key :env :version :change-num]
-    :parse-fn #(-> % (str/split #" *, *") ((partial map keyword)))
-    :validate [(partial every? #{:change-num :key :env :version})
-               "Must be a comma-separated list of: key, env, version, change-num"]]
+     ["-t"  "--content-type TYPE"
+      :default "edn"
+      :validate [#{"edn" "txt" "json" "properties" "props"}
+                 "Must be one of: edn, txt, json, properties, props"]]
 
-   ["-m"  "--master-key KEY-NAME"]])
+     ["-f"  "--content-file FILENAME"
+      :parse-fn io/file
+      :validate [#(.exists ^java.io.File %) "The file must exist"]]
+
+     ["-o"  "--order-by ORDER"
+      :default [:key :env :version :change-num]
+      :parse-fn #(-> % (str/split #" *, *") ((partial map keyword)))
+      :validate [(partial every? #{:change-num :key :env :version})
+                 "Must be a comma-separated list of: key, env, version, change-num"]]
+
+     ["-m"  "--master-key KEY-NAME"]]))
 
 
 
@@ -169,17 +110,30 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
 
 
+(defn- multi-key
+  [pos params]
+  (let [pos* (if (= 0 pos) first #(or (second %) (first %)))]
+    (map pos* params)))
+
+
+
 (defn -main [& args]
   (let [{:keys [options arguments errors] :as cli} (parse-opts args cli-options)
         {:keys [help backend env key version change-num
                 content-type with-meta output-format order-by
-                master-key extended pretty-print content-file]} options
+                master-key extended pretty-print content-file
+                diff-mode]} options
         [op value & too-many-args] arguments
         op (when op (keyword (str/lower-case op)))
+
+        [backend2 env2 key2 version2 change-num2] (multi-key 1 [backend env key version change-num])
+        [backend  env  key  version  change-num]  (multi-key 0 [backend env key version change-num])
         backend-name (or (keyword backend) (util/default-backend-name))
+        backend-name2 (or (keyword backend2) (util/default-backend-name))
         output-format (if (:cli-format options) :cli output-format)
         ;; if table and extended show :tablex
-        output-format (or (and (= output-format :table) extended :tablex) output-format)]
+        output-format (or (and (= output-format :table) extended :tablex) output-format)
+        ]
 
     (cond
       help            (help! [])
@@ -188,8 +142,8 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
 
       ;; check for invalid operation
       (not
-       (#{:get :set :init :list :list-keys :create-key} op))
-      (help! ["INVALID operation: must be either GET, SET, LIST, INIT, LIST-KEYS or CREATE-KEY"])
+       (#{:get :set :init :list :diff :list-keys :create-key} op))
+      (help! ["INVALID operation: must be either GET, SET, LIST, INIT, DIFF, LIST-KEYS or CREATE-KEY"])
 
       ;; check for missing value on set
       (and (= op :set) (not (or value content-file)))
@@ -259,5 +213,15 @@ NOTE: set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to
           :list (cli/list! (b/backend-factory {:type backend-name})
                            {:env env :key key :version version :order-by order-by}
                            :output-format output-format :backend-name backend-name
-                           :extended extended))
+                           :extended extended)
+
+          ;;
+          ;; DIFF
+          ;;
+          :diff (cli/diff! [(b/backend-factory {:type backend-name})
+                            {:env env :key key :version version :change-num change-num}]
+                           [(b/backend-factory {:type backend-name})
+                            {:env env2 :key key2 :version version2 :change-num change-num2}]
+                           :mode diff-mode)
+          )
         (normal-exit!)))))
