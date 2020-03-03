@@ -1,6 +1,8 @@
 (ns com.brunobonacci.oneconfig.ui.controller
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
    [reagent.core :as reagent :refer [atom]]
+   [cljs.core.async :as async :refer [<! put! chan]]
    [ajax.core :refer [GET POST]]
    [cljs.pprint :as pp]
    [com.brunobonacci.oneconfig.ui.utils :as utils]
@@ -52,6 +54,7 @@
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
+    :selected {:counter 0 :items-meta [] :entries []}
     }))
 
 
@@ -78,6 +81,56 @@
   (swap! state assoc :1config-version version))
 
 
+(defn GETAsync [url]
+  (let [out (chan)
+        handler #(put! out %1)]
+    (GET url {:handler handler
+              :format          :json
+              :response-format :json
+              :keywords?       true
+              :error-handler handler})
+    out))
+
+(defn create-url-a [item]
+  (let [{:keys [key env version change-num]} item]
+    (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
+               (gs/urlEncode key) (gs/urlEncode env)
+               (gs/urlEncode version) change-num)))
+
+(defn aaaaaa [compare-items]
+  (go
+    (let [urls (map #(create-url-a %) (get compare-items :items-meta))
+          configs [(<! (GETAsync (first urls)))
+                   (<! (GETAsync (last urls)))]
+          selected-entries (map #(:encoded-value %) configs)]
+      (swap! state #(-> %
+                        (assoc-in [:new-entry] empty-new-entry)
+                        (assoc-in [:selected :entries]  selected-entries)
+                        (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                        (assoc-in [:client-mode] :compare-entry-mode))))))
+
+(defn row-selected
+  [e item]
+  (let [parent (-> e .-target .-parentElement .-parentElement)]
+    (if (.. e -target -checked)
+      (do
+        (swap! state update-in [:selected :counter] inc)
+        (swap! state update-in [:selected :items-meta]  merge item)
+        (.add (.-classList parent) "selected"))
+      (do
+        (swap! state update-in [:selected :counter] dec)
+        (let [change-num  (:change-num item)
+              items-meta (get-in @state [:selected :items-meta] )
+              new-items-meta (remove #(= change-num (:change-num %)) items-meta)]
+          (println "New items-meta : " new-items-meta)
+          (swap! state assoc-in [:selected :items-meta]  new-items-meta)
+          )
+        (.remove (.-classList parent) "selected")
+        ))))
+
+(defn all-rows-selected
+  [e]
+  (println "To be done"))
 
 (defn get-item-handler [response]
   (swap! state
@@ -85,8 +138,6 @@
            (-> s
                (assoc :item-data (get response :encoded-value))
                (assoc :client-mode :show-entry-mode)))))
-
-
 
 (defn footer-element
   [version]
@@ -129,7 +180,6 @@
         :error-handler   backend-error-handler}))
 
 
-
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
         get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
@@ -147,8 +197,6 @@
                   :response-format :json
                   :keywords?       true
                   :error-handler   backend-error-handler})))
-
-
 
 (defn add-config-entry! [event]
   (.preventDefault event)
@@ -264,10 +312,22 @@
     (.setReadOnly ace-instance editable?)
     (.setHighlightActiveLine ace-instance true)))
 
+(defn compare-ace-code-block!
+  [left right]
+  (let [
+        left (js-obj "content" left)
+        right (js-obj "content" right)
+        props (js-obj "element" "#acediff" "left" left "right" right)
+        ]
+    (js/AceDiff. props)))
 
 (defn highlight-code-block
   [editable? type]
   (js/setTimeout #(highlight-ace-code-block! editable? (get ace-theme-mapping type "json")) 75))
+
+(defn compare-code-block
+  [entries]
+  (js/setTimeout #(compare-ace-code-block! (first entries) (last entries)) 75))
 
 (defn get-input-value
   [v]

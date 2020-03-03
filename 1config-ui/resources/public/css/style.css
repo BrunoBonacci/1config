@@ -16,6 +16,10 @@ body {
     width: 30px;
 }
 
+.ui.table tr.selected {
+    background: #cce7ff !important;
+    color: #3716b5 !important;
+}
 
 /*Loader start*/
 #loader {
@@ -116,6 +120,15 @@ body {
 
 #jsEditor {
     height: 83vh;
+}
+
+#acediff {
+    width: 25vh;
+    height: 50vh;
+}
+
+.acediff__wrap {
+    top: 5vh;
 }
 
 .overflow-class {

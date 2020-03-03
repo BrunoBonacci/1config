@@ -47,7 +47,7 @@
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
       ^{:key (string/join "-" [key env version change-num content-type])}
-      [:tr {:class "center aligned"}
+      [:tr {:class (str "center aligned " (string/join "-" [key env version change-num content-type]))}
        [:td {:data-label "Key"} key]
        [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]
@@ -56,7 +56,9 @@
        [:td {:data-label "Type"} (utils/as-label content-type)]
        [:td {:data-label "Value"}
         [:button {:class "ui icon button" :on-click #(ctl/get-config-item! item)}
-         [:i {:class "eye icon"}]]]])))
+         [:i {:class "eye icon"}]]]
+       [:td {:data-label "Compare"}
+        [:input {:type "checkbox" :on-change #(ctl/row-selected % item)}]]])))
 
 
 ;; TODO: fix param
@@ -87,9 +89,10 @@
               :class       "filter-input-width"
               :placeholder "Version.."
               :value       (get filters :version)
-              :on-change   #(ctl/on-filter-change :version %)}
-      ]
-     [:i {:class "search icon"}]]]])
+              :on-change   #(ctl/on-filter-change :version %)}]
+     [:i {:class "search icon"}]]]
+   [:th
+    [:input {:type "checkbox" :on-change #(ctl/all-rows-selected %)}]]])
 
 
 
@@ -122,7 +125,8 @@
     [:th {:class "shrink-column" :row-span 2} "Change num"]
     [:th {:class "shrink-column" :row-span 2} "Time"]
     [:th {:class "shrink-column" :row-span 2} "Type"]
-    [:th {:class "shrink-column" :row-span 2} "Value"]]
+    [:th {:class "shrink-column" :row-span 2} "Value"]
+    [:th {:class "shrink-column"} "Compare"]]
    [table-filter-section :DUMMY filters]])
 
 
@@ -301,12 +305,68 @@
    [:div {:class "ten wide column"}]
    [:div {:class "three wide column"}]]])
 
+(defn compare-entry-details-window
+  [_ compare-items ]
+  [:form {:class "ui form" :on-submit #(ctl/add-config-entry! %1)}
+  [:div {:class "ui grid" :style {:padding "16px"}}
+   [:div {:class "three wide column"}
+     [:div {:class "edit-background"}
+     [:div {:class "ui grid"}
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       [:div {:class "row onecfg-filter-block"}]
+       [:div {:class "row onecfg-filter-block"}]
+       [:div {:class "row onecfg-filter-block"}]
+       [:div {:class "row onecfg-filter-block"}]
+       [:div {:class "ui horizontal divider"} "Upload a file"]]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "twelve wide column"}
+       ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       [:table {:class "ui very basic  table"}
+        [:tbody
+         [:tr
+          [:td
+           [:input {:type      "file"
+                    :name      "file"
+                    :class     "inputfile"
+                    :id        "file-input"
+                    :on-change #(ctl/upload-file %)}]
+
+           [:label {:for "file-input" :class "ui mini blue button"}
+            [:i {:class "ui upload icon"}] "Upload"]]
+          [:td]
+          [:td]]]]]
+      [:div {:class "two wide column"}]
+      ;;;-------------------------------------------------
+      [:div {:class "two wide column"}]
+      [:div {:class "four wide column"}
+       [:button {:class "ui primary button"} "Save"]]
+      [:div {:class "four wide column"}]
+      [:div {:class "four wide column "}
+       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]
+      [:div {:class "two wide column"}]]]]
+
+   [:div {:class "ten wide column"}
+    [:div {:class "ui raised segment"}
+     [:div  {:class "overflow-class"}
+      [:div {:id "acediff"}]
+      [ctl/compare-code-block (get compare-items :entries)]
+      ]]]
+   [:div {:class "three wide column"}]
+   ;;-----------------------------------------
+   [:div {:class "three wide column"}]
+   [:div {:class "ten wide column"}]
+   [:div {:class "three wide column"}]]])
+
 (defn entry-button-text [mode]
   (cond
     (= :listing mode)  "New Entry"
     (= :new-entry-mode mode) "Edit Entry"
     (= :show-entry-mode mode) "Edit Entry"
     (= :edit-entry-mode mode) "New Entry"
+    (= :compare-entry-mode mode) "New Entry"
     :else (println (str "unknown mode : " mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -323,6 +383,10 @@
      [:div {:class "item"}
       [:div {:class (get current-state :entry-management-button-style) :on-click #(ctl/config-entry-management-panel! (get current-state :client-mode))}
        [entry-button-text (get current-state :client-mode)]]]
+     [:div {:class "item"}
+      [:div {:class    (if (= (get-in current-state [:selected :counter]) 2)
+                         "ui inverted button"
+                         "ui inverted disabled button") :on-click #(ctl/aaaaaa (get current-state :selected)) } "Compare" ]]
      [:div {:class "right menu"}
       [:div {:class "item"}
        [:div
@@ -367,6 +431,8 @@
                                      (:preferences current-state)
                                      item-params
                                      item-data]]
+         (= :compare-entry-mode)  [:div {:class "modal show-modal"}
+                                   [compare-entry-details-window :DUMMY (get current-state :selected)]]
          :else [:div {:class "modal"}]))]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
