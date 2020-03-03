@@ -97,7 +97,7 @@
                (gs/urlEncode key) (gs/urlEncode env)
                (gs/urlEncode version) change-num)))
 
-(defn aaaaaa [compare-items]
+(defn compare-selected-items [compare-items]
   (go
     (let [urls (map #(create-url-a %) (get compare-items :items-meta))
           configs [(<! (GETAsync (first urls)))

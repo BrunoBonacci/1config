@@ -386,7 +386,7 @@
      [:div {:class "item"}
       [:div {:class    (if (= (get-in current-state [:selected :counter]) 2)
                          "ui inverted button"
-                         "ui inverted disabled button") :on-click #(ctl/aaaaaa (get current-state :selected)) } "Compare" ]]
+                         "ui inverted disabled button") :on-click #(ctl/compare-selected-items (get current-state :selected)) } "Compare" ]]
      [:div {:class "right menu"}
       [:div {:class "item"}
        [:div
