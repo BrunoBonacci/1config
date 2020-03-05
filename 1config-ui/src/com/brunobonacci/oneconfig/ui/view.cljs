@@ -46,8 +46,8 @@
   [preferences items]
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
-      ^{:key (string/join "-" [key env version change-num content-type])}
-      [:tr {:class (str "center aligned " (string/join "-" [key env version change-num content-type]))}
+      ^{:key (string/join "-" [key env version change-num])}
+      [:tr {:class "center aligned"}
        [:td {:data-label "Key"} key]
        [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
        [:td {:data-label "Version"} version]

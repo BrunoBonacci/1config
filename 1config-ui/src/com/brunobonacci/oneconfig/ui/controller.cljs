@@ -314,11 +314,9 @@
 
 (defn compare-ace-code-block!
   [left right]
-  (let [
-        left (js-obj "content" left)
+  (let [left (js-obj "content" left)
         right (js-obj "content" right)
-        props (js-obj "element" "#acediff" "left" left "right" right)
-        ]
+        props (js-obj "element" "#acediff" "left" left "right" right)]
     (js/AceDiff. props)))
 
 (defn highlight-code-block
@@ -326,8 +324,8 @@
   (js/setTimeout #(highlight-ace-code-block! editable? (get ace-theme-mapping type "json")) 75))
 
 (defn compare-code-block
-  [entries]
-  (js/setTimeout #(compare-ace-code-block! (first entries) (last entries)) 75))
+  [{:keys [left right]}]
+  (js/setTimeout #(compare-ace-code-block! left right) 75))
 
 (defn get-input-value
   [v]
