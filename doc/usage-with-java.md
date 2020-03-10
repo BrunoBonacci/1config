@@ -46,3 +46,7 @@ config.getValueAsProperties();    // for properties entries
 config.getValueAsJsonMap();       // Map<String, Object> for json entries
 config.getValueAsEdnMap();        // Map<Keyword, Object> for edn entries
 ```
+
+If you are using Spring, there is a integration library which works
+out of the box. Please check out
+[Spring-1config](https://github.com/brandonstubbs/spring-1config)
