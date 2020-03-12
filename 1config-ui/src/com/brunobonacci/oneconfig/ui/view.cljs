@@ -252,6 +252,7 @@
 
          [:option {:value "json"} "json"]
          [:option {:value "edn"} "edn"]
+         [:option {:value "yaml"} "yaml"]
          [:option {:value "properties"} "properties"]
          [:option {:value "txt"} "txt"]]]
 

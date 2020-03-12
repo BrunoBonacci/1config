@@ -105,6 +105,7 @@
     (or encoded-value value)
     (case content-type
       "json"       (json/generate-string value {:pretty true})
+      "yaml"       encoded-value
       "edn"        (pp/write value :stream nil)
       "txt"        value
       ("properties" "props") (util/properties->str value))))

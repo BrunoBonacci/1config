@@ -27,7 +27,7 @@
    :file-name ""
    })
 
-(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})
+(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "yaml" "yaml", "properties" "properties"})
 
 (defonce state
   (atom

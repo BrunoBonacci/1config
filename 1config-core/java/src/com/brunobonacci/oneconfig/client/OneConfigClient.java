@@ -20,11 +20,12 @@ public class OneConfigClient {
             .invoke( Clojure.read("clojure.walk"));
     }
 
-    private static final Keyword _key         = Keyword.intern("key");
-    private static final Keyword _env         = Keyword.intern("env");
-    private static final Keyword _version     = Keyword.intern("version");
-    private static final Keyword _contentType = Keyword.intern("content-type");
-    private static final Keyword _value       = Keyword.intern("value");
+    private static final Keyword _key          = Keyword.intern("key");
+    private static final Keyword _env          = Keyword.intern("env");
+    private static final Keyword _version      = Keyword.intern("version");
+    private static final Keyword _contentType  = Keyword.intern("content-type");
+    private static final Keyword _value        = Keyword.intern("value");
+    private static final Keyword _encodedValue = Keyword.intern("encoded-value");
 
     private static final IFn arrayMap  = Clojure.var("clojure.core", "array-map");
     private static final IFn getIn     = Clojure.var("clojure.core", "get-in");
@@ -104,6 +105,10 @@ public class OneConfigClient {
             return _entry.get(OneConfigClient._value);
         }
 
+        public String getEncodedValue() {
+            return (String) _entry.get(OneConfigClient._encodedValue);
+        }
+
         public Properties getValueAsProperties() {
             return (Properties) _entry.get(OneConfigClient._value);
         }
@@ -115,6 +120,11 @@ public class OneConfigClient {
 
         @SuppressWarnings("unchecked")
         public Map<String, ? extends Object> getValueAsJsonMap() {
+            return (Map<String, ? extends Object>) OneConfigClient.stringify.invoke(_entry.get(OneConfigClient._value));
+        }
+
+        @SuppressWarnings("unchecked")
+        public Map<String, ? extends Object> getValueAsYamlMap() {
             return (Map<String, ? extends Object>) OneConfigClient.stringify.invoke(_entry.get(OneConfigClient._value));
         }
 

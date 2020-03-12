@@ -110,6 +110,11 @@ echo "(*) testing properties"
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=1'      2>/dev/null || (echo "good edn not accepted" ; exit 38)
 $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t props 'foo=\uHHHH' 2>/dev/null && (echo "bad  edn accepted" ; exit 39)
 
+echo "(*) testing yaml"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t yaml '{foo: bar baz}'  2>/dev/null || (echo "good yaml not accepted" ; exit 40)
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '0.0.1' -t yaml '{foo: bar: baz}' 2>/dev/null && (echo "bad  yaml accepted" ; exit 41)
+
+
 echo "(*) verify if the restrictions are taken into account"
 $CFG1 -k mysql-database -e restricted -v '1.1.1' -t txt SET 'impossible' && exit 50
 

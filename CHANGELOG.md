@@ -3,6 +3,7 @@
 ## Release: v0.16.0 (unreleased)
 
   * CLI: Added ability to compare two entries
+  * NEW: Added support for YAML configurations
 
 
 ## Release: v0.15.0 (2020-02-09)

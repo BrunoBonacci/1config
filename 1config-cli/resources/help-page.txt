@@ -69,7 +69,7 @@
                                : If not provided, the latest version will be returned.
    -c   --change-num CHANGENUM : used with GET returns a specific configuration change.
    -f   --content-file FILE    : read the value to SET from the given file.
-   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', 'properties' or 'props'
+   -t   --content-type TYPE    : one of 'edn', 'txt' or 'json', 'yaml', 'properties' or 'props'
                                : default is 'edn'
    -m   --master-key  KEY-NAME : The master encryption key to use for encrypting the entry.
                                : It must be a KMS key alias or an arn identifier for a key.
