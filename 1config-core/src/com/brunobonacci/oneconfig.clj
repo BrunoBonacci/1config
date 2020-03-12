@@ -86,8 +86,3 @@
     (if (every? map? maps)
       (apply merge-with deep-merge maps)
       (last maps))))
-
-
-(deep-merge {:foo 1 :bar {:baz 2}}
-            {:foo 2 :bar {:baz 1 :qux 3}})
-{:foo 2, :bar {:baz 1, :qux 3}}
