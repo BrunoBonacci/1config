@@ -17,28 +17,28 @@
 
 
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [org.clojure/clojurescript "1.10.520"]
+                 [org.clojure/clojurescript "1.10.597"]
                  [com.brunobonacci/oneconfig #=(ver)]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
                  [cljs-ajax "0.8.0"]
-                 [cljsjs/react "16.9.0-0"]
-                 [cljsjs/react-dom "16.9.0-0"]
+                 [cljsjs/react "16.13.0-0"]
+                 [cljsjs/react-dom "16.13.0-0"]
 
-                 [cheshire "5.9.0"]
+                 [cheshire "5.10.0"]
 
                  [http-kit "2.4.0-alpha3"]
                  [compojure "1.6.1"]
-                 [ring "1.7.1"]
+                 [ring "1.8.0"]
                  [ring/ring-defaults "0.3.2"]
                  [ring/ring-json "0.5.0"]
                  [ring-cors "0.1.13"]
                  [enlive "1.1.6"]
-                 [reagent "0.8.1"]
-                 [re-frame "0.10.9"]
+                 [reagent "0.10.0"]
+                 [re-frame "0.12.0"]
 
                  [re-frisk "0.5.4.1"]
 
-                 [org.slf4j/slf4j-log4j12 "1.7.26"]]
+                 [org.slf4j/slf4j-log4j12 "1.7.30"]]
 
   :min-lein-version "2.7.1"
   :source-paths     ["src" "../1config-shared/src"]
@@ -81,7 +81,7 @@
 
   :profiles {:uberjar {:aot        :all
                        :prep-tasks ["compile" ["cljsbuild" "once" "min"]]}
-             :dev     {:dependencies [[figwheel-sidecar "0.5.18"]]
+             :dev     {:dependencies [[figwheel-sidecar "0.5.19"]]
                        :plugins [[lein-figwheel "0.5.19"]
                                  [lein-cljsbuild "1.1.7"]
                                  [lein-binplus "0.6.6"]]}}

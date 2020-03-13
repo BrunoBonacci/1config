@@ -20,10 +20,10 @@
 
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.brunobonacci/oneconfig #=(ver)]
-                 [org.clojure/tools.cli "0.4.1"]
-                 [org.slf4j/slf4j-log4j12 "1.7.26"]
+                 [org.clojure/tools.cli "1.0.194"]
+                 [org.slf4j/slf4j-log4j12 "1.7.30"]
                  [doric "0.9.0"]
-                 [com.brunobonacci/safely "0.5.0-alpha7"]]
+                 [com.brunobonacci/safely "0.5.0"]]
 
   :global-vars {*warn-on-reflection* true}
 
@@ -41,14 +41,14 @@
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[midje "1.9.6"]
-                                  [org.clojure/test.check "0.10.0-alpha3"]
-                                  [criterium "0.4.4"]
-                                  [org.slf4j/slf4j-log4j12 "1.8.0-beta4"]]
+             :dev {:dependencies [[midje "1.9.9"]
+                                  [org.clojure/test.check "1.0.0"]
+                                  [criterium "0.4.5"]
+                                  [org.slf4j/slf4j-log4j12 "1.7.30"]]
                    :resource-paths ["dev-resources"]
-                   :plugins      [[lein-midje "3.2.1"]
+                   :plugins      [[lein-midje "3.2.2"]
                                   [lein-shell "0.5.0"]
-                                  [lein-binplus "0.6.5"]]}}
+                                  [lein-binplus "0.6.6"]]}}
 
   :aliases
   {"package"
