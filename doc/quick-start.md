@@ -23,8 +23,8 @@ brew update && brew upgrade one-config
 
 ``` bash
 mkdir -p ~/bin
-wget https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg -O ~/bin/1cfg
-wget https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
+wget https://github.com/BrunoBonacci/1config/releases/download/0.16.0/1cfg -O ~/bin/1cfg
+wget https://github.com/BrunoBonacci/1config/releases/download/0.16.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
 chmod +x ~/bin/1cfg
 export PATH=~/bin:$PATH
 ```
@@ -33,8 +33,8 @@ export PATH=~/bin:$PATH
 
  - Open a terminal window
  - Create installation dir `md %userprofile%\1config\bin`
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg and save it in the above folder
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.15.0/1cfg-ui-beta and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.16.0/1cfg and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.16.0/1cfg-ui-beta and save it in the above folder
  - Rename file into `1cfg.cmd` with `ren %userprofile%\1config\bin\1cfg %userprofile%\1config\bin\1cfg.cmd`
  - Rename file into `1cfg-ui-beta.cmd` with `ren %userprofile%\1config\bin\1cfg-ui-beta %userprofile%\1config\bin\1cfg-ui-beta.cmd`
  - Add it to the System path:

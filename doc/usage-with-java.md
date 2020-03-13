@@ -19,7 +19,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.15.0</version>
+    <version>0.16.0</version>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
