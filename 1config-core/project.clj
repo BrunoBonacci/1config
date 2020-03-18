@@ -10,7 +10,7 @@
 
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.brunobonacci/where "0.5.5"]
-                 [com.brunobonacci/safely "0.5.0"]
+                 [org.clojure/tools.logging "1.0.0"]
                  [amazonica "0.3.152" :exclusions
                   [com.amazonaws/aws-java-sdk
                    com.amazonaws/amazon-kinesis-client]]

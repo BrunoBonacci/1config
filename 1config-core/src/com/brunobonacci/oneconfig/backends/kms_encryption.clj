@@ -7,7 +7,7 @@
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
             [where.core :refer [where]]
-            [safely.core :refer [safely]])
+            [com.brunobonacci.oneconfig.util :refer [safely]])
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations

@@ -2,7 +2,6 @@
     com.brunobonacci.oneconfig.profiles
   (:require [com.brunobonacci.oneconfig.util
              :refer [home-1config file-exists? parse-edn deep-merge]]
-            [safely.core :refer [safely]]
             [schema.core :as s]
             [where.core :refer [where]]
             [clojure.string :as str]

@@ -3,7 +3,7 @@
   (:refer-clojure :exclude [find load list])
   (:require [amazonica.aws.securitytoken :as sts]
             [com.brunobonacci.oneconfig.backend :refer :all]
-            [safely.core :refer [safely]]))
+            [com.brunobonacci.oneconfig.util :refer [safely]]))
 
 ;;
 ;;```

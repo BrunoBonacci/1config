@@ -7,7 +7,6 @@
             [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.walk :refer [postwalk]]
-            [safely.core :refer [safely]]
             [where.core :refer [where]])
   (:import [java.io ByteArrayInputStream ByteArrayOutputStream File InputStream]
            [java.util Map Properties]
@@ -165,6 +164,19 @@
 (defn println-err [& args]
   (binding [*out* *err*]
     (apply println args)))
+
+
+
+;; simplified version of https://github.com/BrunoBonacci/safely
+;; supports just the default return
+(defmacro safely
+  [& forms]
+  (let [[body _ options :as seg] (partition-by #{:on-error} forms)
+        options (->> options (partition 2) (map vec) (into {}))]
+    `(try
+       ~@body
+       (catch Exception x#
+         (:default ~options)))))
 
 
 
