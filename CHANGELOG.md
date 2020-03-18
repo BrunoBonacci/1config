@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.16.1 (2020-03-18)
+
+  * CORE: remove `safely` as dependency to reduce dependencies clash
+
 ## Release: v0.16.0 (2020-03-13)
 
   * CLI: Added ability to compare two entries
