@@ -25,7 +25,8 @@ define helpdoc
 # - test:    runs integration tests for cli
 # - package: creates the distribution packages
 # - deploy:  uploads the library into clojars
-# - all:     same as `make clean build test package`
+# - all:     same as `make clean build test`
+# - release: same as `clean update-version build test package`
 #
 endef
 
@@ -54,6 +55,13 @@ help:
 # Preparing all
 #
 all: clean build test package
+
+
+#
+# Preparing a release
+#
+release: clean update-version build test package
+
 
 #
 # Checking java version
@@ -136,6 +144,18 @@ package: build $(TARGETS)
 - @printf "#------------------------------------------------------------------#\n"
 - cat $(PKDIR)/1cfg.sha
 - @printf "#------------------------------------------------------------------#\n"
+
+
+#
+# Update version in doc
+#
+.PHONY: update-version
+update-version:
+- LAST=$$(curl -s https://api.github.com/repos/BrunoBonacci/1config/releases | jq -r '.[0].tag_name') ; \
+  CURR=$$(cat ver/1config.version) ; \
+  echo Updating $${LAST} to $${CURR} ; \
+  find . -name \*.md | grep -v CHANGELOG.md | xargs -I{} grep -l "$$LAST" {} | xargs -I{} sed -i '' s/$$LAST/$$CURR/g {}
+
 
 #
 # Clean target directories
