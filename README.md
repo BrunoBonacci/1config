@@ -22,6 +22,7 @@ Here some of the key-points and advantages:
   * Graphical User interface for managing changes to the configuration
   * Support for local development (outside AWS)
   * Highly-configurable and secure authorization.
+  * Support for EDN, JSON, YAML, Java Properties and plain-text.
 
 *Now available with a GUI as well:*
 
