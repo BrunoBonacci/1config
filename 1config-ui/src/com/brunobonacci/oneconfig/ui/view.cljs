@@ -431,7 +431,7 @@
                                      (:preferences current-state)
                                      item-params
                                      item-data]]
-         (= :compare-entry-mode)  [:div {:class "modal show-modal"}
+         (= :compare-entry-mode mode)  [:div {:class "modal show-modal"}
                                    [compare-entry-details-window :DUMMY (get current-state :selected)]]
          :else [:div {:class "modal"}]))]]
    [:div {:class "footer" }

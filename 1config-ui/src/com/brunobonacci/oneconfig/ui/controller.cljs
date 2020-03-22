@@ -54,7 +54,7 @@
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
-    :selected {:counter 0 :items-meta [] :entries []}
+    :selected {:counter 0 :items-meta [] :entries {:left nil :right nil}}
     }))
 
 
@@ -105,7 +105,8 @@
           selected-entries (map #(:encoded-value %) configs)]
       (swap! state #(-> %
                         (assoc-in [:new-entry] empty-new-entry)
-                        (assoc-in [:selected :entries]  selected-entries)
+                        (assoc-in [:selected :entries :left]  (first selected-entries))
+                        (assoc-in [:selected :entries :right]  (last selected-entries))
                         (assoc-in [:entry-management-button-style] "ui inverted disabled button")
                         (assoc-in [:client-mode] :compare-entry-mode))))))
 
@@ -330,8 +331,6 @@
 (defn get-input-value
   [v]
   (-> v .-target .-value))
-
-
 
 (defn on-filter-change
   [type value]
