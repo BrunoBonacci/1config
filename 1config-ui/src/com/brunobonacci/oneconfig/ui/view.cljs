@@ -375,30 +375,23 @@
                 (utils/filter-entries
                  (get current-state :filters)
                  (get current-state :entries)))]
-
-     (let [mode (:client-mode current-state )
-           item-params (:item-params current-state)
-           item-data (:item-data current-state)]
+     (let [mode         (:client-mode current-state )
+           item-params  (:item-params current-state)
+           item-data    (:item-data current-state)
+           preferences  (:preferences current-state)]
        (cond
-         (= :listing mode) [:div {:class "modal"}]
-         (= :new-entry-mode mode)  [:div {:class "modal show-modal"}
-                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
-                                     ]]
+         (= :listing mode)          [:div {:class "modal"}]
+         (= :new-entry-mode mode)   [:div {:class "modal show-modal"}
+                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
          (= :edit-entry-mode mode)  [:div {:class "modal show-modal"}
-                                     [:div {:class "hide-element"}
-                                      [ctl/copy-data-to-new-entry! item-params item-data]]
-                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
-                                     ]]
-         (= :show-entry-mode mode) [:div {:class "modal show-modal"}
-                                    [show-entry-window
-                                     (:preferences current-state)
-                                     item-params
-                                     item-data]]
+                                      [:div {:class "hide-element"}
+                                        [ctl/copy-data-to-new-entry! item-params item-data]]
+                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
+         (= :show-entry-mode mode)  [:div {:class "modal show-modal"}
+                                      [show-entry-window preferences item-params item-data]]
          (= :compare-entry-mode mode)  [:div {:class "modal show-modal"}
-                                   [compare-entry-details-window :DUMMY
-                                    (get current-state :selected)
-                                    (:preferences current-state)]]
-         :else [:div {:class "modal"}]))]]
+                                        [compare-entry-details-window :DUMMY (get current-state :selected) preferences]]
+         :else                      [:div {:class "modal"}]))]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
 
