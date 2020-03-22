@@ -166,44 +166,41 @@
       (show-extended-table preferences items real-filters)
       (show-minified-table preferences items real-filters))]])
 
-
+(defn item-as-table
+  [item preferences]
+  [:table {:class "ui celled striped table"}
+   [:thead
+    [:tr
+     [:th {:class "center aligned collapsing" :col-span "2"}
+      (get item :key)]]]
+   [:tbody
+    [:tr
+     [:td {:class "center aligned collapsing"} "Environment"]
+     [:td {:class "center aligned collapsing"}
+      (let [env (get item :env)]
+        (utils/as-label (colourize-label preferences env) env))]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Version"]
+     [:td {:class "center aligned collapsing"}
+      (get item :version)]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Change num"]
+     [:td {:class "center aligned collapsing"}
+      (get item :change-num)]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Time"]
+     [:td {:class "center aligned collapsing"} (utils/parse-date (get item :change-num))]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Type"]
+     [:td {:class "center aligned collapsing"} (utils/as-label (get item :content-type))]]
+    [:tr
+     [:td {:class "center aligned collapsing" :col-span "2"}
+      [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]])
 
 (defn show-entry-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
-    [:table {:class "ui celled striped table"}
-     [:thead
-      [:tr
-       [:th {:class "center aligned collapsing" :col-span "2"}
-        (get item-params :key)]]]
-
-     [:tbody
-      [:tr
-       [:td {:class "center aligned collapsing"} "Environment"]
-       [:td {:class "center aligned collapsing"}
-        (let [env (get item-params :env)]
-          (utils/as-label (colourize-label preferences  env) env))]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Version"]
-       [:td {:class "center aligned collapsing"}
-        (get item-params :version)]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Change num"]
-       [:td {:class "center aligned collapsing"}
-        (get item-params :change-num)]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Time"]
-       [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Type"]
-       [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
-      [:tr
-       [:td {:class "center aligned collapsing" :col-span "2"}
-        [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
+    [item-as-table item-params preferences]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
@@ -306,59 +303,25 @@
    [:div {:class "three wide column"}]]])
 
 (defn compare-entry-details-window
-  [_ compare-items ]
-  [:form {:class "ui form" :on-submit #(ctl/add-config-entry! %1)}
-  [:div {:class "ui grid" :style {:padding "16px"}}
-   [:div {:class "three wide column"}
-     [:div {:class "edit-background"}
-     [:div {:class "ui grid"}
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       [:div {:class "row onecfg-filter-block"}]
-       [:div {:class "row onecfg-filter-block"}]
-       [:div {:class "row onecfg-filter-block"}]
-       [:div {:class "row onecfg-filter-block"}]
-       [:div {:class "ui horizontal divider"} "Upload a file"]]
-      [:div {:class "two wide column"}]
-      ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       [:table {:class "ui very basic  table"}
-        [:tbody
-         [:tr
-          [:td
-           [:input {:type      "file"
-                    :name      "file"
-                    :class     "inputfile"
-                    :id        "file-input"
-                    :on-change #(ctl/upload-file %)}]
-
-           [:label {:for "file-input" :class "ui mini blue button"}
-            [:i {:class "ui upload icon"}] "Upload"]]
-          [:td]
-          [:td]]]]]
-      [:div {:class "two wide column"}]
-      ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "four wide column"}
-       [:button {:class "ui primary button"} "Save"]]
-      [:div {:class "four wide column"}]
-      [:div {:class "four wide column "}
-       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]
-      [:div {:class "two wide column"}]]]]
-
-   [:div {:class "ten wide column"}
-    [:div {:class "ui raised segment"}
-     [:div  {:class "overflow-class"}
-      [:div {:id "acediff"}]
-      [ctl/compare-code-block (get compare-items :entries)]
-      ]]]
-   [:div {:class "three wide column"}]
-   ;;-----------------------------------------
-   [:div {:class "three wide column"}]
-   [:div {:class "ten wide column"}]
-   [:div {:class "three wide column"}]]])
+  [_ compare-items preferences]
+  (let [entries (get compare-items :entries)
+        items-meta (get compare-items :items-meta)
+        left (first items-meta)
+        right (last items-meta)]
+    [:div {:class "ui grid" :style {:padding "16px"}}
+     [:div {:class "three wide column"}
+      [item-as-table left preferences]]
+     [:div {:class "ten wide column"}
+      [:div {:class "ui raised segment"}
+       [:div {:class "overflow-class"}
+        [:div {:id "acediff"}]
+        [ctl/compare-code-block entries]]]]
+     [:div {:class "three wide column"}
+      [item-as-table right preferences]]
+     ;;-----------------------------------------
+     [:div {:class "three wide column"}]
+     [:div {:class "ten wide column"}]
+     [:div {:class "three wide column"}]]))
 
 (defn entry-button-text [mode]
   (cond
@@ -432,7 +395,9 @@
                                      item-params
                                      item-data]]
          (= :compare-entry-mode mode)  [:div {:class "modal show-modal"}
-                                   [compare-entry-details-window :DUMMY (get current-state :selected)]]
+                                   [compare-entry-details-window :DUMMY
+                                    (get current-state :selected)
+                                    (:preferences current-state)]]
          :else [:div {:class "modal"}]))]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
