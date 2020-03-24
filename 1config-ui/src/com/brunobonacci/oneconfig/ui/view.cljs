@@ -195,12 +195,39 @@
      [:td {:class "center aligned collapsing"} (utils/as-label (get item :content-type))]]
     [:tr
      [:td {:class "center aligned collapsing" :col-span "2"}
-      [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]])
+      [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-compare-entries-panel! %)} "Close"]]]]])
 
 (defn show-entry-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
-    [item-as-table item-params preferences]]
+     [:table {:class "ui celled striped table"}
+      [:thead
+       [:tr
+        [:th {:class "center aligned collapsing" :col-span "2"}
+         (get item-params :key)]]]
+      [:tbody
+       [:tr
+        [:td {:class "center aligned collapsing"} "Environment"]
+        [:td {:class "center aligned collapsing"}
+         (let [env (get item-params :env)]
+           (utils/as-label (colourize-label preferences  env) env))]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Version"]
+        [:td {:class "center aligned collapsing"}
+         (get item-params :version)]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Change num"]
+        [:td {:class "center aligned collapsing"}
+         (get item-params :change-num)]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Time"]
+        [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Type"]
+        [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
+       [:tr
+        [:td {:class "center aligned collapsing" :col-span "2"}
+         [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}

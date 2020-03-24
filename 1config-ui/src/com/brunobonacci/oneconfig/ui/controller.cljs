@@ -29,6 +29,8 @@
    :file-name ""
    })
 
+(def empty-selected {:counter 0 :items-meta [] :entries {:left nil :right nil}})
+
 (def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})
 
 (defonce state
@@ -54,7 +56,7 @@
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
-    :selected {:counter 0 :items-meta [] :entries {:left nil :right nil}}
+    :selected empty-selected
     }))
 
 
@@ -105,6 +107,7 @@
           selected-entries (map #(:encoded-value %) configs)]
       (swap! state #(-> %
                         (assoc-in [:new-entry] empty-new-entry)
+                        (assoc-in [:selected :counter] 0)
                         (assoc-in [:selected :entries :left]  (first selected-entries))
                         (assoc-in [:selected :entries :right]  (last selected-entries))
                         (assoc-in [:entry-management-button-style] "ui inverted disabled button")
@@ -280,13 +283,43 @@
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setValue ace-instance val)))
 
-(defn close-new-entry-panel!  [event]
+(defn close-new-entry-panel!
+  [event]
   (.preventDefault event)
   (enable-body-scroll)
   (swap! state #(-> %
                     (assoc-in [:item-params] nil)
                     (assoc-in [:item-data] nil)
                     (assoc-in [:new-entry] empty-new-entry)
+                    (assoc-in [:entry-management-button-style] "ui inverted button")
+                    (assoc-in [:client-mode] :listing))))
+
+(defn nodelist-to-seq
+  [nl]
+  (let [result-seq (map #(.item nl %) (range (.-length nl)))]
+    (doall result-seq)))
+
+(defn uncheck-box
+  [box]
+  (set! (.-checked box) false))
+
+(defn close-compare-entries-panel!
+  [event]
+  (.preventDefault event)
+  (enable-body-scroll)
+  (let [selected-lines (apply list (-> js/document
+                                       (.getElementsByClassName "selected")
+                                       array-seq))]
+    (doall (map #(.remove (.-classList %) "selected") selected-lines))
+    (doall (map #(-> % .-childNodes
+                       nodelist-to-seq
+                       last
+                       .-childNodes
+                       nodelist-to-seq
+                       last
+                       uncheck-box) selected-lines)))
+  (swap! state #(-> %
+                    (assoc-in [:selected] empty-selected)
                     (assoc-in [:entry-management-button-style] "ui inverted button")
                     (assoc-in [:client-mode] :listing))))
 
