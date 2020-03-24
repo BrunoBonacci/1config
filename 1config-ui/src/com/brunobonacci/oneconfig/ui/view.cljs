@@ -38,8 +38,9 @@
          [:span {:class "tooltiptext"} master-key]]]
        [:td {:data-label "User"}
         [:div {:class "tooltip"} (utils/get-aws-username user)
-         [:span {:class "tooltiptext"} user]]]])))
-
+         [:span {:class "tooltiptext"} user]]]
+       [:td {:data-label "Compare"}
+        [:input {:type "checkbox" :on-change #(ctl/row-selected % item)}]]])))
 
 
 (defn create-minified-table
@@ -109,10 +110,9 @@
     [:th {:row-span 2} "Type"]
     [:th {:row-span 2} "Value"]
     [:th {:row-span 2} "Master Key"]
-    [:th {:row-span 2} "User"]]
+    [:th {:row-span 2} "User"]
+    [:th {:class "shrink-column"} "Compare"]  ]
    [table-filter-section :DUMMY filters]])
-
-
 
 ;; TODO: fix param
 (defn table-header
