@@ -4,7 +4,7 @@
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [amazonica.aws.securitytoken :as sts]
             [com.brunobonacci.oneconfig.profiles :as prof]
-            [safely.core :refer [safely]]))
+            [com.brunobonacci.oneconfig.util :refer [safely]]))
 
 
 ;;

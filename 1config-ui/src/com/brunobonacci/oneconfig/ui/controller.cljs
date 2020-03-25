@@ -29,6 +29,7 @@
    :file-name ""
    })
 
+(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "yaml" "yaml", "properties" "properties"})
 (def empty-selected {:counter 0 :items-meta [] :entries {:left nil :right nil}})
 
 (def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})

@@ -11,3 +11,5 @@ pom.xml.asc
 .hg/
 1config-core/dev/kms.clj
 1config-ui/resources/public/cljs
+/1config-ui/.rebel_readline_history
+/1config-ui/figwheel_server.log

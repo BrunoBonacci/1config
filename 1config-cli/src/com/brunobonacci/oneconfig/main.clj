@@ -85,8 +85,8 @@
 
      ["-t"  "--content-type TYPE"
       :default "edn"
-      :validate [#{"edn" "txt" "json" "properties" "props"}
-                 "Must be one of: edn, txt, json, properties, props"]]
+      :validate [#{"edn" "txt" "json" "properties" "props", "yaml"}
+                 "Must be one of: edn, txt, json, yaml, properties, props"]]
 
      ["-f"  "--content-file FILENAME"
       :parse-fn io/file

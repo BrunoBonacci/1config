@@ -1,16 +1,17 @@
-(ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
+(ns ^:no-doc ^{:author "Bruno Bonacci (@BrunoBonacci)"}
     com.brunobonacci.oneconfig.util
   (:require [cheshire.core :as json]
+            [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [safely.core :refer [safely]]
-            [schema.core :as s]
-            [where.core :refer [where]]
             [clojure.string :as str]
-            [clojure.tools.logging :as log])
-  (:import [java.io ByteArrayInputStream ByteArrayOutputStream InputStream File]
-           java.util.zip.GZIPInputStream
-           java.util.Properties java.util.Map))
+            [clojure.tools.logging :as log]
+            [clojure.walk :refer [postwalk]]
+            [where.core :refer [where]])
+  (:import [java.io ByteArrayInputStream ByteArrayOutputStream File InputStream]
+           [java.util Map Properties]
+           java.util.zip.GZIPInputStream))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -90,6 +91,7 @@
        (sort-by order-fn))))
 
 
+
 ;; mapcat is not lazy so defining one
 (defn lazy-mapcat
   "maps a function over a collection and
@@ -102,6 +104,7 @@
       (lazy-mapcat f (rest coll))))))
 
 
+
 (defn clean-map
   "remove keys with nils"
   [map]
@@ -110,12 +113,14 @@
      (into {})))
 
 
+
 (defn nil-value-keys
   "Returns keys which have a nil value"
   [map]
   (->> map
      (filter (where second :is? nil))
      (keys)))
+
 
 
 (defmacro show-stacktrace!!
@@ -132,6 +137,7 @@
                                                       (recur (.getCause e#))
                                                       (.getMessage e#)))))))
           (System/exit 1))))
+
 
 
 (defmacro log-configure-request
@@ -158,6 +164,20 @@
 (defn println-err [& args]
   (binding [*out* *err*]
     (apply println args)))
+
+
+
+;; simplified version of https://github.com/BrunoBonacci/safely
+;; supports just the default return
+(defmacro safely
+  [& forms]
+  (let [[body _ options :as seg] (partition-by #{:on-error} forms)
+        options (->> options (partition 2) (map vec) (into {}))]
+    `(try
+       ~@body
+       (catch Exception x#
+         (:default ~options)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -212,6 +232,7 @@
                     "hierarchical")))
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
 ;;                 ----==| F I L E   U I L I T I E S |==----                  ;;
@@ -235,10 +256,12 @@
   (or (env "HOME") (env "userprofile")))
 
 
+
 (defn dir-exists?
   [path]
   (when-let [dir (some-> path io/file)]
     (and (.exists ^File dir) (.isDirectory ^File dir))))
+
 
 
 (defn home-1config
@@ -268,8 +291,8 @@
                     (constantly true))
          mapper   (if as-string (fn [^java.io.File f] (.getCanonicalPath f)) identity)]
      (->> (list-files dir)
-          (filter matches?)
-          (map mapper))))
+        (filter matches?)
+        (map mapper))))
   ([dir]
    (if-let [^java.io.File path (and dir (.exists (io/file dir)) (io/file dir))]
      (if (.isDirectory path)
@@ -279,6 +302,7 @@
                       (.listFiles path))))
        [path])
      [])))
+
 
 
 (defn file-exists?
@@ -319,12 +343,14 @@
       (doall (take-while (partial not= ::eof) edn-seq)))))
 
 
+
 (defn read-edn-file
   "reads a EDN file and returns its content or nil if invalid"
   [file]
   (safely
    (some-> file slurp parse-edn last)
    :on-error :default nil))
+
 
 
 (defn read-config-file
@@ -338,9 +364,12 @@
 (defn filename->content-type
   [^String file]
   (->> file
-     (re-find #"(?i).*\.(edn|json|txt|properties)$")
+     (re-find #"(?i).*\.(edn|json|txt|properties|yaml|yml)$")
      second
-     (#(some-> % str/lower-case))))
+     (#(some-> % str/lower-case))
+     (#(case %
+         "yml" "yaml"
+         %))))
 
 
 
@@ -349,10 +378,12 @@
     (.load (ByteArrayInputStream. (.getBytes properties "ISO-8859-1")))))
 
 
+
 (defn properties->str [^Properties properties]
   (let [out (java.io.StringWriter.)]
     (.store properties (java.io.PrintWriter. out) nil)
     (-> out (.getBuffer) (.toString))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -366,17 +397,33 @@
 (defmulti decode (fn [form value] form))
 
 
+
 (defmethod decode "edn"
   [_ value]
   (last (parse-edn value)))
+
+
 
 (defmethod decode "json"
   [_ value]
   (json/parse-string value true))
 
+
+
+(defmethod decode "yaml"
+  [_ value]
+  (->> (yaml/parse-string value)
+     (postwalk #(cond
+                  (map? %)  (into (array-map) %)
+                  (sequential? %) (vec %)
+                  :else %))))
+
+
+
 (defmethod decode "txt"
   [_ value]
   value)
+
 
 
 (defmethod decode "properties"
@@ -384,12 +431,15 @@
   (parse-properties value))
 
 
+
 (defmethod decode "props"
   [_ value]
   (decode "properties" value))
 
 
+
 (defmulti encode (fn [form value] form))
+
 
 
 (defmethod encode "edn"
@@ -397,9 +447,17 @@
   (pr-str value))
 
 
+
 (defmethod encode "json"
   [_ value]
   (json/generate-string value))
+
+
+
+(defmethod encode "yaml"
+  [_ value]
+  (yaml/generate-string value))
+
 
 
 (defmethod encode "txt"
@@ -409,6 +467,7 @@
     (number? value) (str value)
     :else
     (throw (ex-info "Illegal value, a string expected" {:value value}))))
+
 
 
 (defmethod encode "properties"
@@ -421,10 +480,10 @@
     (throw (ex-info "Illegal value, a Properties expected" {:value value}))))
 
 
+
 (defmethod encode "props"
   [_ value]
   (encode "properties" value))
-
 
 
 
@@ -439,9 +498,11 @@
       (ByteArrayInputStream. (.toByteArray bout)))))
 
 
+
 (defn unmarshall-value
   [{:keys [content-type] :as config-entry}]
   (update config-entry :value (partial decode content-type)))
+
 
 
 (defn marshall-value

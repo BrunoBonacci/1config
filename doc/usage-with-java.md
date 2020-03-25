@@ -19,7 +19,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.15.0</version>
+    <version>0.16.1</version>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
@@ -46,3 +46,7 @@ config.getValueAsProperties();    // for properties entries
 config.getValueAsJsonMap();       // Map<String, Object> for json entries
 config.getValueAsEdnMap();        // Map<Keyword, Object> for edn entries
 ```
+
+If you are using Spring, there is a integration library which works
+out of the box. Please check out
+[Spring-1config](https://github.com/brandonstubbs/spring-1config)

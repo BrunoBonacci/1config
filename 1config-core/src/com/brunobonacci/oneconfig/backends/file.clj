@@ -32,7 +32,7 @@
         base-size   (inc (count (.getCanonicalPath ^java.io.File base-dir)))]
     (->>
      ;; list all the files with supported extensions
-     (list-files #"(?i).*\.(edn|json|txt|properties)$" search-root
+     (list-files #"(?i).*\.(edn|json|txt|properties|yaml)$" search-root
                  :as-string true)
      ;; create relative paths
      (map #(subs % base-size))
