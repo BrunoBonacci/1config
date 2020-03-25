@@ -118,17 +118,16 @@
   (let [parent (-> e .-target .-parentElement .-parentElement)]
     (if (.. e -target -checked)
       (do
-        (swap! state update-in [:selected :counter] inc)
-        (swap! state update-in [:selected :items-meta]  merge item)
+        (swap! state #(-> %
+                          (update-in [:selected :counter] inc)
+                          (update-in [:selected :items-meta] merge item)))
         (.add (.-classList parent) "selected"))
       (do
         (swap! state update-in [:selected :counter] dec)
         (let [change-num  (:change-num item)
               items-meta (get-in @state [:selected :items-meta] )
               new-items-meta (remove #(= change-num (:change-num %)) items-meta)]
-          (println "New items-meta : " new-items-meta)
-          (swap! state assoc-in [:selected :items-meta]  new-items-meta)
-          )
+          (swap! state assoc-in [:selected :items-meta]  new-items-meta))
         (.remove (.-classList parent) "selected")
         ))))
 
