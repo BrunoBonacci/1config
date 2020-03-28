@@ -1,6 +1,8 @@
 (ns com.brunobonacci.oneconfig.ui.controller
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
    [reagent.core :as reagent :refer [atom]]
+   [cljs.core.async :as async :refer [<! put! chan]]
    [ajax.core :refer [GET POST]]
    [cljs.pprint :as pp]
    [com.brunobonacci.oneconfig.ui.utils :as utils]
@@ -28,6 +30,9 @@
    })
 
 (def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "yaml" "yaml", "properties" "properties"})
+(def empty-selected {:counter 0 :items-meta [] :entries {:left nil :right nil}})
+
+(def ace-theme-mapping {"json" "json", "txt"  "text", "edn" "clojure", "properties" "properties"})
 
 (defonce state
   (atom
@@ -52,6 +57,7 @@
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
     :item-data   nil
     :item-params nil
+    :selected empty-selected
     }))
 
 
@@ -78,6 +84,57 @@
   (swap! state assoc :1config-version version))
 
 
+(defn GETAsync [url]
+  (let [out (chan)
+        handler #(put! out %1)]
+    (GET url {:handler handler
+              :format          :json
+              :response-format :json
+              :keywords?       true
+              :error-handler handler})
+    out))
+
+(defn create-url-a [item]
+  (let [{:keys [key env version change-num]} item]
+    (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
+               (gs/urlEncode key) (gs/urlEncode env)
+               (gs/urlEncode version) change-num)))
+
+(defn compare-selected-items [compare-items]
+  (go
+    (let [urls (map #(create-url-a %) (get compare-items :items-meta))
+          configs [(<! (GETAsync (first urls)))
+                   (<! (GETAsync (last urls)))]
+          selected-entries (map #(:encoded-value %) configs)]
+      (swap! state #(-> %
+                        (assoc-in [:new-entry] empty-new-entry)
+                        (assoc-in [:selected :counter] 0)
+                        (assoc-in [:selected :entries :left]  (first selected-entries))
+                        (assoc-in [:selected :entries :right]  (last selected-entries))
+                        (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                        (assoc-in [:client-mode] :compare-entry-mode))))))
+
+(defn row-selected
+  [e item]
+  (let [parent (-> e .-target .-parentElement .-parentElement)]
+    (if (.. e -target -checked)
+      (do
+        (swap! state #(-> %
+                          (update-in [:selected :counter] inc)
+                          (update-in [:selected :items-meta] merge item)))
+        (.add (.-classList parent) "selected"))
+      (do
+        (swap! state update-in [:selected :counter] dec)
+        (let [change-num  (:change-num item)
+              items-meta (get-in @state [:selected :items-meta] )
+              new-items-meta (remove #(= change-num (:change-num %)) items-meta)]
+          (swap! state assoc-in [:selected :items-meta]  new-items-meta))
+        (.remove (.-classList parent) "selected")
+        ))))
+
+(defn all-rows-selected
+  [e]
+  (println "To be done"))
 
 (defn get-item-handler [response]
   (swap! state
@@ -85,8 +142,6 @@
            (-> s
                (assoc :item-data (get response :encoded-value))
                (assoc :client-mode :show-entry-mode)))))
-
-
 
 (defn footer-element
   [version]
@@ -129,7 +184,6 @@
         :error-handler   backend-error-handler}))
 
 
-
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
         get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
@@ -147,8 +201,6 @@
                   :response-format :json
                   :keywords?       true
                   :error-handler   backend-error-handler})))
-
-
 
 (defn add-config-entry! [event]
   (.preventDefault event)
@@ -231,13 +283,43 @@
   (let [ace-instance (.edit js/ace "jsEditor")]
     (.setValue ace-instance val)))
 
-(defn close-new-entry-panel!  [event]
+(defn close-new-entry-panel!
+  [event]
   (.preventDefault event)
   (enable-body-scroll)
   (swap! state #(-> %
                     (assoc-in [:item-params] nil)
                     (assoc-in [:item-data] nil)
                     (assoc-in [:new-entry] empty-new-entry)
+                    (assoc-in [:entry-management-button-style] "ui inverted button")
+                    (assoc-in [:client-mode] :listing))))
+
+(defn nodelist-to-seq
+  [nl]
+  (let [result-seq (map #(.item nl %) (range (.-length nl)))]
+    (doall result-seq)))
+
+(defn uncheck-box
+  [box]
+  (set! (.-checked box) false))
+
+(defn close-compare-entries-panel!
+  [event]
+  (.preventDefault event)
+  (enable-body-scroll)
+  (let [selected-lines (apply list (-> js/document
+                                       (.getElementsByClassName "selected")
+                                       array-seq))]
+    (doall (map #(.remove (.-classList %) "selected") selected-lines))
+    (doall (map #(-> % .-childNodes
+                       nodelist-to-seq
+                       last
+                       .-childNodes
+                       nodelist-to-seq
+                       last
+                       uncheck-box) selected-lines)))
+  (swap! state #(-> %
+                    (assoc-in [:selected] empty-selected)
                     (assoc-in [:entry-management-button-style] "ui inverted button")
                     (assoc-in [:client-mode] :listing))))
 
@@ -264,16 +346,25 @@
     (.setReadOnly ace-instance editable?)
     (.setHighlightActiveLine ace-instance true)))
 
+(defn compare-ace-code-block!
+  [left right]
+  (disable-body-scroll)
+  (let [left (js-obj "content" left)
+        right (js-obj "content" right)
+        props (js-obj "element" "#acediff" "left" left "right" right)]
+    (js/AceDiff. props)))
 
 (defn highlight-code-block
   [editable? type]
   (js/setTimeout #(highlight-ace-code-block! editable? (get ace-theme-mapping type "json")) 75))
 
+(defn compare-code-block
+  [{:keys [left right]}]
+  (js/setTimeout #(compare-ace-code-block! left right) 75))
+
 (defn get-input-value
   [v]
   (-> v .-target .-value))
-
-
 
 (defn on-filter-change
   [type value]

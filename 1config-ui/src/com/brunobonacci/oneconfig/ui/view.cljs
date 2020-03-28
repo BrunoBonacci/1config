@@ -38,15 +38,16 @@
          [:span {:class "tooltiptext"} master-key]]]
        [:td {:data-label "User"}
         [:div {:class "tooltip"} (utils/get-aws-username user)
-         [:span {:class "tooltiptext"} user]]]])))
-
+         [:span {:class "tooltiptext"} user]]]
+       [:td {:data-label "Compare"}
+        [:input {:type "checkbox" :on-change #(ctl/row-selected % item)}]]])))
 
 
 (defn create-minified-table
   [preferences items]
   (for [item items]
     (let [{:keys [key env version change-num content-type]} item]
-      ^{:key (string/join "-" [key env version change-num content-type])}
+      ^{:key (string/join "-" [key env version change-num])}
       [:tr {:class "center aligned"}
        [:td {:data-label "Key"} key]
        [:td {:data-label "Environment"} (utils/as-label (colourize-label preferences env) env)]
@@ -56,7 +57,9 @@
        [:td {:data-label "Type"} (utils/as-label content-type)]
        [:td {:data-label "Value"}
         [:button {:class "ui icon button" :on-click #(ctl/get-config-item! item)}
-         [:i {:class "eye icon"}]]]])))
+         [:i {:class "eye icon"}]]]
+       [:td {:data-label "Compare"}
+        [:input {:type "checkbox" :on-change #(ctl/row-selected % item)}]]])))
 
 
 ;; TODO: fix param
@@ -87,9 +90,10 @@
               :class       "filter-input-width"
               :placeholder "Version.."
               :value       (get filters :version)
-              :on-change   #(ctl/on-filter-change :version %)}
-      ]
-     [:i {:class "search icon"}]]]])
+              :on-change   #(ctl/on-filter-change :version %)}]
+     [:i {:class "search icon"}]]]
+   [:th
+    [:input {:type "checkbox" :on-change #(ctl/all-rows-selected %)}]]])
 
 
 
@@ -106,10 +110,9 @@
     [:th {:row-span 2} "Type"]
     [:th {:row-span 2} "Value"]
     [:th {:row-span 2} "Master Key"]
-    [:th {:row-span 2} "User"]]
+    [:th {:row-span 2} "User"]
+    [:th {:class "shrink-column"} "Compare"]  ]
    [table-filter-section :DUMMY filters]])
-
-
 
 ;; TODO: fix param
 (defn table-header
@@ -122,7 +125,8 @@
     [:th {:class "shrink-column" :row-span 2} "Change num"]
     [:th {:class "shrink-column" :row-span 2} "Time"]
     [:th {:class "shrink-column" :row-span 2} "Type"]
-    [:th {:class "shrink-column" :row-span 2} "Value"]]
+    [:th {:class "shrink-column" :row-span 2} "Value"]
+    [:th {:class "shrink-column"} "Compare"]]
    [table-filter-section :DUMMY filters]])
 
 
@@ -162,44 +166,68 @@
       (show-extended-table preferences items real-filters)
       (show-minified-table preferences items real-filters))]])
 
-
+(defn item-as-table
+  [item preferences]
+  [:table {:class "ui celled striped table"}
+   [:thead
+    [:tr
+     [:th {:class "center aligned collapsing" :col-span "2"}
+      (get item :key)]]]
+   [:tbody
+    [:tr
+     [:td {:class "center aligned collapsing"} "Environment"]
+     [:td {:class "center aligned collapsing"}
+      (let [env (get item :env)]
+        (utils/as-label (colourize-label preferences env) env))]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Version"]
+     [:td {:class "center aligned collapsing"}
+      (get item :version)]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Change num"]
+     [:td {:class "center aligned collapsing"}
+      (get item :change-num)]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Time"]
+     [:td {:class "center aligned collapsing"} (utils/parse-date (get item :change-num))]]
+    [:tr
+     [:td {:class "center aligned collapsing"} "Type"]
+     [:td {:class "center aligned collapsing"} (utils/as-label (get item :content-type))]]
+    [:tr
+     [:td {:class "center aligned collapsing" :col-span "2"}
+      [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-compare-entries-panel! %)} "Close"]]]]])
 
 (defn show-entry-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
-    [:table {:class "ui celled striped table"}
-     [:thead
-      [:tr
-       [:th {:class "center aligned collapsing" :col-span "2"}
-        (get item-params :key)]]]
-
-     [:tbody
-      [:tr
-       [:td {:class "center aligned collapsing"} "Environment"]
-       [:td {:class "center aligned collapsing"}
-        (let [env (get item-params :env)]
-          (utils/as-label (colourize-label preferences  env) env))]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Version"]
-       [:td {:class "center aligned collapsing"}
-        (get item-params :version)]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Change num"]
-       [:td {:class "center aligned collapsing"}
-        (get item-params :change-num)]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Time"]
-       [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
-
-      [:tr
-       [:td {:class "center aligned collapsing"} "Type"]
-       [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
-      [:tr
-       [:td {:class "center aligned collapsing" :col-span "2"}
-        [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
+     [:table {:class "ui celled striped table"}
+      [:thead
+       [:tr
+        [:th {:class "center aligned collapsing" :col-span "2"}
+         (get item-params :key)]]]
+      [:tbody
+       [:tr
+        [:td {:class "center aligned collapsing"} "Environment"]
+        [:td {:class "center aligned collapsing"}
+         (let [env (get item-params :env)]
+           (utils/as-label (colourize-label preferences  env) env))]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Version"]
+        [:td {:class "center aligned collapsing"}
+         (get item-params :version)]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Change num"]
+        [:td {:class "center aligned collapsing"}
+         (get item-params :change-num)]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Time"]
+        [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
+       [:tr
+        [:td {:class "center aligned collapsing"} "Type"]
+        [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
+       [:tr
+        [:td {:class "center aligned collapsing" :col-span "2"}
+         [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
@@ -302,12 +330,34 @@
    [:div {:class "ten wide column"}]
    [:div {:class "three wide column"}]]])
 
+(defn compare-entry-details-window
+  [_ compare-items preferences]
+  (let [entries (get compare-items :entries)
+        items-meta (get compare-items :items-meta)
+        left (first items-meta)
+        right (last items-meta)]
+    [:div {:class "ui grid" :style {:padding "16px"}}
+     [:div {:class "three wide column"}
+      [item-as-table left preferences]]
+     [:div {:class "ten wide column"}
+      [:div {:class "ui raised segment"}
+       [:div {:class "overflow-class"}
+        [:div {:id "acediff"}]
+        [ctl/compare-code-block entries]]]]
+     [:div {:class "three wide column"}
+      [item-as-table right preferences]]
+     ;;-----------------------------------------
+     [:div {:class "three wide column"}]
+     [:div {:class "ten wide column"}]
+     [:div {:class "three wide column"}]]))
+
 (defn entry-button-text [mode]
   (cond
     (= :listing mode)  "New Entry"
     (= :new-entry-mode mode) "Edit Entry"
     (= :show-entry-mode mode) "Edit Entry"
     (= :edit-entry-mode mode) "New Entry"
+    (= :compare-entry-mode mode) "New Entry"
     :else (println (str "unknown mode : " mode))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -324,6 +374,10 @@
      [:div {:class "item"}
       [:div {:class (get current-state :entry-management-button-style) :on-click #(ctl/config-entry-management-panel! (get current-state :client-mode))}
        [entry-button-text (get current-state :client-mode)]]]
+     [:div {:class "item"}
+      [:div {:class    (if (= (get-in current-state [:selected :counter]) 2)
+                         "ui inverted button"
+                         "ui inverted disabled button") :on-click #(ctl/compare-selected-items (get current-state :selected)) } "Compare" ]]
      [:div {:class "right menu"}
       [:div {:class "item"}
        [:div
@@ -349,26 +403,23 @@
                 (utils/filter-entries
                  (get current-state :filters)
                  (get current-state :entries)))]
-
-     (let [mode (:client-mode current-state )
-           item-params (:item-params current-state)
-           item-data (:item-data current-state)]
+     (let [mode         (:client-mode current-state )
+           item-params  (:item-params current-state)
+           item-data    (:item-data current-state)
+           preferences  (:preferences current-state)]
        (cond
-         (= :listing mode) [:div {:class "modal"}]
-         (= :new-entry-mode mode)  [:div {:class "modal show-modal"}
-                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
-                                     ]]
+         (= :listing mode)          [:div {:class "modal"}]
+         (= :new-entry-mode mode)   [:div {:class "modal show-modal"}
+                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
          (= :edit-entry-mode mode)  [:div {:class "modal show-modal"}
-                                     [:div {:class "hide-element"}
-                                      [ctl/copy-data-to-new-entry! item-params item-data]]
-                                    [new-entry-details-window :DUMMY (get current-state :new-entry)
-                                     ]]
-         (= :show-entry-mode mode) [:div {:class "modal show-modal"}
-                                    [show-entry-window
-                                     (:preferences current-state)
-                                     item-params
-                                     item-data]]
-         :else [:div {:class "modal"}]))]]
+                                      [:div {:class "hide-element"}
+                                        [ctl/copy-data-to-new-entry! item-params item-data]]
+                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
+         (= :show-entry-mode mode)  [:div {:class "modal show-modal"}
+                                      [show-entry-window preferences item-params item-data]]
+         (= :compare-entry-mode mode)  [:div {:class "modal show-modal"}
+                                        [compare-entry-details-window :DUMMY (get current-state :selected) preferences]]
+         :else                      [:div {:class "modal"}]))]]
    [:div {:class "footer" }
     (ctl/footer-element (get current-state :1config-version))]])
 
