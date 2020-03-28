@@ -348,6 +348,7 @@
 
 (defn compare-ace-code-block!
   [left right]
+  (disable-body-scroll)
   (let [left (js-obj "content" left)
         right (js-obj "content" right)
         props (js-obj "element" "#acediff" "left" left "right" right)]
