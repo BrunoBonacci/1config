@@ -399,10 +399,12 @@
       (:preferences current-state)
       (:extended-mode? current-state)
       (:filters current-state)
-      (group-by :key
-                (utils/filter-entries
-                 (get current-state :filters)
-                 (get current-state :entries)))]
+      (->>
+       (utils/filter-entries
+        (get current-state :filters)
+        (get current-state :entries))
+       (group-by :key)
+       (into (sorted-map)))]
      (let [mode         (:client-mode current-state )
            item-params  (:item-params current-state)
            item-data    (:item-data current-state)
