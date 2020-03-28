@@ -1,5 +1,5 @@
 # 1Config
-[![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg)
+[![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig) ![CircleCi](https://img.shields.io/circleci/project/BrunoBonacci/1config.svg) ![last-commit](https://img.shields.io/github/last-commit/BrunoBonacci/1config.svg) [![cljdoc badge](https://cljdoc.org/badge/com.brunobonacci/1config)]
 
 <a href="https://cljdoc.org/d/com.brunobonacci/oneconfig/" target="_blank"><img src="https://raw.githubusercontent.com/BrunoBonacci/1config/master/doc/images/1cfg.png" width="120" height="120" /></a>
 
