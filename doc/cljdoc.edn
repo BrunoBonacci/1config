@@ -8,6 +8,7 @@
    ["Best practices" {:file "doc/best-practices.md" }]
    ["Configuration resolution" {:file "doc/config-resolution.md" }]
    ["Command line tool" {:file "doc/cli-tool.md" }]
+   ["UI tool" {:file "doc/ui-tool.md" }]
    ["Key management" {:file "doc/key-management.md" }]
    ["Providers chain" {:file "doc/providers.md" }]
    ["Local development" {:file "doc/local-development.md" }]

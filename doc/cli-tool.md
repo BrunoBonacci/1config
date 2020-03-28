@@ -20,6 +20,26 @@ chmod -x ~/bin/1cfg
 
 Here how to use it:
 
+  * Initialize AWS ENV variables
+  ``` bash
+  export AWS_ACCESS_KEY_ID=xxx
+  export AWS_SECRET_ACCESS_KEY=yyy
+  export AWS_DEFAULT_REGION=eu-west-1
+  ```
+
+  If you have the AWS CLI setup then you can use switch to the given profile with:
+  ``` bash
+  export AWS_PROFILE=xxx
+  ```
+
+  * Then run the tool
+  ``` bash
+  $ 1cfg --help
+
+  ```
+
+Here is how to use the command line:
+
 ``` text
 
    A command line tool to manage application secrets and configuration safely and effectively.
