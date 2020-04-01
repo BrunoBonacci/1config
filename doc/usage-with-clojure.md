@@ -7,7 +7,7 @@ In order to use the library add the dependency to your `project.clj`
 [com.brunobonacci/oneconfig "0.16.2"]
 
 ;; deps.edn format
-{:deps { com.brunobonacci/oneconfig "0.16.2" }}
+{:deps { com.brunobonacci/oneconfig {:mvn/version "0.16.2"} }}
 ```
 
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)
