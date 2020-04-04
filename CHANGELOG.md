@@ -1,5 +1,10 @@
 # Changelog
 
+## Release: v0.16.4 (2020-04-04)
+
+  * Added AOT compiled library Jar
+  * Delayed use of DefaultAwsRegionProviderChain which blocks outside AWS
+
 ## Release: v0.16.2 (2020-03-29)
 
   * UI: Added ability to compare two entries (DIFF)

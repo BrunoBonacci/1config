@@ -19,7 +19,7 @@ Then add the dependency
 <dependency>
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
-    <version>0.16.2</version>
+    <version>0.16.4</version>
     <classifier>aot</classifier>
 </dependency>
 ```
