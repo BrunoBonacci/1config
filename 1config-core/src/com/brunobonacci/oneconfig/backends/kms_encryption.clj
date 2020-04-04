@@ -43,12 +43,12 @@
    (or
     ;; for dev mode just use `defcredential` macro
     (some-> #'aws/credential deref deref :endpoint Regions/fromName Region/getRegion)
-    ;; use default prodider chain
+    ;; check env
+    (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
+    ;; use default prodider chain, this call blocks and it is slow on non EC2
     (some-> (safely (.getRegion (new DefaultAwsRegionProviderChain))
                     :on-error :default nil :log-errors false)
             Regions/fromName Region/getRegion)
-    ;; check env
-    (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
     ;; this call blocks and it is slow on non EC2
     (Regions/getCurrentRegion)
     ;; us-west-2 (??)
