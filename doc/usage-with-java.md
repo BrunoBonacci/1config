@@ -20,6 +20,7 @@ Then add the dependency
     <groupId>com.brunobonacci</groupId>
     <artifactId>oneconfig</artifactId>
     <version>0.16.2</version>
+    <classifier>aot</classifier>
 </dependency>
 ```
 Latest version: [![Clojars Project](https://img.shields.io/clojars/v/com.brunobonacci/oneconfig.svg)](https://clojars.org/com.brunobonacci/oneconfig)

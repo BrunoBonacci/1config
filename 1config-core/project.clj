@@ -31,10 +31,14 @@
 
   :global-vars {*warn-on-reflection* true}
 
-  :profiles {:dev {:dependencies [[midje "1.9.9"]
+  :profiles {:aot-jar {:aot :all}
+             :dev {:dependencies [[midje "1.9.9"]
                                   [org.clojure/test.check "1.0.0"]
                                   [criterium "0.4.5"]
                                   [org.slf4j/slf4j-log4j12 "1.7.30"]]
                    :resource-paths ["dev-resources"]
                    :plugins      [[lein-midje "3.2.2"]]}}
+
+  ;; generating AOT jar alongside Clojure JAR
+  :classifiers {:aot :aot-jar}
   )
