@@ -15,7 +15,7 @@ Download latest release from github and save it in your `~/bin` folder:
 Then give it permissions to run:
 
 ``` shell
-chmod -x ~/bin/1cfg
+chmod +x ~/bin/1cfg
 ```
 
 Here how to use it:
