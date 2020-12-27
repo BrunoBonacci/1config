@@ -47,13 +47,12 @@
 
 (defmethod init-backend! :dynamo
   [_ & opts]
-  (let [cfg (dyn/default-dynamo-config)]
-    (safely
-     (dyn/create-configure-table cfg (:table cfg))
-     :on-error
-     :max-retries 3
-     :log-stacktrace false
-     :message (str "Creating DynamoDB table:" (:table cfg)))))
+  (safely
+    (dyn/create-configure-table)
+    :on-error
+    :max-retries 3
+    :log-stacktrace false
+    :message (str "Creating 1Config DynamoDB table")))
 
 
 
