@@ -73,3 +73,9 @@
      sort))
   ([client op]
    (aws/doc client op)))
+
+
+(defn default-cfg
+  "returns aws default config. TODO: future use"
+  []
+  {})

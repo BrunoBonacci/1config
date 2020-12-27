@@ -34,7 +34,7 @@
 (defn- dyn-client
   "returns a cached dynamodb client"
   []
-  (aws/make-client (default-dynamo-config) :dynamodb))
+  (aws/make-client (merge (aws/default-cfg) (default-dynamo-config)) :dynamodb))
 
 
 

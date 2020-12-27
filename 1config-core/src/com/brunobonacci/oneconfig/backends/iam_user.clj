@@ -1,9 +1,11 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.iam-user
+ com.brunobonacci.oneconfig.backends.iam-user
   (:refer-clojure :exclude [find load list])
-  (:require [amazonica.aws.securitytoken :as sts]
-            [com.brunobonacci.oneconfig.backend :refer :all]
-            [com.brunobonacci.oneconfig.util :refer [safely]]))
+  (:require [com.brunobonacci.oneconfig.backend :refer :all]
+            [com.brunobonacci.oneconfig.util :refer [safely]]
+            [com.brunobonacci.oneconfig.aws :as aws]))
+
+
 
 ;;
 ;;```
@@ -17,6 +19,11 @@
 ;;  | + {:user (sts/get-caller-identity)}
 ;;```
 ;;
+
+(defn- get-caller-identity
+  []
+  (aws/invoke! (aws/make-client (aws/default-cfg) :sts) :GetCallerIdentity {}))
+
 
 
 (deftype IamUserEnrichmentBackend [store]
@@ -36,11 +43,11 @@
   (save [_ config-entry]
     ;; read-user from IAM
     (->> (safely
-           [[:user (-> (sts/get-caller-identity {}) :arn)]]
+           [[:user (-> (get-caller-identity) :Arn)]]
            :on-error
            :default [])
-       (into config-entry)
-       (save store)))
+      (into config-entry)
+      (save store)))
 
   (list [_ filters]
     (list store filters)))
