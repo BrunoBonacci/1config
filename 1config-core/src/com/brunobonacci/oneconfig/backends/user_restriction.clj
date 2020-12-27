@@ -1,10 +1,11 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.user-restriction
+ com.brunobonacci.oneconfig.backends.user-restriction
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
-            [amazonica.aws.securitytoken :as sts]
+            [com.brunobonacci.oneconfig.aws :as aws]
             [com.brunobonacci.oneconfig.profiles :as prof]
             [com.brunobonacci.oneconfig.util :refer [safely]]))
+
 
 
 ;;
@@ -23,10 +24,11 @@
 (defn- aws-account-id
   []
   (safely
-   (-> (sts/get-caller-identity {}) :account)
-   :on-error
-   :log-errors false
-   :default "local"))
+    (-> (aws/get-caller-identity) :Account)
+    :on-error
+    :log-errors false
+    :default "local"))
+
 
 
 (defn- check-user-restrictions
@@ -36,7 +38,7 @@
 
 
 (deftype UserRestrictionBackend
-    [store]
+         [store]
 
   IConfigClient
 
@@ -57,6 +59,7 @@
 
   (list [_ filters]
     (list store filters)))
+
 
 
 (defn user-restriction-backend

@@ -20,10 +20,6 @@
 ;;```
 ;;
 
-(defn- get-caller-identity
-  []
-  (aws/invoke! (aws/make-client (aws/default-cfg) :sts) :GetCallerIdentity {}))
-
 
 
 (deftype IamUserEnrichmentBackend [store]
@@ -43,7 +39,7 @@
   (save [_ config-entry]
     ;; read-user from IAM
     (->> (safely
-           [[:user (-> (get-caller-identity) :Arn)]]
+           [[:user (-> (aws/get-caller-identity) :Arn)]]
            :on-error
            :default [])
       (into config-entry)

@@ -5,6 +5,7 @@
    [cognitect.aws.credentials :as credentials]))
 
 
+
 (defn invoke
   "Invokes an AWS request and returns the result.
   Errors are contained within the result"
@@ -50,6 +51,7 @@
                {:endpoint-override endpoint-override})))))
 
 
+
 (def make-client
   "Creates a client for the specified api with the given configuration"
   (memoize
@@ -60,6 +62,7 @@
          :auth              nil ;; default chain
          :endpoint-override (or (:all endpoint-override)
                               (api endpoint-override))}))))
+
 
 
 (defn help
@@ -75,7 +78,14 @@
    (aws/doc client op)))
 
 
+
 (defn default-cfg
   "returns aws default config. TODO: future use"
   []
   {})
+
+
+
+(defn get-caller-identity
+  []
+  (invoke! (make-client (default-cfg) :sts) :GetCallerIdentity {}))
