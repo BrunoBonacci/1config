@@ -28,19 +28,20 @@ function build(){
 (defproject project "0.1.0-SNAPSHOT"
   :scm {:name "git" :url "/project"}
 
-  :dependencies [[org.clojure/clojure "1.10.0"]
-                 [com.brunobonacci/where "0.5.2"]
-                 [com.brunobonacci/safely "0.5.0-alpha7"]
-                 [amazonica "0.3.139" :exclusions
-                  [com.amazonaws/aws-java-sdk
-                   com.amazonaws/amazon-kinesis-client]]
-                 [com.amazonaws/aws-java-sdk-core     "1.11.513"]
-                 [com.amazonaws/aws-java-sdk-dynamodb "1.11.513"]
-                 [com.amazonaws/aws-java-sdk-kms      "1.11.513"]
-                 [com.amazonaws/aws-java-sdk-sts      "1.11.513"]
-                 [com.amazonaws/aws-encryption-sdk-java "1.3.6"]
-                 [prismatic/schema "1.1.10"]
-                 [cheshire "5.8.1"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [com.brunobonacci/where "0.5.5"]
+                 [org.clojure/tools.logging "1.0.0"]
+                 [com.amazonaws/aws-java-sdk-core       "1.11.926"]
+                 [com.amazonaws/aws-java-sdk-kms        "1.11.926"]
+                 [com.amazonaws/aws-encryption-sdk-java "1.7.0"]
+                 [com.cognitect.aws/api "0.8.484"]
+                 [com.cognitect.aws/endpoints "1.1.11.893"]
+                 [com.cognitect.aws/sts "809.2.784.0"]
+                 [com.cognitect.aws/dynamodb "810.2.801.0"]
+                 [com.cognitect.aws/kms "801.2.687.0"]
+                 [prismatic/schema "1.1.12"]
+                 [cheshire "5.10.0"]
+                 [clj-commons/clj-yaml "0.7.0"]]
  )
 EOF
 
