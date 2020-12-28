@@ -85,27 +85,8 @@
 
 
 
-(defn lazy-paginated-query
-  "It creates a generic wrapper for a AWS paginated query"
-  [query-fn last-token-name next-token-name result-fn]
-  (fn lazy-query
-    ([client query]
-     (lazy-mapcat result-fn (lazy-query client query nil)))
-    ([client query page-token]
-     (let [result (query-fn
-                    client
-                    (cond-> query
-                      page-token (assoc next-token-name page-token)))]
-       (lazy-seq
-         (if-let [next-page (get result last-token-name)]
-           (cons result
-             (lazy-query client query next-page))
-           [result]))))))
-
-
-
 (def ^:private lazy-db-scan
-  (lazy-paginated-query
+  (aws/lazy-paginated-query
     #(aws/invoke! % :Scan %2)
     :LastEvaluatedKey :ExclusiveStartKey :Items))
 
@@ -175,7 +156,7 @@
 
 
   (list [this filters]
-    (->> (lazy-db-scan (dyn-client) {:TableName (:table cfg) :Limit 3})
+    (->> (lazy-db-scan (dyn-client) {:TableName (:table cfg)})
       (map from-db-rec)
       (list-entries filters)
       (map #(assoc % :backend :dynamo)))))

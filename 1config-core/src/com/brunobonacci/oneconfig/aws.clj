@@ -1,6 +1,7 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
  com.brunobonacci.oneconfig.aws
   (:require
+   [com.brunobonacci.oneconfig.util :refer [lazy-mapcat]]
    [cognitect.aws.client.api  :as aws]
    [cognitect.aws.credentials :as credentials]))
 
@@ -76,6 +77,25 @@
      sort))
   ([client op]
    (aws/doc client op)))
+
+
+
+(defn lazy-paginated-query
+  "It creates a generic wrapper for a AWS paginated query"
+  [query-fn last-token-name next-token-name result-fn]
+  (fn lazy-query
+    ([client query]
+     (lazy-mapcat result-fn (lazy-query client query nil)))
+    ([client query page-token]
+     (let [result (query-fn
+                    client
+                    (cond-> query
+                      page-token (assoc next-token-name page-token)))]
+       (lazy-seq
+         (if-let [next-page (get result last-token-name)]
+           (cons result
+             (lazy-query client query next-page))
+           [result]))))))
 
 
 
