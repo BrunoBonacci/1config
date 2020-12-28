@@ -8,7 +8,7 @@
 
   :scm {:name "git" :url "https://github.com/BrunoBonacci/1config.git"}
 
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[org.clojure/clojure "1.10.2-rc1"]
                  [com.brunobonacci/where "0.5.5"]
                  [org.clojure/tools.logging "1.0.0"]
                  [com.amazonaws/aws-java-sdk-core       "1.11.926"]
