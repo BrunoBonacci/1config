@@ -1,18 +1,19 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.kms-encryption
+ com.brunobonacci.oneconfig.backends.kms-encryption
   (:refer-clojure :exclude [find load list])
-  (:require [amazonica.aws.kms :as kms]
-            [amazonica.core :as aws]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
+            [com.brunobonacci.oneconfig.aws :as aws]
             [where.core :refer [where]]
             [com.brunobonacci.oneconfig.util :refer [safely]])
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations
+           com.amazonaws.auth.DefaultAWSCredentialsProviderChain
            [com.amazonaws.regions Region Regions DefaultAwsRegionProviderChain]
            java.util.Collections))
+
 
 
 ;;
@@ -40,19 +41,17 @@
 
 (def ^:private aws-region
   (delay
-   (or
-    ;; for dev mode just use `defcredential` macro
-    (some-> #'aws/credential deref deref :endpoint Regions/fromName Region/getRegion)
-    ;; check env
-    (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
-    ;; use default prodider chain, this call blocks and it is slow on non EC2
-    (some-> (safely (.getRegion (new DefaultAwsRegionProviderChain))
-                    :on-error :default nil :log-errors false)
-            Regions/fromName Region/getRegion)
-    ;; this call blocks and it is slow on non EC2
-    (Regions/getCurrentRegion)
-    ;; us-west-2 (??)
-    (-> Regions/DEFAULT_REGION Region/getRegion))))
+    (or
+      ;; check env
+      (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
+      ;; use default prodider chain, this call blocks and it is slow on non EC2
+      (some-> (safely (.getRegion (new DefaultAwsRegionProviderChain))
+                :on-error :default nil :log-errors false)
+        Regions/fromName Region/getRegion)
+      ;; this call blocks and it is slow on non EC2
+      (Regions/getCurrentRegion)
+      ;; us-west-2 (??)
+      (-> Regions/DEFAULT_REGION Region/getRegion))))
 
 
 
@@ -65,50 +64,41 @@
   [^String arn-or-key]
   (if (arn? arn-or-key)
     (->> arn-or-key
-       (re-find #".*:key/([a-z0-9-]+)")
-       second)
+      (re-find #".*:key/([a-z0-9-]+)")
+      second)
     arn-or-key))
 
 
 
-(defn- list-aliases
-  [start-from]
-  (kms/list-aliases (if start-from {:marker start-from} {})))
+(defn- kms-client
+  "returns a cached kms client"
+  []
+  (aws/make-client (aws/default-cfg) :kms))
 
 
-;; lazy wrapper for query
-(defn lazy-list-with-marker
-  "Takes a query as a lambda function and returns
-   a lazy pagination over the items"
-  ([top-key q]
-   ;; mapcat is not lazy so defining one
-   (lazy-mapcat top-key (lazy-list-with-marker :first-page q nil)))
-  ;; paginate lazily the query
-  ([_ q start-from]
-   (let [result (q start-from)]
-     (lazy-seq
-      (if-let [next-page (:next-marker result)]
-        (cons result
-              (lazy-list-with-marker :next-page q next-page))
-        [result])))))
+
+(def lazy-list-aliases
+  (aws/lazy-paginated-query
+    #(aws/invoke! % :ListAliases %2)
+    :NextMarker :Marker :Aliases))
 
 
 
 (defn master-keys
   []
   (->>
-   (lazy-list-with-marker :aliases list-aliases)
-   (filter (where :alias-name :starts-with? "alias/1Config/"))
-   ;; build key ARN out of key alias.
-   (map (fn [{:keys [target-key-id alias-arn alias-name] :as m}]
-          (let [arn
-                (->
-                 (re-find (re-pattern (str "(.*):\\Q" alias-name "\\E")) alias-arn)
-                 second
-                 (str ":key/" target-key-id))]
-            (assoc m :key-arn arn))))
-   (map (juxt :alias-name :key-arn))
-   (into {})))
+    (lazy-list-aliases (kms-client) {})
+    (filter (where :AliasName :starts-with? "alias/1Config/"))
+    ;; build key ARN out of key alias.
+    (map (fn [{:keys [TargetKeyId AliasArn AliasName] :as m}]
+           (let [arn
+                 (->
+                   (re-find (re-pattern (str "(.*):\\Q" AliasName "\\E")) AliasArn)
+                   second
+                   (str ":key/" TargetKeyId))]
+             (assoc m :key-arn arn))))
+    (map (juxt :AliasName :key-arn))
+    (into {})))
 
 
 
@@ -124,12 +114,14 @@
 
 (defn create-master-key
   [key-name description]
-  (let [mk (kms/create-key {:description description
-                            :key-usage "ENCRYPT_DECRYPT"
-                            :origin "AWS_KMS"})]
-    (kms/create-alias {:alias-name (normalize-alias key-name)
-                       :target-key-id (-> mk :key-metadata :key-id)})
-    (-> mk :key-metadata :arn)))
+  (let [mk (aws/invoke! (kms-client) :CreateKey
+             {:Description description
+              :KeyUsage "ENCRYPT_DECRYPT"
+              :Origin "AWS_KMS"})]
+    (aws/invoke! (kms-client) :CreateAlias
+      {:AliasName (normalize-alias key-name)
+       :TargetKeyId (-> mk :KeyMetadata :KeyId)})
+    (-> mk :KeyMetadata :Arn)))
 
 
 
@@ -147,15 +139,14 @@
    (let [ ;; retrieving the master key to generate the data key
          ^KmsMasterKeyProvider master-key
          (KmsMasterKeyProvider.
-          ;; reuse amazonica credential variable
-          (aws/get-credentials (some-> #'aws/credential deref deref))
-          ^Region @aws-region
-          (PredefinedClientConfigurations/defaultConfig)
-          (key-id master-key-id))
+           (DefaultAWSCredentialsProviderChain.)
+           ^Region @aws-region
+           (PredefinedClientConfigurations/defaultConfig)
+           (key-id master-key-id))
          ;; sanitize context if present
          ^java.util.Map context (->> (or context {})
-                                   (map (fn [[k v]] [(str k) (str v)]))
-                                   (into {}))
+                                  (map (fn [[k v]] [(str k) (str v)]))
+                                  (into {}))
          ;; the encrypted payload contains an envelop
          ;; with the data key encrypted
          out (.encryptString crypto master-key payload context)]
@@ -173,15 +164,14 @@
    (let [ ;; retrieving the master key to generate the data key
          ^KmsMasterKeyProvider master-key
          (KmsMasterKeyProvider.
-          ;; reuse amazonica credential variable
-          (aws/get-credentials (some-> #'aws/credential deref deref))
-          ^Region @aws-region
-          (PredefinedClientConfigurations/defaultConfig)
-          (Collections/emptyList))
+           (DefaultAWSCredentialsProviderChain.)
+           ^Region @aws-region
+           (PredefinedClientConfigurations/defaultConfig)
+           (Collections/emptyList))
          ;; sanitize context if present
          ^java.util.Map context (->> (or context {})
-                                   (map (fn [[k v]] [(str k) (str v)]))
-                                   (into {}))
+                                  (map (fn [[k v]] [(str k) (str v)]))
+                                  (into {}))
          ;; the encrypted payload contains an envelop
          ;; with the data key encrypted
          out (.decryptString crypto master-key payload)
@@ -190,7 +180,7 @@
 
      (when (not= context (select-keys out-ctx (keys context)))
        (throw (ex-info "Invalid encryption context. Possible tampering with config-entry."
-                       {:config-entry context})))
+                {:config-entry context})))
      {:result      (.getResult out)
       :context     out-ctx
       :algorithm   (str (.getCryptoAlgorithm out))
@@ -212,11 +202,11 @@
   [master-key]
   (try
     (let [master-key (arn-or-alias master-key)
-          master-key-arn (-> (kms/describe-key {:key-id master-key}) :key-metadata :arn)
+          master-key-arn (-> (aws/invoke! (kms-client) :DescribeKey {:KeyId master-key}) :KeyMetadata :Arn)
           master-key-alias (when-not (= master-key-arn master-key) master-key)]
       (clean-map
-       {:master-key master-key-arn
-        :master-key-alias master-key-alias}))
+        {:master-key master-key-arn
+         :master-key-alias master-key-alias}))
     (catch Exception x
       ;; if not found return nil
       (when-not (re-find #" is not found." (.getMessage x))
@@ -230,14 +220,14 @@
   ;; lookup master key
   (or (lookup-master-key master-key)
 
-     ;; arn keys must already exists
-     (when (arn? master-key)
-       (throw (ex-info "Cannot find master key" {:master-key master-key})))
+    ;; arn keys must already exists
+    (when (arn? master-key)
+      (throw (ex-info "Cannot find master key" {:master-key master-key})))
 
-     ;; if alias key doesn't exists will create one
-     {:master-key-alias (normalize-alias master-key)
-      :master-key
-      (create-master-key
+    ;; if alias key doesn't exists will create one
+    {:master-key-alias (normalize-alias master-key)
+     :master-key
+     (create-master-key
        (normalize-alias master-key)
        (format "1Config managed key for %s configurations" master-key))}))
 
@@ -269,15 +259,15 @@
 
   (save [_ {:keys [key value master-key] :as config-entry}]
     (let [{:keys [master-key-alias master-key]
-           } (resolve-master-key (or master-key key))
+           }(resolve-master-key (or master-key key))
           context (encryption-context config-entry)
           encrypted (:result
                      (encrypt value master-key context))]
       (as-> config-entry $
         ;; add the encrypted value and the master encryption key
         (assoc $ :value encrypted
-               :master-key master-key
-               :master-key-alias master-key-alias)
+          :master-key master-key
+          :master-key-alias master-key-alias)
         (clean-map $)
         (save store $))))
 

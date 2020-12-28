@@ -11,13 +11,9 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.brunobonacci/where "0.5.5"]
                  [org.clojure/tools.logging "1.0.0"]
-                 [amazonica "0.3.152" :exclusions
-                  [com.amazonaws/aws-java-sdk
-                   com.amazonaws/amazon-kinesis-client]]
-                 [com.amazonaws/aws-java-sdk-core     "1.11.743"]
-                 [com.amazonaws/aws-java-sdk-kms      "1.11.743"]
-                 [com.amazonaws/aws-java-sdk-sts      "1.11.743"]
-                 [com.amazonaws/aws-encryption-sdk-java "1.6.1"]
+                 [com.amazonaws/aws-java-sdk-core       "1.11.926"]
+                 [com.amazonaws/aws-java-sdk-kms        "1.11.926"]
+                 [com.amazonaws/aws-encryption-sdk-java "1.7.0"]
                  [com.cognitect.aws/api "0.8.484"]
                  [com.cognitect.aws/endpoints "1.1.11.893"]
                  [com.cognitect.aws/sts "809.2.784.0"]
