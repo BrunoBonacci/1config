@@ -8,17 +8,17 @@
 
   :scm {:name "git" :url "https://github.com/BrunoBonacci/1config.git"}
 
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[org.clojure/clojure "1.10.2-rc1"]
                  [com.brunobonacci/where "0.5.5"]
                  [org.clojure/tools.logging "1.0.0"]
                  [amazonica "0.3.152" :exclusions
                   [com.amazonaws/aws-java-sdk
                    com.amazonaws/amazon-kinesis-client]]
-                 [com.amazonaws/aws-java-sdk-core     "1.11.743"]
-                 [com.amazonaws/aws-java-sdk-dynamodb "1.11.743"]
-                 [com.amazonaws/aws-java-sdk-kms      "1.11.743"]
-                 [com.amazonaws/aws-java-sdk-sts      "1.11.743"]
-                 [com.amazonaws/aws-encryption-sdk-java "1.6.1"]
+                 [com.amazonaws/aws-java-sdk-core     "1.11.926"]
+                 [com.amazonaws/aws-java-sdk-dynamodb "1.11.926"]
+                 [com.amazonaws/aws-java-sdk-kms      "1.11.926"]
+                 [com.amazonaws/aws-java-sdk-sts      "1.11.926"]
+                 [com.amazonaws/aws-encryption-sdk-java "1.7.0"]
                  [prismatic/schema "1.1.12"]
                  [cheshire "5.10.0"]
                  [clj-commons/clj-yaml "0.7.0"]]

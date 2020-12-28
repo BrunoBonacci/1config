@@ -1,15 +1,19 @@
 #!/bin/bash
 
 export CURR=$(pwd)
-export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+#export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+#
+#if [ ! -f $CFG1 ] ; then
+#    echo "ERROR: 1cfg binary executable not present."
+#    echo "  please run:"
+#    echo "    cd 1config-cli"
+#    echo "    lein do clean, bin"
+#    exit 1
+#fi
 
-if [ ! -f $CFG1 ] ; then
-    echo "ERROR: 1cfg binary executable not present."
-    echo "  please run:"
-    echo "    cd 1config-cli"
-    echo "    lein do clean, bin"
-    exit 1
-fi
+export CFG1="java -agentlib:native-image-agent=config-merge-dir=$(dirname $0)/../../1config-cli/target/config/ -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
+
+$CFG1 -h
 
 # defining test table
 export ONECONFIG_DYNAMO_TABLE=1ConfigTest
