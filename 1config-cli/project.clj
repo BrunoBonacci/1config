@@ -67,7 +67,7 @@
     "-H:+PrintClassInitialization"
     "-H:ConfigurationFileDirectories=./target/config/"
     "--initialize-at-build-time"
-    "--initialize-at-run-time=com.amazonaws.auth.DefaultAWSCredentialsProviderChain"
+    "--initialize-at-run-time=com.amazonaws.auth.DefaultAWSCredentialsProviderChain,com.amazonaws.regions.DefaultAwsRegionProviderChain"
     "--enable-http" "--enable-https" "--enable-all-security-services"
     "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
     "-H:Name=./target/${:name}"]
