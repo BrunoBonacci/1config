@@ -6,13 +6,8 @@
             [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
             [com.brunobonacci.oneconfig.aws :as aws]
             [where.core :refer [where]]
-            [com.brunobonacci.oneconfig.util :refer [safely]])
-  (:import com.amazonaws.encryptionsdk.AwsCrypto
-           com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
-           com.amazonaws.PredefinedClientConfigurations
-           com.amazonaws.auth.DefaultAWSCredentialsProviderChain
-           [com.amazonaws.regions Region Regions DefaultAwsRegionProviderChain]
-           java.util.Collections))
+            [com.brunobonacci.oneconfig.util :refer [safely]]
+            [clojure.java.io :as io]))
 
 
 
@@ -37,22 +32,6 @@
 ;;  | + {:master-key "arn", :master-key-alias "key-alias"}
 ;;```
 ;;
-
-
-(def ^:private aws-region
-  (delay
-    (or
-      ;; check env
-      (some-> (or (env "AWS_REGION") (env "AWS_DEFAULT_REGION")) Regions/fromName Region/getRegion)
-      ;; use default prodider chain, this call blocks and it is slow on non EC2
-      (some-> (safely (.getRegion (new DefaultAwsRegionProviderChain))
-                :on-error :default nil :log-errors false)
-        Regions/fromName Region/getRegion)
-      ;; this call blocks and it is slow on non EC2
-      (Regions/getCurrentRegion)
-      ;; us-west-2 (??)
-      (-> Regions/DEFAULT_REGION Region/getRegion))))
-
 
 
 (def arn?
@@ -125,66 +104,43 @@
 
 
 
-;;
-;; AWS Cryto utility
-(defonce ^:private ^AwsCrypto crypto
-  (AwsCrypto.))
+(defn- base64-encode
+  [stream]
+  (let [baos (java.io.ByteArrayOutputStream.)]
+    (io/copy stream baos)
+    (String. (.encode (java.util.Base64/getEncoder) ^bytes (.toByteArray baos)) "utf-8")))
 
 
 
-(defn- encrypt
-  ([^String payload master-key-id]
-   (encrypt payload master-key-id {}))
-  ([^String payload master-key-id context]
-   (let [ ;; retrieving the master key to generate the data key
-         ^KmsMasterKeyProvider master-key
-         (KmsMasterKeyProvider.
-           (DefaultAWSCredentialsProviderChain.)
-           ^Region @aws-region
-           (PredefinedClientConfigurations/defaultConfig)
-           (key-id master-key-id))
-         ;; sanitize context if present
-         ^java.util.Map context (->> (or context {})
-                                  (map (fn [[k v]] [(str k) (str v)]))
-                                  (into {}))
-         ;; the encrypted payload contains an envelop
-         ;; with the data key encrypted
-         out (.encryptString crypto master-key payload context)]
-     {:result      (.getResult out)
-      :context     (into {} (.getEncryptionContext out))
-      :algorithm   (str (.getCryptoAlgorithm out))
-      :master-keys (into [] (.getMasterKeyIds out))})))
+(defn- base64-decode
+  [stream]
+  (let [baos (java.io.ByteArrayOutputStream.)]
+    (io/copy stream baos)
+    (java.nio.ByteBuffer/wrap (.decode (java.util.Base64/getDecoder) ^bytes (.toByteArray baos)))))
 
 
 
-(defn- decrypt
-  ([^String payload]
-   (decrypt payload {}))
-  ([^String payload context]
-   (let [ ;; retrieving the master key to generate the data key
-         ^KmsMasterKeyProvider master-key
-         (KmsMasterKeyProvider.
-           (DefaultAWSCredentialsProviderChain.)
-           ^Region @aws-region
-           (PredefinedClientConfigurations/defaultConfig)
-           (Collections/emptyList))
-         ;; sanitize context if present
-         ^java.util.Map context (->> (or context {})
-                                  (map (fn [[k v]] [(str k) (str v)]))
-                                  (into {}))
-         ;; the encrypted payload contains an envelop
-         ;; with the data key encrypted
-         out (.decryptString crypto master-key payload)
-         ;; checking context
-         out-ctx (into {} (.getEncryptionContext out))]
+(defn decrypt
+  [context text]
+  (->
+    (aws/invoke! (kms-client) :Decrypt
+      {:EncryptionContext (into {} (map (fn [[k v]] [(str k) (str v)]) context))
+       :CiphertextBlob (base64-decode text)})
+    :Plaintext
+    slurp))
 
-     (when (not= context (select-keys out-ctx (keys context)))
-       (throw (ex-info "Invalid encryption context. Possible tampering with config-entry."
-                {:config-entry context})))
-     {:result      (.getResult out)
-      :context     out-ctx
-      :algorithm   (str (.getCryptoAlgorithm out))
-      :master-keys (into [] (.getMasterKeyIds out))})))
+
+
+(defn encrypt
+  [key-id context text]
+  (->
+    (aws/invoke! (kms-client) :Encrypt
+      {:KeyId key-id
+       :EncryptionContext (into {} (map (fn [[k v]] [(str k) (str v)]) context))
+       :EncryptionAlgorithm "SYMMETRIC_DEFAULT"
+       :Plaintext text})
+    :CiphertextBlob
+    base64-encode))
 
 
 
@@ -246,7 +202,7 @@
   (find [this {:keys [key env version] :as config-entry}]
     (when-let [entry (find store config-entry)]
       (let [ctx (encryption-context entry)]
-        (update entry :value (comp :result #(decrypt % ctx))))))
+        (update entry :value #(decrypt ctx %)))))
 
 
   IConfigBackend
@@ -254,15 +210,14 @@
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (when-let [entry (load store config-entry)]
       (let [ctx (encryption-context entry)]
-        (update entry :value (comp :result #(decrypt % ctx))))))
+        (update entry :value #(decrypt ctx %)))))
 
 
   (save [_ {:keys [key value master-key] :as config-entry}]
     (let [{:keys [master-key-alias master-key]
            }(resolve-master-key (or master-key key))
           context (encryption-context config-entry)
-          encrypted (:result
-                     (encrypt value master-key context))]
+          encrypted (encrypt master-key context value)]
       (as-> config-entry $
         ;; add the encrypted value and the master encryption key
         (assoc $ :value encrypted

@@ -12,11 +12,13 @@ if [ ! -f $CFG1 ] ; then
 fi
 
 # defining test table
-export ONECONFIG_DYNAMO_TABLE=1ConfigTest
+export ONECONFIG_DYNAMO_TABLE=1ConfigTest2
 
 if [ "$(aws dynamodb list-tables --output=text | grep -q $ONECONFIG_DYNAMO_TABLE || echo 1)" == "1" ] ; then
     echo "(*) To initialise a given backend"
     $CFG1 INIT -b dynamo
+    echo "waiting for table to be available..."
+    sleep 10
 fi
 
 
