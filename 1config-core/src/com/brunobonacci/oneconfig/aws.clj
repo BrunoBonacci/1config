@@ -3,6 +3,7 @@
   (:require
    [com.brunobonacci.oneconfig.util :refer [lazy-mapcat]]
    [cognitect.aws.client.api  :as aws]
+   [cognitect.aws.http.cognitect]
    [cognitect.aws.credentials :as credentials]))
 
 
@@ -40,12 +41,15 @@
     resp))
 
 
+(def shared-http-client
+  (delay (cognitect.aws.http.cognitect/create)))
 
 (defn- create-client
   "Creates an AWS client for the specified api."
   [{:keys [api region auth endpoint-override]}]
   (aws/client
-    (-> {:api api}
+    (-> {:api api
+         :http-client @shared-http-client}
       (merge (when region {:region region}))
       (merge (when auth {:credentials-provider auth}))
       (merge (when endpoint-override

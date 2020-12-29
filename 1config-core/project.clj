@@ -34,8 +34,32 @@
                                   [criterium "0.4.5"]
                                   [org.slf4j/slf4j-log4j12 "1.7.30"]]
                    :resource-paths ["dev-resources"]
-                   :plugins      [[lein-midje "3.2.2"]]}}
+                   :plugins      [[lein-midje "3.2.2"]
+                                  [lein-shell "0.5.0"]]}}
 
   ;; generating AOT jar alongside Clojure JAR
   :classifiers {:aot :aot-jar}
+
+  :main com.brunobonacci.main
+
+  :aliases
+  {
+   "native-config"
+   ["shell"
+    ;; run the application to infer the build configuration
+    "java" "-agentlib:native-image-agent=config-output-dir=./target/config/"
+    "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
+    "test/service1" "test1" "1.12.0"]
+
+   "native"
+   ["shell"
+    "native-image" "--report-unsupported-elements-at-runtime" "--no-server" "--no-fallback"
+    "-H:+PrintClassInitialization"
+    "-H:ConfigurationFileDirectories=./target/config/"
+    "--initialize-at-build-time"
+    "--allow-incomplete-classpath"
+    "--enable-http" "--enable-https" "--enable-all-security-services"
+    "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
+    "-H:Name=./target/${:name}"]
+   }
   )
