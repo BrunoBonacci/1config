@@ -1,0 +1,2562 @@
+[
+{
+  "name":"amalloy.ring_buffer.RingBuffer"
+},
+{
+  "name":"amalloy.ring_buffer__init"
+},
+{
+  "name":"apple.security.AppleProvider",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"boolean[]"
+},
+{
+  "name":"byte[]"
+},
+{
+  "name":"char[]"
+},
+{
+  "name":"cheshire.core__init"
+},
+{
+  "name":"cheshire.factory__init"
+},
+{
+  "name":"cheshire.generate.JSONable"
+},
+{
+  "name":"cheshire.generate__init"
+},
+{
+  "name":"cheshire.generate_seq__init"
+},
+{
+  "name":"cheshire.parse__init"
+},
+{
+  "name":"cheshire.prettyprint.CustomPrettyPrinter"
+},
+{
+  "name":"clj_yaml.MarkedConstructor"
+},
+{
+  "name":"clj_yaml.MarkedConstructor$Marked"
+},
+{
+  "name":"clj_yaml.core.Marked"
+},
+{
+  "name":"clj_yaml.core.YAMLCodec"
+},
+{
+  "name":"clj_yaml.core__init"
+},
+{
+  "name":"clojure.asm.ClassReader"
+},
+{
+  "name":"clojure.asm.ClassVisitor"
+},
+{
+  "name":"clojure.asm.ClassWriter"
+},
+{
+  "name":"clojure.asm.Opcodes"
+},
+{
+  "name":"clojure.asm.Type"
+},
+{
+  "name":"clojure.asm.commons.GeneratorAdapter"
+},
+{
+  "name":"clojure.asm.commons.Method"
+},
+{
+  "name":"clojure.core.ArrayChunk"
+},
+{
+  "name":"clojure.core.ArrayManager"
+},
+{
+  "name":"clojure.core.Eduction"
+},
+{
+  "name":"clojure.core.IVecImpl"
+},
+{
+  "name":"clojure.core.Inst"
+},
+{
+  "name":"clojure.core.Vec"
+},
+{
+  "name":"clojure.core.VecNode"
+},
+{
+  "name":"clojure.core.VecSeq"
+},
+{
+  "name":"clojure.core.async.Mix"
+},
+{
+  "name":"clojure.core.async.Mult"
+},
+{
+  "name":"clojure.core.async.Mux"
+},
+{
+  "name":"clojure.core.async.Pub"
+},
+{
+  "name":"clojure.core.async.impl.buffers.DroppingBuffer"
+},
+{
+  "name":"clojure.core.async.impl.buffers.FixedBuffer"
+},
+{
+  "name":"clojure.core.async.impl.buffers.PromiseBuffer"
+},
+{
+  "name":"clojure.core.async.impl.buffers.SlidingBuffer"
+},
+{
+  "name":"clojure.core.async.impl.buffers__init"
+},
+{
+  "name":"clojure.core.async.impl.channels.MMC"
+},
+{
+  "name":"clojure.core.async.impl.channels.ManyToManyChannel"
+},
+{
+  "name":"clojure.core.async.impl.channels__init"
+},
+{
+  "name":"clojure.core.async.impl.concurrent__init"
+},
+{
+  "name":"clojure.core.async.impl.dispatch__init"
+},
+{
+  "name":"clojure.core.async.impl.exec.threadpool__init"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Call"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Case"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.CatchHandler"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.CondBr"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Const"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.CustomTerminator"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Dot"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.EndFinally"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Fn"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.IEmittableInstruction"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.IInstruction"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.ITerminator"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.InstanceInterop"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Jmp"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.PopTry"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.PushTry"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.RawCode"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Recur"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.Return"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros.StaticCall"
+},
+{
+  "name":"clojure.core.async.impl.ioc_macros__init"
+},
+{
+  "name":"clojure.core.async.impl.mutex__init"
+},
+{
+  "name":"clojure.core.async.impl.protocols.Buffer"
+},
+{
+  "name":"clojure.core.async.impl.protocols.Channel"
+},
+{
+  "name":"clojure.core.async.impl.protocols.Executor"
+},
+{
+  "name":"clojure.core.async.impl.protocols.Handler"
+},
+{
+  "name":"clojure.core.async.impl.protocols.ReadPort"
+},
+{
+  "name":"clojure.core.async.impl.protocols.UnblockingBuffer"
+},
+{
+  "name":"clojure.core.async.impl.protocols.WritePort"
+},
+{
+  "name":"clojure.core.async.impl.protocols__init"
+},
+{
+  "name":"clojure.core.async.impl.timers.TimeoutQueueEntry"
+},
+{
+  "name":"clojure.core.async.impl.timers__init"
+},
+{
+  "name":"clojure.core.async__init"
+},
+{
+  "name":"clojure.core.cache.BasicCache"
+},
+{
+  "name":"clojure.core.cache.CacheProtocol"
+},
+{
+  "name":"clojure.core.cache.FIFOCache"
+},
+{
+  "name":"clojure.core.cache.FnCache"
+},
+{
+  "name":"clojure.core.cache.LIRSCache"
+},
+{
+  "name":"clojure.core.cache.LRUCache"
+},
+{
+  "name":"clojure.core.cache.LUCache"
+},
+{
+  "name":"clojure.core.cache.SoftCache"
+},
+{
+  "name":"clojure.core.cache.TTLCacheQ"
+},
+{
+  "name":"clojure.core.cache__init"
+},
+{
+  "name":"clojure.core.match.AppPattern"
+},
+{
+  "name":"clojure.core.match.BindNode"
+},
+{
+  "name":"clojure.core.match.FailNode"
+},
+{
+  "name":"clojure.core.match.GuardPattern"
+},
+{
+  "name":"clojure.core.match.LeafNode"
+},
+{
+  "name":"clojure.core.match.LiteralPattern"
+},
+{
+  "name":"clojure.core.match.MapKeyPattern"
+},
+{
+  "name":"clojure.core.match.MapPattern"
+},
+{
+  "name":"clojure.core.match.OrPattern"
+},
+{
+  "name":"clojure.core.match.PatternMatrix"
+},
+{
+  "name":"clojure.core.match.PatternRow"
+},
+{
+  "name":"clojure.core.match.PredicatePattern"
+},
+{
+  "name":"clojure.core.match.RestPattern"
+},
+{
+  "name":"clojure.core.match.SeqPattern"
+},
+{
+  "name":"clojure.core.match.SwitchNode"
+},
+{
+  "name":"clojure.core.match.VectorPattern"
+},
+{
+  "name":"clojure.core.match.WildcardPattern"
+},
+{
+  "name":"clojure.core.match.protocols.IContainsRestPattern"
+},
+{
+  "name":"clojure.core.match.protocols.IExistentialPattern"
+},
+{
+  "name":"clojure.core.match.protocols.IMatchLookup"
+},
+{
+  "name":"clojure.core.match.protocols.INodeCompile"
+},
+{
+  "name":"clojure.core.match.protocols.IPatternCompile"
+},
+{
+  "name":"clojure.core.match.protocols.IPseudoPattern"
+},
+{
+  "name":"clojure.core.match.protocols.ISpecializeMatrix"
+},
+{
+  "name":"clojure.core.match.protocols.ISyntaxTag"
+},
+{
+  "name":"clojure.core.match.protocols.IVecMod"
+},
+{
+  "name":"clojure.core.match.protocols.IVectorPattern"
+},
+{
+  "name":"clojure.core.match.protocols__init"
+},
+{
+  "name":"clojure.core.match__init"
+},
+{
+  "name":"clojure.core.memoize.PluggableMemoization"
+},
+{
+  "name":"clojure.core.memoize.RetryingDelay"
+},
+{
+  "name":"clojure.core.memoize__init"
+},
+{
+  "name":"clojure.core.protocols.CollReduce"
+},
+{
+  "name":"clojure.core.protocols.Datafiable"
+},
+{
+  "name":"clojure.core.protocols.IKVReduce"
+},
+{
+  "name":"clojure.core.protocols.InternalReduce"
+},
+{
+  "name":"clojure.core.protocols.Navigable"
+},
+{
+  "name":"clojure.core.protocols__init"
+},
+{
+  "name":"clojure.core.server__init"
+},
+{
+  "name":"clojure.core.specs.alpha$eval10",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval133",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval135",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval4",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval6",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$even_number_of_forms_QMARK_",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__100",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__103",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__105",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__108",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__111",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__113",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__116",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__118",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__120",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__15",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__18",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__21",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__24",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__27",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__29",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__32",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__34",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__37",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__40",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__43",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__47",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__50",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__53",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__55",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__57",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__70",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__72",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__84",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__97",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$quotable",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core__init"
+},
+{
+  "name":"clojure.core_deftype__init"
+},
+{
+  "name":"clojure.core_print__init"
+},
+{
+  "name":"clojure.core_proxy__init"
+},
+{
+  "name":"clojure.data.codec.base64__init"
+},
+{
+  "name":"clojure.data.json.JSONWriter"
+},
+{
+  "name":"clojure.data.json__init"
+},
+{
+  "name":"clojure.data.json_compat_0_1__init"
+},
+{
+  "name":"clojure.data.priority_map.PersistentPriorityMap"
+},
+{
+  "name":"clojure.data.priority_map__init"
+},
+{
+  "name":"clojure.data.xml.event.CDataEvent"
+},
+{
+  "name":"clojure.data.xml.event.CharsEvent"
+},
+{
+  "name":"clojure.data.xml.event.CommentEvent"
+},
+{
+  "name":"clojure.data.xml.event.EmptyElementEvent"
+},
+{
+  "name":"clojure.data.xml.event.EndElementEvent"
+},
+{
+  "name":"clojure.data.xml.event.QNameEvent"
+},
+{
+  "name":"clojure.data.xml.event.StartElementEvent"
+},
+{
+  "name":"clojure.data.xml.event__init"
+},
+{
+  "name":"clojure.data.xml.impl__init"
+},
+{
+  "name":"clojure.data.xml.jvm.emit.EventEmit"
+},
+{
+  "name":"clojure.data.xml.jvm.emit__init"
+},
+{
+  "name":"clojure.data.xml.jvm.name__init"
+},
+{
+  "name":"clojure.data.xml.jvm.parse__init"
+},
+{
+  "name":"clojure.data.xml.jvm.pprint__init"
+},
+{
+  "name":"clojure.data.xml.name__init"
+},
+{
+  "name":"clojure.data.xml.node.CData"
+},
+{
+  "name":"clojure.data.xml.node.Comment"
+},
+{
+  "name":"clojure.data.xml.node.Element"
+},
+{
+  "name":"clojure.data.xml.node.ElementIterator"
+},
+{
+  "name":"clojure.data.xml.node__init"
+},
+{
+  "name":"clojure.data.xml.process__init"
+},
+{
+  "name":"clojure.data.xml.protocols.AsElements"
+},
+{
+  "name":"clojure.data.xml.protocols.AsQName"
+},
+{
+  "name":"clojure.data.xml.protocols.AsXmlString"
+},
+{
+  "name":"clojure.data.xml.protocols.EventGeneration"
+},
+{
+  "name":"clojure.data.xml.protocols__init"
+},
+{
+  "name":"clojure.data.xml.prxml__init"
+},
+{
+  "name":"clojure.data.xml.pu_map__init"
+},
+{
+  "name":"clojure.data.xml.tree__init"
+},
+{
+  "name":"clojure.data.xml__init"
+},
+{
+  "name":"clojure.datafy__init"
+},
+{
+  "name":"clojure.edn__init"
+},
+{
+  "name":"clojure.genclass__init"
+},
+{
+  "name":"clojure.gvec__init"
+},
+{
+  "name":"clojure.instant__init"
+},
+{
+  "name":"clojure.java.io.Coercions"
+},
+{
+  "name":"clojure.java.io.IOFactory"
+},
+{
+  "name":"clojure.java.io__init"
+},
+{
+  "name":"clojure.lang.AFn"
+},
+{
+  "name":"clojure.lang.AFunction"
+},
+{
+  "name":"clojure.lang.APersistentMap"
+},
+{
+  "name":"clojure.lang.APersistentMap$KeySeq"
+},
+{
+  "name":"clojure.lang.APersistentMap$ValSeq"
+},
+{
+  "name":"clojure.lang.APersistentSet"
+},
+{
+  "name":"clojure.lang.APersistentVector"
+},
+{
+  "name":"clojure.lang.ASeq"
+},
+{
+  "name":"clojure.lang.Associative"
+},
+{
+  "name":"clojure.lang.BigInt"
+},
+{
+  "name":"clojure.lang.ChunkBuffer"
+},
+{
+  "name":"clojure.lang.Compiler",
+  "allPublicFields":true
+},
+{
+  "name":"clojure.lang.Compiler$CompilerException"
+},
+{
+  "name":"clojure.lang.Cons"
+},
+{
+  "name":"clojure.lang.Counted"
+},
+{
+  "name":"clojure.lang.DynamicClassLoader"
+},
+{
+  "name":"clojure.lang.ExceptionInfo"
+},
+{
+  "name":"clojure.lang.Fn"
+},
+{
+  "name":"clojure.lang.IChunk"
+},
+{
+  "name":"clojure.lang.IChunkedSeq"
+},
+{
+  "name":"clojure.lang.IDeref"
+},
+{
+  "name":"clojure.lang.IEditableCollection"
+},
+{
+  "name":"clojure.lang.IExceptionInfo"
+},
+{
+  "name":"clojure.lang.IFn"
+},
+{
+  "name":"clojure.lang.IHashEq"
+},
+{
+  "name":"clojure.lang.IKVReduce"
+},
+{
+  "name":"clojure.lang.IKeywordLookup"
+},
+{
+  "name":"clojure.lang.ILookup"
+},
+{
+  "name":"clojure.lang.IMeta"
+},
+{
+  "name":"clojure.lang.IObj",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.IPersistentCollection"
+},
+{
+  "name":"clojure.lang.IPersistentList"
+},
+{
+  "name":"clojure.lang.IPersistentMap"
+},
+{
+  "name":"clojure.lang.IPersistentSet"
+},
+{
+  "name":"clojure.lang.IPersistentStack"
+},
+{
+  "name":"clojure.lang.IPersistentVector"
+},
+{
+  "name":"clojure.lang.IProxy"
+},
+{
+  "name":"clojure.lang.IRecord"
+},
+{
+  "name":"clojure.lang.IReduceInit"
+},
+{
+  "name":"clojure.lang.IRef"
+},
+{
+  "name":"clojure.lang.IReference"
+},
+{
+  "name":"clojure.lang.ISeq"
+},
+{
+  "name":"clojure.lang.ITransientAssociative"
+},
+{
+  "name":"clojure.lang.ITransientMap"
+},
+{
+  "name":"clojure.lang.ITransientSet"
+},
+{
+  "name":"clojure.lang.ITransientVector"
+},
+{
+  "name":"clojure.lang.IType"
+},
+{
+  "name":"clojure.lang.Indexed"
+},
+{
+  "name":"clojure.lang.Keyword"
+},
+{
+  "name":"clojure.lang.LazilyPersistentVector"
+},
+{
+  "name":"clojure.lang.LazySeq"
+},
+{
+  "name":"clojure.lang.LineNumberingPushbackReader"
+},
+{
+  "name":"clojure.lang.LispReader$ReaderException"
+},
+{
+  "name":"clojure.lang.LockingTransaction",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.MapEntry"
+},
+{
+  "name":"clojure.lang.MapEquivalence"
+},
+{
+  "name":"clojure.lang.Murmur3"
+},
+{
+  "name":"clojure.lang.Named"
+},
+{
+  "name":"clojure.lang.Namespace",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.Numbers"
+},
+{
+  "name":"clojure.lang.PersistentArrayMap",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.PersistentArrayMap$Seq"
+},
+{
+  "name":"clojure.lang.PersistentHashMap"
+},
+{
+  "name":"clojure.lang.PersistentHashMap$NodeSeq"
+},
+{
+  "name":"clojure.lang.PersistentHashSet"
+},
+{
+  "name":"clojure.lang.PersistentQueue"
+},
+{
+  "name":"clojure.lang.PersistentTreeMap"
+},
+{
+  "name":"clojure.lang.PersistentVector"
+},
+{
+  "name":"clojure.lang.PersistentVector$ChunkedSeq"
+},
+{
+  "name":"clojure.lang.RT",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.Ratio"
+},
+{
+  "name":"clojure.lang.ReaderConditional"
+},
+{
+  "name":"clojure.lang.Reflector"
+},
+{
+  "name":"clojure.lang.Reversible"
+},
+{
+  "name":"clojure.lang.SeqIterator"
+},
+{
+  "name":"clojure.lang.Seqable"
+},
+{
+  "name":"clojure.lang.Sequential"
+},
+{
+  "name":"clojure.lang.StringSeq"
+},
+{
+  "name":"clojure.lang.Symbol",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.TaggedLiteral"
+},
+{
+  "name":"clojure.lang.Util"
+},
+{
+  "name":"clojure.lang.Var",
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.lang.Volatile"
+},
+{
+  "name":"clojure.main__init"
+},
+{
+  "name":"clojure.pprint.PrettyFlush"
+},
+{
+  "name":"clojure.pprint.cl_format__init"
+},
+{
+  "name":"clojure.pprint.column_writer__init"
+},
+{
+  "name":"clojure.pprint.dispatch__init"
+},
+{
+  "name":"clojure.pprint.pprint_base__init"
+},
+{
+  "name":"clojure.pprint.pretty_writer__init"
+},
+{
+  "name":"clojure.pprint.print_table__init"
+},
+{
+  "name":"clojure.pprint.utilities__init"
+},
+{
+  "name":"clojure.pprint__init"
+},
+{
+  "name":"clojure.reflect.AsmReflector"
+},
+{
+  "name":"clojure.reflect.ClassResolver"
+},
+{
+  "name":"clojure.reflect.Constructor"
+},
+{
+  "name":"clojure.reflect.Field"
+},
+{
+  "name":"clojure.reflect.JavaReflector"
+},
+{
+  "name":"clojure.reflect.Method"
+},
+{
+  "name":"clojure.reflect.Reflector"
+},
+{
+  "name":"clojure.reflect.TypeReference"
+},
+{
+  "name":"clojure.reflect.java__init"
+},
+{
+  "name":"clojure.reflect__init"
+},
+{
+  "name":"clojure.set__init"
+},
+{
+  "name":"clojure.spec.alpha.Spec"
+},
+{
+  "name":"clojure.spec.alpha.Specize"
+},
+{
+  "name":"clojure.spec.alpha__init"
+},
+{
+  "name":"clojure.spec.gen.alpha__init"
+},
+{
+  "name":"clojure.stacktrace__init"
+},
+{
+  "name":"clojure.string__init"
+},
+{
+  "name":"clojure.tools.analyzer.ast__init"
+},
+{
+  "name":"clojure.tools.analyzer.env__init"
+},
+{
+  "name":"clojure.tools.analyzer.jvm.ExceptionThrown"
+},
+{
+  "name":"clojure.tools.analyzer.jvm.utils__init"
+},
+{
+  "name":"clojure.tools.analyzer.jvm__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.add_binding_atom__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.cleanup__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.constant_lifter__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.elide_meta__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.emit_form__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.analyze_host_expr__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.annotate_host_info__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.annotate_loops__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.annotate_tag__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.box__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.classify_invoke__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.constant_lifter__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.emit_form__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.fix_case_test__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.infer_tag__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.validate__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.validate_loop_locals__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.validate_recur__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.jvm.warn_on_reflection__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.source_info__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.trim__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.uniquify__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes.warn_earmuff__init"
+},
+{
+  "name":"clojure.tools.analyzer.passes__init"
+},
+{
+  "name":"clojure.tools.analyzer.utils__init"
+},
+{
+  "name":"clojure.tools.analyzer__init"
+},
+{
+  "name":"clojure.tools.cli__init"
+},
+{
+  "name":"clojure.tools.logging$eval1",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.tools.logging$eval149",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.tools.logging$eval2",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.tools.logging.impl.Logger"
+},
+{
+  "name":"clojure.tools.logging.impl.LoggerFactory",
+  "allDeclaredMethods":true,
+  "allPublicMethods":true
+},
+{
+  "name":"clojure.tools.logging.impl__init"
+},
+{
+  "name":"clojure.tools.logging__init"
+},
+{
+  "name":"clojure.tools.macro__init"
+},
+{
+  "name":"clojure.tools.reader.default_data_readers__init"
+},
+{
+  "name":"clojure.tools.reader.impl.commons__init"
+},
+{
+  "name":"clojure.tools.reader.impl.errors__init"
+},
+{
+  "name":"clojure.tools.reader.impl.inspect__init"
+},
+{
+  "name":"clojure.tools.reader.impl.utils__init"
+},
+{
+  "name":"clojure.tools.reader.reader_types.IPushbackReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.IndexingPushbackReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.IndexingReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.InputStreamReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.PushbackReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.PushbackReaderCoercer"
+},
+{
+  "name":"clojure.tools.reader.reader_types.Reader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.ReaderCoercer"
+},
+{
+  "name":"clojure.tools.reader.reader_types.SourceLoggingPushbackReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types.StringReader"
+},
+{
+  "name":"clojure.tools.reader.reader_types__init"
+},
+{
+  "name":"clojure.tools.reader__init"
+},
+{
+  "name":"clojure.uuid__init"
+},
+{
+  "name":"clojure.walk__init"
+},
+{
+  "name":"cognitect.aws.client.Client"
+},
+{
+  "name":"cognitect.aws.client.ClientSPI"
+},
+{
+  "name":"cognitect.aws.client.api.async__init"
+},
+{
+  "name":"cognitect.aws.client.api__init"
+},
+{
+  "name":"cognitect.aws.client.shared__init"
+},
+{
+  "name":"cognitect.aws.client__init"
+},
+{
+  "name":"cognitect.aws.config__init"
+},
+{
+  "name":"cognitect.aws.credentials.CredentialsProvider"
+},
+{
+  "name":"cognitect.aws.credentials.Stoppable"
+},
+{
+  "name":"cognitect.aws.credentials__init"
+},
+{
+  "name":"cognitect.aws.dynaload__init"
+},
+{
+  "name":"cognitect.aws.ec2_metadata_utils__init"
+},
+{
+  "name":"cognitect.aws.endpoint.EndpointProvider"
+},
+{
+  "name":"cognitect.aws.endpoint__init"
+},
+{
+  "name":"cognitect.aws.http.HttpClient"
+},
+{
+  "name":"cognitect.aws.http.cognitect__init"
+},
+{
+  "name":"cognitect.aws.http__init"
+},
+{
+  "name":"cognitect.aws.interceptors__init"
+},
+{
+  "name":"cognitect.aws.protocols.common__init"
+},
+{
+  "name":"cognitect.aws.protocols.json__init"
+},
+{
+  "name":"cognitect.aws.protocols.query__init"
+},
+{
+  "name":"cognitect.aws.region.RegionProvider"
+},
+{
+  "name":"cognitect.aws.region__init"
+},
+{
+  "name":"cognitect.aws.retry__init"
+},
+{
+  "name":"cognitect.aws.service__init"
+},
+{
+  "name":"cognitect.aws.shape__init"
+},
+{
+  "name":"cognitect.aws.signers__init"
+},
+{
+  "name":"cognitect.aws.util.BBuffable"
+},
+{
+  "name":"cognitect.aws.util.Base64Encodable"
+},
+{
+  "name":"cognitect.aws.util__init"
+},
+{
+  "name":"cognitect.http_client.Client"
+},
+{
+  "name":"cognitect.http_client.IClient"
+},
+{
+  "name":"cognitect.http_client__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.aws__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backend.IConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backend.IConfigClient"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backend__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.dynamo.DynamoTableConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.dynamo__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.encoding.EncodingConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.encoding__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.file.FileSystemConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.file1.ReadOnlySingleFileConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.file1__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.file__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.hierarchical.HierarchicalBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.hierarchical__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.iam_user.IamUserEnrichmentBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.iam_user__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.immutable.ImmutableBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.immutable__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.in_memory.InMemoryConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.in_memory.TestStore"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.in_memory__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.kms_encryption.KmsEncryptionConfigBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.kms_encryption__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.logging.LoggingBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.logging__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.user_restriction.UserRestrictionBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.user_restriction__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.validation.ValidationBackend"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends.validation__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.backends__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.cli__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.diff__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.main__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.profiles__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.table__init"
+},
+{
+  "name":"com.brunobonacci.oneconfig.util__init"
+},
+{
+  "name":"com.codahale.metrics.Clock"
+},
+{
+  "name":"com.codahale.metrics.ConsoleReporter"
+},
+{
+  "name":"com.codahale.metrics.Counter"
+},
+{
+  "name":"com.codahale.metrics.ExponentiallyDecayingReservoir"
+},
+{
+  "name":"com.codahale.metrics.Gauge"
+},
+{
+  "name":"com.codahale.metrics.Histogram"
+},
+{
+  "name":"com.codahale.metrics.JvmAttributeGaugeSet"
+},
+{
+  "name":"com.codahale.metrics.Meter"
+},
+{
+  "name":"com.codahale.metrics.Metric"
+},
+{
+  "name":"com.codahale.metrics.MetricFilter"
+},
+{
+  "name":"com.codahale.metrics.MetricRegistry"
+},
+{
+  "name":"com.codahale.metrics.Reservoir"
+},
+{
+  "name":"com.codahale.metrics.Sampling"
+},
+{
+  "name":"com.codahale.metrics.ScheduledReporter"
+},
+{
+  "name":"com.codahale.metrics.SlidingTimeWindowReservoir"
+},
+{
+  "name":"com.codahale.metrics.SlidingWindowReservoir"
+},
+{
+  "name":"com.codahale.metrics.Snapshot"
+},
+{
+  "name":"com.codahale.metrics.Timer"
+},
+{
+  "name":"com.codahale.metrics.Timer$Context"
+},
+{
+  "name":"com.codahale.metrics.UniformReservoir"
+},
+{
+  "name":"com.codahale.metrics.jvm.FileDescriptorRatioGauge"
+},
+{
+  "name":"com.codahale.metrics.jvm.GarbageCollectorMetricSet"
+},
+{
+  "name":"com.codahale.metrics.jvm.MemoryUsageGaugeSet"
+},
+{
+  "name":"com.codahale.metrics.jvm.ThreadStatesGaugeSet"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonFactory"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonFactory$Feature"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonGenerationException"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonGenerator"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonGenerator$Feature"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonParser"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonParser$Feature"
+},
+{
+  "name":"com.fasterxml.jackson.core.JsonToken"
+},
+{
+  "name":"com.fasterxml.jackson.core.PrettyPrinter"
+},
+{
+  "name":"com.fasterxml.jackson.dataformat.cbor.CBORFactory"
+},
+{
+  "name":"com.fasterxml.jackson.dataformat.smile.SmileFactory"
+},
+{
+  "name":"com.sun.crypto.provider.AESCipher$General",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DHParameters",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.HmacCore$HmacSHA256",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.TlsKeyMaterialGenerator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.TlsMasterSecretGenerator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.TlsPrfGenerator$V12",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.xml.internal.stream.XMLInputFactoryImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"defun.core__init"
+},
+{
+  "name":"double[]"
+},
+{
+  "name":"flatland.ordered.common.Compactable"
+},
+{
+  "name":"flatland.ordered.common__init"
+},
+{
+  "name":"flatland.ordered.map.OrderedMap"
+},
+{
+  "name":"flatland.ordered.map.TransientOrderedMap"
+},
+{
+  "name":"flatland.ordered.map__init"
+},
+{
+  "name":"flatland.ordered.set.OrderedSet"
+},
+{
+  "name":"flatland.ordered.set.TransientOrderedSet"
+},
+{
+  "name":"flatland.ordered.set__init"
+},
+{
+  "name":"flatland.useful.debug__init"
+},
+{
+  "name":"flatland.useful.experimental.delegate__init"
+},
+{
+  "name":"flatland.useful.ns__init"
+},
+{
+  "name":"float[]"
+},
+{
+  "name":"int[]"
+},
+{
+  "name":"java.beans.PropertyVetoException"
+},
+{
+  "name":"java.io.BufferedInputStream"
+},
+{
+  "name":"java.io.BufferedOutputStream"
+},
+{
+  "name":"java.io.BufferedReader"
+},
+{
+  "name":"java.io.BufferedWriter"
+},
+{
+  "name":"java.io.ByteArrayInputStream"
+},
+{
+  "name":"java.io.ByteArrayOutputStream"
+},
+{
+  "name":"java.io.CharArrayReader"
+},
+{
+  "name":"java.io.Closeable"
+},
+{
+  "name":"java.io.EOFException"
+},
+{
+  "name":"java.io.File"
+},
+{
+  "name":"java.io.FileInputStream"
+},
+{
+  "name":"java.io.FileOutputStream"
+},
+{
+  "name":"java.io.FileWriter"
+},
+{
+  "name":"java.io.InputStream"
+},
+{
+  "name":"java.io.InputStreamReader"
+},
+{
+  "name":"java.io.NotSerializableException"
+},
+{
+  "name":"java.io.OutputStream"
+},
+{
+  "name":"java.io.OutputStreamWriter"
+},
+{
+  "name":"java.io.PrintStream"
+},
+{
+  "name":"java.io.PrintWriter"
+},
+{
+  "name":"java.io.PushbackReader"
+},
+{
+  "name":"java.io.Reader"
+},
+{
+  "name":"java.io.Serializable"
+},
+{
+  "name":"java.io.StringReader"
+},
+{
+  "name":"java.io.StringWriter"
+},
+{
+  "name":"java.io.Writer"
+},
+{
+  "name":"java.lang.Boolean",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Byte",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.CharSequence"
+},
+{
+  "name":"java.lang.Character"
+},
+{
+  "name":"java.lang.Class",
+  "allPublicMethods":true
+},
+{
+  "name":"java.lang.ClassLoader"
+},
+{
+  "name":"java.lang.Double",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Float",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.IllegalArgumentException",
+  "allPublicConstructors":true
+},
+{
+  "name":"java.lang.Integer",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Iterable"
+},
+{
+  "name":"java.lang.Long",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.Module"
+},
+{
+  "name":"java.lang.ModuleLayer"
+},
+{
+  "name":"java.lang.Number"
+},
+{
+  "name":"java.lang.Object",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.lang.Object[]"
+},
+{
+  "name":"java.lang.Runnable"
+},
+{
+  "name":"java.lang.Short",
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.StackTraceElement"
+},
+{
+  "name":"java.lang.StackTraceElement[]"
+},
+{
+  "name":"java.lang.String",
+  "allPublicMethods":true
+},
+{
+  "name":"java.lang.String[]"
+},
+{
+  "name":"java.lang.Thread",
+  "methods":[{"name":"getContextClassLoader","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.ThreadLocal"
+},
+{
+  "name":"java.lang.Throwable"
+},
+{
+  "name":"java.lang.UnsupportedOperationException"
+},
+{
+  "name":"java.lang.Void"
+},
+{
+  "name":"java.lang.annotation.Annotation"
+},
+{
+  "name":"java.lang.annotation.Retention"
+},
+{
+  "name":"java.lang.management.ManagementFactory",
+  "methods":[{"name":"getRuntimeMXBean","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.management.RuntimeMXBean",
+  "methods":[{"name":"getUptime","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.module.Configuration",
+  "methods":[{"name":"findModule","parameterTypes":["java.lang.String"] }]
+},
+{
+  "name":"java.lang.module.ModuleReference",
+  "methods":[{"name":"location","parameterTypes":[] }]
+},
+{
+  "name":"java.lang.module.ResolvedModule"
+},
+{
+  "name":"java.lang.ref.ReferenceQueue"
+},
+{
+  "name":"java.lang.ref.SoftReference"
+},
+{
+  "name":"java.lang.reflect.Array"
+},
+{
+  "name":"java.lang.reflect.Constructor"
+},
+{
+  "name":"java.lang.reflect.Field"
+},
+{
+  "name":"java.lang.reflect.Modifier"
+},
+{
+  "name":"java.math.BigDecimal"
+},
+{
+  "name":"java.math.BigInteger"
+},
+{
+  "name":"java.net.ConnectException"
+},
+{
+  "name":"java.net.InetAddress"
+},
+{
+  "name":"java.net.MalformedURLException"
+},
+{
+  "name":"java.net.ServerSocket"
+},
+{
+  "name":"java.net.Socket"
+},
+{
+  "name":"java.net.SocketException"
+},
+{
+  "name":"java.net.SocketTimeoutException"
+},
+{
+  "name":"java.net.URI"
+},
+{
+  "name":"java.net.URL"
+},
+{
+  "name":"java.net.URLDecoder"
+},
+{
+  "name":"java.net.URLEncoder"
+},
+{
+  "name":"java.net.UnknownHostException"
+},
+{
+  "name":"java.nio.ByteBuffer"
+},
+{
+  "name":"java.nio.HeapByteBuffer[]"
+},
+{
+  "name":"java.nio.charset.Charset"
+},
+{
+  "name":"java.nio.file.Files"
+},
+{
+  "name":"java.nio.file.attribute.FileAttribute"
+},
+{
+  "name":"java.security.AlgorithmParametersSpi"
+},
+{
+  "name":"java.security.KeyStoreSpi"
+},
+{
+  "name":"java.security.MessageDigest"
+},
+{
+  "name":"java.security.MessageDigestSpi"
+},
+{
+  "name":"java.security.SecureRandomParameters"
+},
+{
+  "name":"java.security.interfaces.ECPrivateKey"
+},
+{
+  "name":"java.security.interfaces.ECPublicKey"
+},
+{
+  "name":"java.security.interfaces.RSAPrivateKey"
+},
+{
+  "name":"java.security.interfaces.RSAPublicKey"
+},
+{
+  "name":"java.sql.Date"
+},
+{
+  "name":"java.sql.Timestamp"
+},
+{
+  "name":"java.text.DateFormat"
+},
+{
+  "name":"java.text.SimpleDateFormat"
+},
+{
+  "name":"java.time.Duration"
+},
+{
+  "name":"java.time.Instant"
+},
+{
+  "name":"java.util.ArrayList"
+},
+{
+  "name":"java.util.Base64"
+},
+{
+  "name":"java.util.Calendar"
+},
+{
+  "name":"java.util.Collection"
+},
+{
+  "name":"java.util.Date"
+},
+{
+  "name":"java.util.GregorianCalendar"
+},
+{
+  "name":"java.util.Iterator"
+},
+{
+  "name":"java.util.LinkedHashMap"
+},
+{
+  "name":"java.util.LinkedHashSet"
+},
+{
+  "name":"java.util.LinkedList"
+},
+{
+  "name":"java.util.List"
+},
+{
+  "name":"java.util.Locale"
+},
+{
+  "name":"java.util.Map"
+},
+{
+  "name":"java.util.Map$Entry"
+},
+{
+  "name":"java.util.Properties",
+  "allPublicMethods":true
+},
+{
+  "name":"java.util.Queue"
+},
+{
+  "name":"java.util.RandomAccess"
+},
+{
+  "name":"java.util.Set"
+},
+{
+  "name":"java.util.SimpleTimeZone"
+},
+{
+  "name":"java.util.TimeZone"
+},
+{
+  "name":"java.util.UUID"
+},
+{
+  "name":"java.util.concurrent.ArrayBlockingQueue"
+},
+{
+  "name":"java.util.concurrent.BlockingQueue"
+},
+{
+  "name":"java.util.concurrent.Callable"
+},
+{
+  "name":"java.util.concurrent.ConcurrentHashMap"
+},
+{
+  "name":"java.util.concurrent.ConcurrentSkipListMap"
+},
+{
+  "name":"java.util.concurrent.DelayQueue"
+},
+{
+  "name":"java.util.concurrent.Delayed"
+},
+{
+  "name":"java.util.concurrent.Executor"
+},
+{
+  "name":"java.util.concurrent.ExecutorService"
+},
+{
+  "name":"java.util.concurrent.Executors"
+},
+{
+  "name":"java.util.concurrent.Future"
+},
+{
+  "name":"java.util.concurrent.LinkedBlockingQueue"
+},
+{
+  "name":"java.util.concurrent.RejectedExecutionException"
+},
+{
+  "name":"java.util.concurrent.ScheduledExecutorService"
+},
+{
+  "name":"java.util.concurrent.ScheduledFuture"
+},
+{
+  "name":"java.util.concurrent.ThreadFactory"
+},
+{
+  "name":"java.util.concurrent.ThreadLocalRandom"
+},
+{
+  "name":"java.util.concurrent.ThreadPoolExecutor"
+},
+{
+  "name":"java.util.concurrent.TimeUnit"
+},
+{
+  "name":"java.util.concurrent.TimeoutException"
+},
+{
+  "name":"java.util.concurrent.atomic.AtomicInteger"
+},
+{
+  "name":"java.util.concurrent.atomic.AtomicLong"
+},
+{
+  "name":"java.util.concurrent.atomic.AtomicReferenceArray"
+},
+{
+  "name":"java.util.concurrent.locks.Lock"
+},
+{
+  "name":"java.util.concurrent.locks.ReentrantLock"
+},
+{
+  "name":"java.util.logging.Level"
+},
+{
+  "name":"java.util.logging.Logger"
+},
+{
+  "name":"java.util.regex.Matcher"
+},
+{
+  "name":"java.util.regex.Pattern"
+},
+{
+  "name":"java.util.zip.GZIPInputStream"
+},
+{
+  "name":"javax.crypto.Mac"
+},
+{
+  "name":"javax.crypto.spec.SecretKeySpec"
+},
+{
+  "name":"javax.security.auth.x500.X500Principal",
+  "fields":[{"name":"thisX500Name"}],
+  "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
+},
+{
+  "name":"javax.xml.namespace.NamespaceContext"
+},
+{
+  "name":"javax.xml.namespace.QName"
+},
+{
+  "name":"javax.xml.stream.XMLInputFactory"
+},
+{
+  "name":"javax.xml.stream.XMLOutputFactory"
+},
+{
+  "name":"javax.xml.stream.XMLStreamConstants"
+},
+{
+  "name":"javax.xml.stream.XMLStreamReader"
+},
+{
+  "name":"javax.xml.stream.XMLStreamWriter"
+},
+{
+  "name":"javax.xml.transform.OutputKeys"
+},
+{
+  "name":"javax.xml.transform.Transformer"
+},
+{
+  "name":"javax.xml.transform.TransformerFactory"
+},
+{
+  "name":"javax.xml.transform.stream.StreamResult"
+},
+{
+  "name":"javax.xml.transform.stream.StreamSource"
+},
+{
+  "name":"long[]"
+},
+{
+  "name":"metrics.core__init"
+},
+{
+  "name":"metrics.counters__init"
+},
+{
+  "name":"metrics.gauges__init"
+},
+{
+  "name":"metrics.histograms__init"
+},
+{
+  "name":"metrics.jvm.core__init"
+},
+{
+  "name":"metrics.meters__init"
+},
+{
+  "name":"metrics.reporters.console__init"
+},
+{
+  "name":"metrics.reporters__init"
+},
+{
+  "name":"metrics.timers__init"
+},
+{
+  "name":"metrics.utils__init"
+},
+{
+  "name":"name.fraser.neil.plaintext.diff_match_patch"
+},
+{
+  "name":"name.fraser.neil.plaintext.diff_match_patch$Diff"
+},
+{
+  "name":"name.fraser.neil.plaintext.diff_match_patch$Operation"
+},
+{
+  "name":"org.apache.log4j.Appender"
+},
+{
+  "name":"org.apache.log4j.AppenderSkeleton",
+  "allPublicMethods":true
+},
+{
+  "name":"org.apache.log4j.Category"
+},
+{
+  "name":"org.apache.log4j.CategoryKey"
+},
+{
+  "name":"org.apache.log4j.ConsoleAppender",
+  "allPublicMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.apache.log4j.Layout",
+  "allPublicMethods":true
+},
+{
+  "name":"org.apache.log4j.Logger"
+},
+{
+  "name":"org.apache.log4j.PatternLayout",
+  "allPublicMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.apache.log4j.WriterAppender",
+  "allPublicMethods":true
+},
+{
+  "name":"org.apache.log4j.helpers.Loader"
+},
+{
+  "name":"org.apache.log4j.spi.OptionHandler"
+},
+{
+  "name":"org.eclipse.jetty.client.HttpClient"
+},
+{
+  "name":"org.eclipse.jetty.client.Socks4Proxy"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Request"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Response"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Response$CompleteListener"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Response$ContentListener"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Response$HeadersListener"
+},
+{
+  "name":"org.eclipse.jetty.client.api.Result"
+},
+{
+  "name":"org.eclipse.jetty.client.util.ByteBufferContentProvider"
+},
+{
+  "name":"org.eclipse.jetty.util.log.Slf4jLog",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"org.eclipse.jetty.util.resource.Resource"
+},
+{
+  "name":"org.eclipse.jetty.util.ssl.SslContextFactory"
+},
+{
+  "name":"org.objectweb.asm.Type"
+},
+{
+  "name":"org.slf4j.Logger",
+  "allPublicMethods":true
+},
+{
+  "name":"org.slf4j.LoggerFactory",
+  "allPublicMethods":true
+},
+{
+  "name":"org.yaml.snakeyaml.DumperOptions"
+},
+{
+  "name":"org.yaml.snakeyaml.DumperOptions$FlowStyle"
+},
+{
+  "name":"org.yaml.snakeyaml.Yaml"
+},
+{
+  "name":"org.yaml.snakeyaml.constructor.BaseConstructor"
+},
+{
+  "name":"org.yaml.snakeyaml.constructor.Constructor"
+},
+{
+  "name":"org.yaml.snakeyaml.constructor.SafeConstructor"
+},
+{
+  "name":"org.yaml.snakeyaml.error.Mark"
+},
+{
+  "name":"org.yaml.snakeyaml.representer.Representer"
+},
+{
+  "name":"safely.circuit_breaker__init"
+},
+{
+  "name":"safely.core__init"
+},
+{
+  "name":"safely.thread_pool__init"
+},
+{
+  "name":"samsara.trackit.jvm_metrics__init"
+},
+{
+  "name":"samsara.trackit.reporter__init"
+},
+{
+  "name":"samsara.trackit.util.MetricsValue"
+},
+{
+  "name":"samsara.trackit.util__init"
+},
+{
+  "name":"samsara.trackit__init"
+},
+{
+  "name":"schema.core$eval153",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"schema.core.AnythingSchema"
+},
+{
+  "name":"schema.core.Atomic"
+},
+{
+  "name":"schema.core.Both"
+},
+{
+  "name":"schema.core.CLJ1195Check"
+},
+{
+  "name":"schema.core.CondPre"
+},
+{
+  "name":"schema.core.ConditionalSchema"
+},
+{
+  "name":"schema.core.Constrained"
+},
+{
+  "name":"schema.core.Either"
+},
+{
+  "name":"schema.core.EnumSchema"
+},
+{
+  "name":"schema.core.EqSchema"
+},
+{
+  "name":"schema.core.FnSchema"
+},
+{
+  "name":"schema.core.HasPrecondition"
+},
+{
+  "name":"schema.core.Isa"
+},
+{
+  "name":"schema.core.MapEntry"
+},
+{
+  "name":"schema.core.Maybe"
+},
+{
+  "name":"schema.core.NamedSchema"
+},
+{
+  "name":"schema.core.One"
+},
+{
+  "name":"schema.core.OptionalKey"
+},
+{
+  "name":"schema.core.Predicate"
+},
+{
+  "name":"schema.core.Protocol"
+},
+{
+  "name":"schema.core.Queue"
+},
+{
+  "name":"schema.core.Record"
+},
+{
+  "name":"schema.core.Recursive"
+},
+{
+  "name":"schema.core.RequiredKey"
+},
+{
+  "name":"schema.core.Schema"
+},
+{
+  "name":"schema.core__init"
+},
+{
+  "name":"schema.macros__init"
+},
+{
+  "name":"schema.spec.collection.CollectionSpec"
+},
+{
+  "name":"schema.spec.collection__init"
+},
+{
+  "name":"schema.spec.core.CoreSpec"
+},
+{
+  "name":"schema.spec.core__init"
+},
+{
+  "name":"schema.spec.leaf.LeafSpec"
+},
+{
+  "name":"schema.spec.leaf__init"
+},
+{
+  "name":"schema.spec.variant.VariantSpec"
+},
+{
+  "name":"schema.spec.variant__init"
+},
+{
+  "name":"schema.utils.ErrorContainer"
+},
+{
+  "name":"schema.utils.NamedError"
+},
+{
+  "name":"schema.utils.ValidationError"
+},
+{
+  "name":"schema.utils__init"
+},
+{
+  "name":"short[]"
+},
+{
+  "name":"sun.security.pkcs.SignerInfo[]"
+},
+{
+  "name":"sun.security.pkcs12.PKCS12KeyStore",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.pkcs12.PKCS12KeyStore$DualFormatPKCS12",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.DSA$SHA224withDSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.DSA$SHA256withDSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.JavaKeyStore$DualFormatJKS",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.JavaKeyStore$JKS",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.NativePRNG",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA2$SHA224",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA2$SHA256",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA5$SHA384",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.SHA5$SHA512",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.X509Factory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.provider.certpath.PKIXCertPathValidator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSAKeyFactory$Legacy",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSAPSSSignature",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA224withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA256withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA512withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.ssl.SSLContextImpl$TLSContext",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.ssl.TrustManagerFactoryImpl$PKIXFactory",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.util.ObjectIdentifier"
+},
+{
+  "name":"sun.security.x509.AuthorityInfoAccessExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.AuthorityKeyIdentifierExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.BasicConstraintsExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.CRLDistributionPointsExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.CertificateExtensions"
+},
+{
+  "name":"sun.security.x509.CertificatePoliciesExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.ExtendedKeyUsageExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.IssuerAlternativeNameExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.KeyUsageExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.NetscapeCertTypeExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.PrivateKeyUsageExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.SubjectAlternativeNameExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"sun.security.x509.SubjectKeyIdentifierExtension",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.Boolean","java.lang.Object"] }]
+},
+{
+  "name":"where.core__init"
+},
+{
+  "name":"where.operation__init"
+}
+]

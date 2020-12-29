@@ -1,17 +1,54 @@
 #!/bin/bash
+#
+# from: 1config-cli
+# $ ../test/bin/end-2-end-test.sh                  # to test the binary same as `1cfg`
+# $ ../test/bin/end-2-end-test.sh 1cfg             # to test the binary
+# $ ../test/bin/end-2-end-test.sh 1cfgx            # to test the executable jar
+# $ ../test/bin/end-2-end-test.sh graalvm-config   # to run the test and generate the config
 
 export CURR=$(pwd)
-#export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
-#
-#if [ ! -f $CFG1 ] ; then
-#    echo "ERROR: 1cfg binary executable not present."
-#    echo "  please run:"
-#    echo "    cd 1config-cli"
-#    echo "    lein do clean, bin"
-#    exit 1
-#fi
 
-export CFG1="java -agentlib:native-image-agent=config-merge-dir=$(dirname $0)/../../1config-cli/target/config/ -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
+
+if [ "$1" == "graalvm-config" ] ; then
+
+   export CFG1="java -agentlib:native-image-agent=config-merge-dir=$(dirname $0)/../../1config-cli/graalvm-config/ -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
+
+   if [ ! -f "$(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar" ] ; then
+       echo "ERROR: uberjar not present."
+       echo "  please run:"
+       echo "    cd 1config-cli"
+       echo "    lein do clean, uberjar"
+       exit 1
+   fi
+
+elif [ "$1" == "1cfg" -o "$1" == "" ] ; then
+
+    export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+    if [ ! -f $CFG1 ] ; then
+        echo "ERROR: 1cfg binary executable not present."
+        echo "  please run:"
+        echo "    cd 1config-cli"
+        echo "    lein do clean, uberjar, native-config, native"
+        exit 1
+    fi
+
+elif [ "$1" == "1cfgx" ] ; then
+
+    export CFG1=$(dirname $0)/../../1config-cli/target/1cfgx
+    if [ ! -f $CFG1 ] ; then
+        echo "ERROR: 1cfg binary executable not present."
+        echo "  please run:"
+        echo "    cd 1config-cli"
+        echo "    lein do clean, bin"
+        exit 1
+    fi
+
+else
+
+    echo "unknown executiable: $1"
+    exit 1
+
+fi
 
 
 # defining test table

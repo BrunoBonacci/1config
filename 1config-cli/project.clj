@@ -36,7 +36,7 @@
 
   :resource-paths ["resources" "../ver" ]
 
-  :bin {:name "1cfg"
+  :bin {:name "1cfgx"
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :profiles {:uberjar {:aot :all}
@@ -56,7 +56,7 @@
    "native-config"
    ["shell"
     ;; run the application to infer the build configuration
-    "../test/bin/end-2-end-test.sh"]
+    "../test/bin/end-2-end-test.sh" "graalvm-config"]
 
    "native"
    ["shell"
@@ -67,7 +67,7 @@
     "--allow-incomplete-classpath"
     "--enable-http" "--enable-https" "--enable-all-security-services"
     "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-    "-H:Name=./target/${:name}"]
+    "-H:Name=./target/1cfg"]
 
    }
   )
