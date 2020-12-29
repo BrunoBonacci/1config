@@ -6,7 +6,13 @@
             [com.brunobonacci.oneconfig.util :as util]
             [com.brunobonacci.oneconfig.backends :as b]
             [safely.core :refer [safely]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            ;; added for GraalVM
+            [cognitect.aws.protocols.json]
+            [cognitect.aws.protocols.common]
+            [cognitect.aws.protocols.query]
+            [cognitect.http-client]
+            [clojure.spec.alpha]))
 
 
 

@@ -22,7 +22,6 @@
                  [com.brunobonacci/oneconfig #=(ver)]
                  [org.clojure/tools.cli "1.0.194"]
                  [org.slf4j/slf4j-log4j12 "1.7.30"]
-                 [doric "0.9.0"]
                  [com.brunobonacci/safely "0.5.0"]]
 
   :global-vars {*warn-on-reflection* true}
@@ -57,17 +56,15 @@
    "native-config"
    ["shell"
     ;; run the application to infer the build configuration
-    "java" "-agentlib:native-image-agent=config-output-dir=./target/config/"
-    "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-    "-b" "dynamo" "-k" "user-service" "-e" "dev" "-v" "0.2.0" "-t" "edn" "GET"]
+    "../test/bin/end-2-end-test.sh"]
 
    "native"
    ["shell"
-    "native-image" "--report-unsupported-elements-at-runtime" "--no-server"
+    "native-image" "--report-unsupported-elements-at-runtime" "--no-server" "--no-fallback"
     "-H:+PrintClassInitialization"
     "-H:ConfigurationFileDirectories=./target/config/"
     "--initialize-at-build-time"
-    "--initialize-at-run-time=com.amazonaws.auth.DefaultAWSCredentialsProviderChain,com.amazonaws.regions.DefaultAwsRegionProviderChain"
+    "--allow-incomplete-classpath"
     "--enable-http" "--enable-https" "--enable-all-security-services"
     "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
     "-H:Name=./target/${:name}"]

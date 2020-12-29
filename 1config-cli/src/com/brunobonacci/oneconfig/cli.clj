@@ -10,7 +10,7 @@
             [com.brunobonacci.oneconfig.util :as util]
             [com.brunobonacci.oneconfig.profiles :as prof]
             [com.brunobonacci.oneconfig.diff :as diff]
-            [doric.core :as table]
+            [com.brunobonacci.oneconfig.table :as table]
             [safely.core :refer [safely]]))
 
 
@@ -175,9 +175,9 @@
   [{:keys [backend] :as context} entries]
   (table/table [{:name :key              :title "Config key"}
                 {:name :env              :title "Env"}
-                {:name :version          :title "Version"}
+                {:name :version          :title "Version"   :align :right}
                 {:name :change-num       :title "Change num"}
-                {:name :content-type     :title "Type"}
+                {:name :content-type     :title "Type"      :align :center}
                 {:name :ts               :title "Timestamp" :format timestamp-format}]
                (->> entries
                   (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
@@ -188,9 +188,9 @@
   [{:keys [backend] :as context} entries]
   (table/table [{:name :key              :title "Config key"}
                 {:name :env              :title "Env"}
-                {:name :version          :title "Version"}
+                {:name :version          :title "Version"   :align :right}
                 {:name :change-num       :title "Change num"}
-                {:name :content-type     :title "Type"}
+                {:name :content-type     :title "Type"      :align :center}
                 {:name :ts               :title "Timestamp" :format timestamp-format}
                 {:name :master-key-alias :title "Master encryption key"}
                 {:name :user             :title "User"}]
@@ -231,7 +231,7 @@
        (map (fn [[k v]] {:alias k :master-key-arn v}))
        (sort-by :alias)
        (table/table [{:name :alias :title "Key alias"}
-                     :master-key-arn])))
+                     {:name :master-key-arn :title "Master Key Arn"}])))
    :on-error
    :log-stacktrace false
    :message "Listing keys"))

@@ -41,8 +41,12 @@
     resp))
 
 
+
 (def shared-http-client
+  ;; required for graalvm
   (delay (cognitect.aws.http.cognitect/create)))
+
+
 
 (defn- create-client
   "Creates an AWS client for the specified api."

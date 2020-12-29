@@ -1,15 +1,18 @@
 #!/bin/bash
 
 export CURR=$(pwd)
-export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+#export CFG1=$(dirname $0)/../../1config-cli/target/1cfg
+#
+#if [ ! -f $CFG1 ] ; then
+#    echo "ERROR: 1cfg binary executable not present."
+#    echo "  please run:"
+#    echo "    cd 1config-cli"
+#    echo "    lein do clean, bin"
+#    exit 1
+#fi
 
-if [ ! -f $CFG1 ] ; then
-    echo "ERROR: 1cfg binary executable not present."
-    echo "  please run:"
-    echo "    cd 1config-cli"
-    echo "    lein do clean, bin"
-    exit 1
-fi
+export CFG1="java -agentlib:native-image-agent=config-merge-dir=$(dirname $0)/../../1config-cli/target/config/ -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
+
 
 # defining test table
 export ONECONFIG_DYNAMO_TABLE=1ConfigTest2
@@ -20,6 +23,13 @@ if [ "$(aws dynamodb list-tables --output=text | grep -q $ONECONFIG_DYNAMO_TABLE
     echo "waiting for table to be available..."
     sleep 10
 fi
+
+## test help and various listings
+$CFG1 -h
+$CFG1 list
+$CFG1 list -X
+$CFG1 list -C
+$CFG1 list-keys
 
 
 # setup user-profiles for testing
