@@ -62,7 +62,7 @@
    ["shell"
     "native-image" "--report-unsupported-elements-at-runtime" "--no-server" "--no-fallback"
     "-H:+PrintClassInitialization"
-    "-H:ConfigurationFileDirectories=./target/config/"
+    "-H:ConfigurationFileDirectories=./target/graalvm-config/"
     "--initialize-at-build-time"
     "--allow-incomplete-classpath"
     "--enable-http" "--enable-https" "--enable-all-security-services"

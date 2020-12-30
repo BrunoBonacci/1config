@@ -13,3 +13,4 @@ pom.xml.asc
 1config-ui/resources/public/cljs
 /1config-ui/.rebel_readline_history
 /1config-ui/figwheel_server.log
+/1config-cli/reports/
