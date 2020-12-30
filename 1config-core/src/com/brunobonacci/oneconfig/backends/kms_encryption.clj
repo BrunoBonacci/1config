@@ -7,7 +7,8 @@
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.util :refer [clean-map lazy-mapcat env]]
             [where.core :refer [where]]
-            [com.brunobonacci.oneconfig.util :refer [safely]])
+            [com.brunobonacci.oneconfig.util :refer [safely]]
+            [clojure.java.io :as io])
   (:import com.amazonaws.encryptionsdk.AwsCrypto
            com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider
            com.amazonaws.PredefinedClientConfigurations
@@ -133,6 +134,56 @@
 
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;       ----==| N E W   V I A   K M S   D I R E C T   C A L L |==----        ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn- base64-decode
+  [stream]
+  (let [baos (java.io.ByteArrayOutputStream.)]
+    (io/copy stream baos)
+    (java.nio.ByteBuffer/wrap (.decode (java.util.Base64/getDecoder) ^bytes (.toByteArray baos)))))
+
+
+(defn decrypt2
+  [context text]
+  (->>
+    (kms/decrypt
+      :encryption-context (into {} (map (fn [[k v]] [(str k) (str v)]) context))
+      :ciphertext-blob (base64-decode text))
+    :plaintext
+    ((memfn ^java.nio.ByteBuffer array))
+    (#(String. ^bytes % "utf-8"))))
+
+
+
+(defn- base64-encode
+  [^java.nio.ByteBuffer bytes]
+  (let [blob (.array bytes)]
+    (String. (.encode (java.util.Base64/getEncoder) blob) "utf-8")))
+
+(defn encrypt2
+  [master-key-id context text]
+  (->
+    (kms/encrypt
+      :key-id master-key-id
+      :encryption-context (into {} (map (fn [[k v]] [(str k) (str v)]) context))
+      :encryption-algorithm "SYMMETRIC_DEFAULT"
+      :plaintext text)
+    :ciphertext-blob
+    base64-encode))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;    ----==| O L D   V I A   A W S - E N C R Y P T I O N - S D K |==----     ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;
 ;; AWS Cryto utility
 (defonce ^:private ^AwsCrypto crypto
@@ -140,61 +191,51 @@
 
 
 
-(defn- encrypt
-  ([^String payload master-key-id]
-   (encrypt payload master-key-id {}))
-  ([^String payload master-key-id context]
-   (let [ ;; retrieving the master key to generate the data key
-         ^KmsMasterKeyProvider master-key
-         (KmsMasterKeyProvider.
+(defn encrypt
+  [master-key-id context ^String payload]
+  (let [ ;; retrieving the master key to generate the data key
+        ^KmsMasterKeyProvider master-key
+        (KmsMasterKeyProvider.
           ;; reuse amazonica credential variable
           (aws/get-credentials (some-> #'aws/credential deref deref))
           ^Region @aws-region
           (PredefinedClientConfigurations/defaultConfig)
           (key-id master-key-id))
-         ;; sanitize context if present
-         ^java.util.Map context (->> (or context {})
-                                   (map (fn [[k v]] [(str k) (str v)]))
-                                   (into {}))
-         ;; the encrypted payload contains an envelop
-         ;; with the data key encrypted
-         out (.encryptString crypto master-key payload context)]
-     {:result      (.getResult out)
-      :context     (into {} (.getEncryptionContext out))
-      :algorithm   (str (.getCryptoAlgorithm out))
-      :master-keys (into [] (.getMasterKeyIds out))})))
+        ;; sanitize context if present
+        ^java.util.Map context (->> (or context {})
+                                 (map (fn [[k v]] [(str k) (str v)]))
+                                 (into {}))
+        ;; the encrypted payload contains an envelop
+        ;; with the data key encrypted
+        out (.encryptString crypto master-key payload context)]
+    (.getResult out)))
 
 
 
-(defn- decrypt
-  ([^String payload]
-   (decrypt payload {}))
-  ([^String payload context]
-   (let [ ;; retrieving the master key to generate the data key
-         ^KmsMasterKeyProvider master-key
-         (KmsMasterKeyProvider.
+(defn decrypt
+  [context ^String payload]
+  (let [ ;; retrieving the master key to generate the data key
+        ^KmsMasterKeyProvider master-key
+        (KmsMasterKeyProvider.
           ;; reuse amazonica credential variable
           (aws/get-credentials (some-> #'aws/credential deref deref))
           ^Region @aws-region
           (PredefinedClientConfigurations/defaultConfig)
           (Collections/emptyList))
-         ;; sanitize context if present
-         ^java.util.Map context (->> (or context {})
-                                   (map (fn [[k v]] [(str k) (str v)]))
-                                   (into {}))
-         ;; the encrypted payload contains an envelop
-         ;; with the data key encrypted
-         out (.decryptString crypto master-key payload)
-         ;; checking context
-         out-ctx (into {} (.getEncryptionContext out))]
+        ;; sanitize context if present
+        ^java.util.Map context (->> (or context {})
+                                 (map (fn [[k v]] [(str k) (str v)]))
+                                 (into {}))
+        ;; the encrypted payload contains an envelop
+        ;; with the data key encrypted
+        out (.decryptString crypto master-key payload)
+        ;; checking context
+        out-ctx (into {} (.getEncryptionContext out))]
 
-     (when (not= context (select-keys out-ctx (keys context)))
-       (throw (ex-info "Invalid encryption context. Possible tampering with config-entry."
-                       {:config-entry context})))
-     {:result      (.getResult out)
-      :context     out-ctx
-      :algorithm   (str (.getCryptoAlgorithm out))
-      :master-keys (into [] (.getMasterKeyIds out))})))
+    (when (not= context (select-keys out-ctx (keys context)))
+      (throw (ex-info "Invalid encryption context. Possible tampering with config-entry."
+               {:config-entry context})))
+    (.getResult out)))
 
 
 
@@ -243,7 +284,7 @@
 
 
 
-(defn- encryption-context
+(defn encryption-context
   [config-entry]
   (select-keys config-entry [:key :env :version :change-num :content-type :user]))
 
@@ -256,7 +297,7 @@
   (find [this {:keys [key env version] :as config-entry}]
     (when-let [entry (find store config-entry)]
       (let [ctx (encryption-context entry)]
-        (update entry :value (comp :result #(decrypt % ctx))))))
+        (update entry :value #(decrypt ctx %)))))
 
 
   IConfigBackend
@@ -264,15 +305,14 @@
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (when-let [entry (load store config-entry)]
       (let [ctx (encryption-context entry)]
-        (update entry :value (comp :result #(decrypt % ctx))))))
+        (update entry :value #(decrypt ctx %)))))
 
 
   (save [_ {:keys [key value master-key] :as config-entry}]
     (let [{:keys [master-key-alias master-key]
            } (resolve-master-key (or master-key key))
           context (encryption-context config-entry)
-          encrypted (:result
-                     (encrypt value master-key context))]
+          encrypted (encrypt master-key context value)]
       (as-> config-entry $
         ;; add the encrypted value and the master encryption key
         (assoc $ :value encrypted

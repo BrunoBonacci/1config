@@ -285,3 +285,56 @@
         (if (> (count diffs) 1)
           (println (diff/colorize-diff diffs))
           (println "No differences found."))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                     ----==| M I G R A T I O N |==----                      ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(defn migrate-entry
+  [v1 v2 entry]
+
+  (if (load v2 entry)
+    :done
+    ;; run the migration
+    (try
+      (as-> entry $
+        (load v1 $)
+        (update $ :value (partial kms/decrypt (kms/encryption-context $)))
+        (update $ :value (partial kms/encrypt2 (:master-key $) (kms/encryption-context $)))
+        (save v2 $)
+        ((constantly :done)))
+      (catch Exception x
+        :failed))))
+
+
+(defn migrate-table
+  [table]
+  (let [v1 (dyn/dynamo-config-backend
+             (merge (dyn/default-dynamo-config) {:table table}))
+        v2 (dyn/dynamo-config-backend-v2
+             (merge (dyn/default-dynamo-config) {:table table}))]
+    (doseq [{:keys [key version env change-num] :as entry} (list v1 {})]
+      (printf " - Migrating %s, %s, %s, %s -> " key version env (str change-num))
+      (println (migrate-entry v1 v2 entry)))))
+
+
+;; (migrate-table "1ConfigMigration")
+
+
+(defn migrate-database!
+  []
+  (safely
+    (migrate-table
+      (util/config-property
+        "1config.dynamo.table"
+        "ONECONFIG_DYNAMO_TABLE"
+        "1Config"))
+    :on-error
+    :log-stacktrace false
+    :message "Migrating database"))
