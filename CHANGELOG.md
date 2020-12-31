@@ -6,6 +6,7 @@
     See migration procedure: (TODO: link)
   * Switched from Amazonica to Cognitect's aws-api client for AWS.
   * Native binaries for command line tool.
+  * Switched from Cheshire to Jasonista (to reduce library version clash)
 
 ## Release: v0.17.0 (unreleased)
 
