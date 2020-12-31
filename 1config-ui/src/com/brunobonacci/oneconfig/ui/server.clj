@@ -147,32 +147,8 @@
     wrap-json-response))
 
 
-;; TODO: remove workaround.
-;;
-;; workaround for AWS Crypto SDK slow first use The SDK does internal
-;; initialization the first time is asked to encrypt/decrypt entries
-;; which take several seconds.  To work around this issue the UI will
-;; request to decrypt one instance before it starts the server thus
-;; elimating the wait for the user.
-;; This isn't a good/long term approach as the operator might not have
-;; access to the keys for the first entry. Therefore a better solution
-;; it is required.
-;;
-(defn warmup-encryption-sdk
-  []
-  (println "Initialize encryption libs")
-  (try
-    (some->> (cfg1/list backend {})
-      first
-      (#(select-keys % [:key :env :version :change-num]))
-      (cfg1/load backend))
-    (catch Exception _
-     ;; purposely ignoring errors
-      )))
-
 
 (defn -main [& args]
-  (warmup-encryption-sdk)
   (http-kit/run-server handler {:port PORT})
   (println (format "Server started: http://127.0.0.1:%d" PORT)))
 
