@@ -1,5 +1,21 @@
 # Changelog
 
+## Release: v0.20.0 (unreleased)
+
+  * [**BREAKING**] Dropped `aws-ancryption-sdk` in favour of direct KMS API use.
+    See migration procedure: (TODO: link)
+  * Switched from Amazonica to Cognitect's aws-api client for AWS.
+  * Native binaries for command line tool.
+
+## Release: v0.17.0 (unreleased)
+
+  * Transition version in preparation for `v0.20.0`. **Use this
+    version if you have an existing installation of 1Config,
+    jump to the new version if you are starting on a new account.**
+  * Migration tool to migrate database to new format
+  * `SAVE` command saves in both versions
+
+
 ## Release: v0.16.4 (2020-04-04)
 
   * Added AOT compiled library Jar
