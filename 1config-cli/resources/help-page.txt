@@ -185,4 +185,4 @@
 
    NOTE: - set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to provide authentication
            and access to the target AWS account.
-         - set AWS_DEFAULT_REGION to set the AWS region to use.
+         - set AWS_REGION to set the AWS region to use.
