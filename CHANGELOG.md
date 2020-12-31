@@ -15,7 +15,6 @@
   * Migration tool to migrate database to new format
   * `SAVE` command saves in both versions
 
-
 ## Release: v0.16.4 (2020-04-04)
 
   * Added AOT compiled library Jar
