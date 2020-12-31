@@ -41,8 +41,8 @@
 
   :profiles {:uberjar {:aot :all}
              :dev {:dependencies [[midje "1.9.9"]
-                                  [org.clojure/test.check "1.0.0"]
-                                  [criterium "0.4.5"]
+                                  [org.clojure/test.check "1.1.0"]
+                                  [criterium "0.4.6"]
                                   [org.slf4j/slf4j-log4j12 "1.7.30"]]
                    :resource-paths ["dev-resources"]
                    :plugins      [[lein-midje "3.2.2"]
@@ -65,6 +65,7 @@
     "-H:ConfigurationFileDirectories=./graalvm-config/"
     "--initialize-at-build-time"
     "--allow-incomplete-classpath"
+    "--initialize-at-run-time=clojure.stacktrace__init"
     "--enable-http" "--enable-https" "--enable-all-security-services"
     "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
     "-H:Name=./target/1cfg"]

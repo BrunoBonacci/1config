@@ -9,11 +9,23 @@
 export CURR=$(pwd)
 
 
-if [ "$1" == "graalvm-config" ] ; then
+if [ "$1" == "uberjar" ] ; then
+
+   export CFG1="java -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
+
+   if [ ! -f $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar ] ; then
+       echo "ERROR: uberjar not present."
+       echo "  please run:"
+       echo "    cd 1config-cli"
+       echo "    lein do clean, uberjar"
+       exit 1
+   fi
+
+elif [ "$1" == "graalvm-config" ] ; then
 
    export CFG1="java -agentlib:native-image-agent=config-merge-dir=$(dirname $0)/../../1config-cli/graalvm-config/ -jar $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar"
 
-   if [ ! -f "$(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar" ] ; then
+   if [ ! -f $(dirname $0)/../../1config-cli/target/oneconfig-cli-*-standalone.jar ] ; then
        echo "ERROR: uberjar not present."
        echo "  please run:"
        echo "    cd 1config-cli"

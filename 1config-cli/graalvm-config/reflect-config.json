@@ -395,7 +395,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$eval132",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$eval133",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval134",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -403,11 +411,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$eval3",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$eval4",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$eval5",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$eval6",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$eval9",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -419,7 +439,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__102",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__103",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__104",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -427,7 +455,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__107",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__108",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__110",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -435,7 +471,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__112",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__113",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__115",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -443,7 +487,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__117",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__118",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__119",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -451,7 +503,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__14",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__15",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__17",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -459,7 +519,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__20",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__21",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__23",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -467,7 +535,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__26",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__27",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__28",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -475,7 +551,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__31",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__32",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__33",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -483,7 +567,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__36",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__37",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__39",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -491,7 +583,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__42",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__43",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__46",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -499,7 +599,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__49",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__50",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__52",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -507,7 +615,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__54",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__55",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__56",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -515,7 +631,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__69",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__70",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__71",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -523,11 +647,23 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__83",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__84",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"clojure.core.specs.alpha$fn__96",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"clojure.core.specs.alpha$fn__97",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.core.specs.alpha$fn__99",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1115,6 +1251,10 @@
 },
 {
   "name":"clojure.tools.logging$eval1",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"clojure.tools.logging$eval136",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -2233,6 +2373,10 @@
   "name":"org.objectweb.asm.Type"
 },
 {
+  "name":"org.slf4j.ILoggerFactory",
+  "allPublicMethods":true
+},
+{
   "name":"org.slf4j.Logger",
   "allPublicMethods":true
 },
@@ -2245,6 +2389,9 @@
 },
 {
   "name":"org.yaml.snakeyaml.DumperOptions$FlowStyle"
+},
+{
+  "name":"org.yaml.snakeyaml.LoaderOptions"
 },
 {
   "name":"org.yaml.snakeyaml.Yaml"
@@ -2287,6 +2434,10 @@
 },
 {
   "name":"samsara.trackit__init"
+},
+{
+  "name":"schema.core$eval152",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"schema.core$eval153",
