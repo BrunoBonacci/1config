@@ -1646,10 +1646,44 @@
   "name":"com.fasterxml.jackson.core.PrettyPrinter"
 },
 {
+  "name":"com.fasterxml.jackson.databind.DeserializationFeature"
+},
+{
+  "name":"com.fasterxml.jackson.databind.JsonSerializer"
+},
+{
+  "name":"com.fasterxml.jackson.databind.ObjectMapper"
+},
+{
+  "name":"com.fasterxml.jackson.databind.SerializationFeature"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.Deserializers[]"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.KeyDeserializers[]"
+},
+{
+  "name":"com.fasterxml.jackson.databind.deser.ValueInstantiators[]"
+},
+{
+  "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.fasterxml.jackson.databind.module.SimpleModule"
+},
+{
+  "name":"com.fasterxml.jackson.databind.ser.Serializers[]"
+},
+{
   "name":"com.fasterxml.jackson.dataformat.cbor.CBORFactory"
 },
 {
   "name":"com.fasterxml.jackson.dataformat.smile.SmileFactory"
+},
+{
+  "name":"com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"
 },
 {
   "name":"com.sun.crypto.provider.AESCipher$General",
@@ -1750,6 +1784,9 @@
 },
 {
   "name":"java.io.Closeable"
+},
+{
+  "name":"java.io.DataOutput"
 },
 {
   "name":"java.io.EOFException"
@@ -2249,6 +2286,45 @@
 },
 {
   "name":"javax.xml.transform.stream.StreamSource"
+},
+{
+  "name":"jsonista.core.ReadValue"
+},
+{
+  "name":"jsonista.core.WriteValue"
+},
+{
+  "name":"jsonista.core__init"
+},
+{
+  "name":"jsonista.jackson.DateSerializer"
+},
+{
+  "name":"jsonista.jackson.FunctionalKeyDeserializer"
+},
+{
+  "name":"jsonista.jackson.FunctionalKeywordSerializer"
+},
+{
+  "name":"jsonista.jackson.FunctionalSerializer"
+},
+{
+  "name":"jsonista.jackson.KeywordKeyDeserializer"
+},
+{
+  "name":"jsonista.jackson.KeywordSerializer"
+},
+{
+  "name":"jsonista.jackson.PersistentHashMapDeserializer"
+},
+{
+  "name":"jsonista.jackson.PersistentVectorDeserializer"
+},
+{
+  "name":"jsonista.jackson.RatioSerializer"
+},
+{
+  "name":"jsonista.jackson.SymbolSerializer"
 },
 {
   "name":"long[]"

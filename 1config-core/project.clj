@@ -17,7 +17,7 @@
                  [com.cognitect.aws/dynamodb "810.2.801.0"]
                  [com.cognitect.aws/kms "810.2.817.0"]
                  [prismatic/schema "1.1.12"]
-                 [cheshire "5.10.0"]
+                 [metosin/jsonista "0.3.0"]
                  [clj-commons/clj-yaml "0.7.2"]]
 
   :source-paths      ["src" "../1config-shared/src"]

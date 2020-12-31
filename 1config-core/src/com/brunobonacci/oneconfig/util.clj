@@ -1,6 +1,6 @@
 (ns ^:no-doc ^{:author "Bruno Bonacci (@BrunoBonacci)"}
  com.brunobonacci.oneconfig.util
-  (:require [cheshire.core :as json]
+  (:require [jsonista.core :as json]
             [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -406,7 +406,7 @@
 
 (defmethod decode "json"
   [_ value]
-  (json/parse-string value true))
+  (json/read-value value json/keyword-keys-object-mapper))
 
 
 
@@ -450,7 +450,8 @@
 
 (defmethod encode "json"
   [_ value]
-  (json/generate-string value))
+  (json/write-value-as-string value
+    (json/object-mapper {:date-format "yyyy-MM-dd'T'HH:mm:ss.SSSX"})))
 
 
 

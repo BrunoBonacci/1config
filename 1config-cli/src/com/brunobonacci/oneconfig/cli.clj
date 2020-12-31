@@ -1,6 +1,6 @@
 (ns com.brunobonacci.oneconfig.cli
   (:refer-clojure :exclude [find load list])
-  (:require [cheshire.core :as json]
+  (:require [jsonista.core :as json]
             [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.tools.logging :as log]
@@ -103,7 +103,10 @@
   (if-not pretty-print?
     (or encoded-value value)
     (case content-type
-      "json"       (json/generate-string value {:pretty true})
+      "json"       (json/write-value-as-string value
+                     (json/object-mapper
+                       {:date-format "yyyy-MM-dd'T'HH:mm:ss.SSSX"
+                        :pretty true}))
       "yaml"       encoded-value
       "edn"        (pp/write value :stream nil)
       "txt"        value

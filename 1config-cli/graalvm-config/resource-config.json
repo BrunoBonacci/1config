@@ -333,6 +333,8 @@
     {"pattern":"\\Qflatland/useful/ns.clj\\E"}, 
     {"pattern":"\\Qflatland/useful/ns__init.class\\E"}, 
     {"pattern":"\\Qhelp-page.txt\\E"}, 
+    {"pattern":"\\Qjsonista/core.clj\\E"}, 
+    {"pattern":"\\Qjsonista/core__init.class\\E"}, 
     {"pattern":"\\Qlog4j.properties\\E"}, 
     {"pattern":"\\Qmetrics/core.clj\\E"}, 
     {"pattern":"\\Qmetrics/core__init.class\\E"}, 
