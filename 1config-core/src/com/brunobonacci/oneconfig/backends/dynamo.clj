@@ -159,6 +159,7 @@
     (->> (lazy-db-scan (dyn-client) {:TableName (:table cfg)})
       (map from-db-rec)
       (list-entries filters)
+      (distinct) ;; remove duplicates of migration
       (map #(assoc % :backend :dynamo)))))
 
 
