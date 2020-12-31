@@ -141,6 +141,7 @@
                           {:table-name (:table cfg)})))]
       (->> (lazy-query q)
          (list-entries filters)
+         (distinct) ;; remove duplicates caused by migration
          (map #(assoc % :backend :dynamo))))))
 
 
@@ -215,6 +216,7 @@
                           {:table-name (:table cfg)})))]
       (->> (lazy-query q)
          (list-entries filters)
+         (distinct) ;; remove duplicates caused by migration
          (map #(assoc % :backend :dynamo))))))
 
 
