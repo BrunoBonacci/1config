@@ -12,8 +12,8 @@
 
 (defn parse-date [timestamp]
   (->> (tc/from-long timestamp)
-       (t/to-default-time-zone)
-       (tf/unparse one-config-formatter)))
+    (t/to-default-time-zone)
+    (tf/unparse one-config-formatter)))
 
 
 
@@ -49,8 +49,8 @@
 
 (defn filter-entries [{:keys [key env version]} entries]
   (->> entries
-       (filter
-        (where [:and
-                [:env     :CONTAINS? (or env "")]
-                [:key     :CONTAINS? (or key "")]
-                [:version :starts-with? (or version "")]]))))
+    (filter
+      (where [:and
+              [:env     :CONTAINS? (or env "")]
+              [:key     :CONTAINS? (or key "")]
+              [:version :starts-with? (or version "")]]))))

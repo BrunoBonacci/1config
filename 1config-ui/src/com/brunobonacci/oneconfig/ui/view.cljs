@@ -13,7 +13,7 @@
   [preferences env]
   ;; TODO: fix transport should be transit format
   (or (get-in preferences [:colors :env-labels (keyword env)])
-      (get-in preferences [:colors :env-labels :default] "grey")))
+    (get-in preferences [:colors :env-labels :default] "grey")))
 
 
 
@@ -200,34 +200,34 @@
 (defn show-entry-window [preferences item-params item-data]
   [:div {:class "ui grid" :style {:padding "16px"}}
    [:div {:class "three wide column"}
-     [:table {:class "ui celled striped table"}
-      [:thead
-       [:tr
-        [:th {:class "center aligned collapsing" :col-span "2"}
-         (get item-params :key)]]]
-      [:tbody
-       [:tr
-        [:td {:class "center aligned collapsing"} "Environment"]
-        [:td {:class "center aligned collapsing"}
-         (let [env (get item-params :env)]
-           (utils/as-label (colourize-label preferences  env) env))]]
-       [:tr
-        [:td {:class "center aligned collapsing"} "Version"]
-        [:td {:class "center aligned collapsing"}
-         (get item-params :version)]]
-       [:tr
-        [:td {:class "center aligned collapsing"} "Change num"]
-        [:td {:class "center aligned collapsing"}
-         (get item-params :change-num)]]
-       [:tr
-        [:td {:class "center aligned collapsing"} "Time"]
-        [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
-       [:tr
-        [:td {:class "center aligned collapsing"} "Type"]
-        [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
-       [:tr
-        [:td {:class "center aligned collapsing" :col-span "2"}
-         [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
+    [:table {:class "ui celled striped table"}
+     [:thead
+      [:tr
+       [:th {:class "center aligned collapsing" :col-span "2"}
+        (get item-params :key)]]]
+     [:tbody
+      [:tr
+       [:td {:class "center aligned collapsing"} "Environment"]
+       [:td {:class "center aligned collapsing"}
+        (let [env (get item-params :env)]
+          (utils/as-label (colourize-label preferences  env) env))]]
+      [:tr
+       [:td {:class "center aligned collapsing"} "Version"]
+       [:td {:class "center aligned collapsing"}
+        (get item-params :version)]]
+      [:tr
+       [:td {:class "center aligned collapsing"} "Change num"]
+       [:td {:class "center aligned collapsing"}
+        (get item-params :change-num)]]
+      [:tr
+       [:td {:class "center aligned collapsing"} "Time"]
+       [:td {:class "center aligned collapsing"} (utils/parse-date (get item-params :change-num))]]
+      [:tr
+       [:td {:class "center aligned collapsing"} "Type"]
+       [:td {:class "center aligned collapsing"} (utils/as-label (get item-params :content-type))]]
+      [:tr
+       [:td {:class "center aligned collapsing" :col-span "2"}
+        [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]]]]]
 
    [:div {:class "ten wide column"}
     [:div {:class "ui raised segment"}
@@ -246,89 +246,89 @@
 (defn new-entry-details-window
   [_ new-entry]
   [:form {:class "ui form" :on-submit #(ctl/add-config-entry! %1)}
-  [:div {:class "ui grid" :style {:padding "16px"}}
-   [:div {:class "three wide column"}
+   [:div {:class "ui grid" :style {:padding "16px"}}
+    [:div {:class "three wide column"}
      [:div {:class "edit-background"}
-     [:div {:class "ui grid"}
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
-       [:div {:class "row onecfg-filter-block"}
-        [:input {:type        "text"
-                 :placeholder "Service Name"
-                 :name        "service"
-                 :value       (get new-entry :key)
-                 :on-change   #(ctl/on-input-change :key %)}]]
+      [:div {:class "ui grid"}
+       [:div {:class "two wide column"}]
+       [:div {:class "twelve wide column"}
+        [:div {:class "row onecfg-filter-block"}
+         [:input {:type        "text"
+                  :placeholder "Service Name"
+                  :name        "service"
+                  :value       (get new-entry :key)
+                  :on-change   #(ctl/on-input-change :key %)}]]
 
-       [:div {:class "row onecfg-filter-block"}
-        [:input {:type        "text"
-                 :placeholder "Environment"
-                 :name        "environment"
-                 :value       (get new-entry :env)
-                 :on-change   #(ctl/on-input-change :env %)}]]
+        [:div {:class "row onecfg-filter-block"}
+         [:input {:type        "text"
+                  :placeholder "Environment"
+                  :name        "environment"
+                  :value       (get new-entry :env)
+                  :on-change   #(ctl/on-input-change :env %)}]]
 
-       [:div {:class "row onecfg-filter-block"}
-        [:input {:type        "text"
-                 :placeholder "Version"
-                 :name        "version"
-                 :value       (get new-entry :version)
-                 :on-change   #(ctl/on-input-change :version %)}]]
+        [:div {:class "row onecfg-filter-block"}
+         [:input {:type        "text"
+                  :placeholder "Version"
+                  :name        "version"
+                  :value       (get new-entry :version)
+                  :on-change   #(ctl/on-input-change :version %)}]]
 
-       [:div {:class "row onecfg-filter-block"}
-        [:select {:class     "ui dropdown modal-selector "
-                  :value     (get new-entry :type)
-                  :on-change #(ctl/on-input-change :type %)}
+        [:div {:class "row onecfg-filter-block"}
+         [:select {:class     "ui dropdown modal-selector "
+                   :value     (get new-entry :type)
+                   :on-change #(ctl/on-input-change :type %)}
 
-         [:option {:value "json"} "json"]
-         [:option {:value "edn"} "edn"]
-         [:option {:value "yaml"} "yaml"]
-         [:option {:value "properties"} "properties"]
-         [:option {:value "txt"} "txt"]]]
+          [:option {:value "json"} "json"]
+          [:option {:value "edn"} "edn"]
+          [:option {:value "yaml"} "yaml"]
+          [:option {:value "properties"} "properties"]
+          [:option {:value "txt"} "txt"]]]
 
-       [:div {:class "ui horizontal divider"} "Upload a file"]]
-      [:div {:class "two wide column"}]
+        [:div {:class "ui horizontal divider"} "Upload a file"]]
+       [:div {:class "two wide column"}]
       ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "twelve wide column"}
+       [:div {:class "two wide column"}]
+       [:div {:class "twelve wide column"}
        ;;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       [:table {:class "ui very basic  table"}
-        [:tbody
-         [:tr
-          [:td
-           [:input {:type      "file"
-                    :name      "file"
-                    :class     "inputfile"
-                    :id        "file-input"
-                    :on-change #(ctl/upload-file %)}]
+        [:table {:class "ui very basic  table"}
+         [:tbody
+          [:tr
+           [:td
+            [:input {:type      "file"
+                     :name      "file"
+                     :class     "inputfile"
+                     :id        "file-input"
+                     :on-change #(ctl/upload-file %)}]
 
-           [:label {:for "file-input" :class "ui mini blue button"}
-            [:i {:class "ui upload icon"}] "Upload"]]
-          [:td (get new-entry :file-name)]
-          [:td
-           (if (gs/isEmptyString (get new-entry :file-name))
-             [:i]
-             [:i {:class "red trash icon" :on-click #(ctl/remove-file!)}])]]]]]
-      [:div {:class "two wide column"}]
+            [:label {:for "file-input" :class "ui mini blue button"}
+             [:i {:class "ui upload icon"}] "Upload"]]
+           [:td (get new-entry :file-name)]
+           [:td
+            (if (gs/isEmptyString (get new-entry :file-name))
+              [:i]
+              [:i {:class "red trash icon" :on-click #(ctl/remove-file!)}])]]]]]
+       [:div {:class "two wide column"}]
       ;;;-------------------------------------------------
-      [:div {:class "two wide column"}]
-      [:div {:class "four wide column"}
-       [:button {:class "ui primary button"} "Save"]]
-      [:div {:class "four wide column"}]
-      [:div {:class "four wide column "}
-       [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]
-      [:div {:class "two wide column"}]]]]
+       [:div {:class "two wide column"}]
+       [:div {:class "four wide column"}
+        [:button {:class "ui primary button"} "Save"]]
+       [:div {:class "four wide column"}]
+       [:div {:class "four wide column "}
+        [:button {:class "ui grey button right floated left aligned" :on-click #(ctl/close-new-entry-panel! %)} "Close"]]
+       [:div {:class "two wide column"}]]]]
 
-   [:div {:class "ten wide column"}
-    [:div {:class "ui raised segment"}
-     [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard!)} "Copy to clipboard"]
-     [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! (get new-entry :val))} "Discard changes"]
-     [:div  {:class "overflow-class"}
-      [:div {:id "jsEditor"} (get new-entry :val)]
-      [ctl/highlight-code-block false (get new-entry :type)]]]]
-   [:div {:class "three wide column"}]
+    [:div {:class "ten wide column"}
+     [:div {:class "ui raised segment"}
+      [:a {:class "ui blue ribbon label" :on-click #(ctl/copy-to-clipboard!)} "Copy to clipboard"]
+      [:a {:class "ui grey right ribbon label" :on-click #(ctl/discard-changes! (get new-entry :val))} "Discard changes"]
+      [:div  {:class "overflow-class"}
+       [:div {:id "jsEditor"} (get new-entry :val)]
+       [ctl/highlight-code-block false (get new-entry :type)]]]]
+    [:div {:class "three wide column"}]
    ;;-----------------------------------------
-   [:div {:class "three wide column"}]
-   [:div {:class "ten wide column"}]
-   [:div {:class "three wide column"}]]])
+    [:div {:class "three wide column"}]
+    [:div {:class "ten wide column"}]
+    [:div {:class "three wide column"}]]])
 
 (defn compare-entry-details-window
   [_ compare-items preferences]
@@ -400,11 +400,11 @@
       (:extended-mode? current-state)
       (:filters current-state)
       (->>
-       (utils/filter-entries
-        (get current-state :filters)
-        (get current-state :entries))
-       (group-by :key)
-       (into (sorted-map)))]
+        (utils/filter-entries
+          (get current-state :filters)
+          (get current-state :entries))
+        (group-by :key)
+        (into (sorted-map)))]
      (let [mode         (:client-mode current-state )
            item-params  (:item-params current-state)
            item-data    (:item-data current-state)
@@ -412,13 +412,13 @@
        (cond
          (= :listing mode)          [:div {:class "modal"}]
          (= :new-entry-mode mode)   [:div {:class "modal show-modal"}
-                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
+                                     [new-entry-details-window :DUMMY (get current-state :new-entry)]]
          (= :edit-entry-mode mode)  [:div {:class "modal show-modal"}
-                                      [:div {:class "hide-element"}
-                                        [ctl/copy-data-to-new-entry! item-params item-data]]
-                                      [new-entry-details-window :DUMMY (get current-state :new-entry)]]
+                                     [:div {:class "hide-element"}
+                                      [ctl/copy-data-to-new-entry! item-params item-data]]
+                                     [new-entry-details-window :DUMMY (get current-state :new-entry)]]
          (= :show-entry-mode mode)  [:div {:class "modal show-modal"}
-                                      [show-entry-window preferences item-params item-data]]
+                                     [show-entry-window preferences item-params item-data]]
          (= :compare-entry-mode mode)  [:div {:class "modal show-modal"}
                                         [compare-entry-details-window :DUMMY (get current-state :selected) preferences]]
          :else                      [:div {:class "modal"}]))]]
@@ -450,5 +450,5 @@
   (ctl/get-all-configs!)
   (ctl/get-version!)
   (reagent/render [app-root]
-                  (. js/document (getElementById "app")))
+    (. js/document (getElementById "app")))
   (ctl/hide-element "loader"))

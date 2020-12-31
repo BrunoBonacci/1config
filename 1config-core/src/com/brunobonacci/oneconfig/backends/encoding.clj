@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.encoding
+ com.brunobonacci.oneconfig.backends.encoding
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends.in-memory
@@ -46,9 +46,9 @@
       (if (:decoded entry)
         entry
         (some->
-         (unmarshall-value entry)
-         (assoc :decoded true
-                :encoded-value value)))))
+          (unmarshall-value entry)
+          (assoc :decoded true
+            :encoded-value value)))))
 
 
   IConfigBackend
@@ -58,9 +58,9 @@
       (if (:decoded entry)
         entry
         (some->
-         (unmarshall-value entry)
-         (assoc :decoded true
-                :encoded-value value)))))
+          (unmarshall-value entry)
+          (assoc :decoded true
+            :encoded-value value)))))
 
 
 
@@ -72,10 +72,10 @@
 
     ;; Otherwise, if not encoded, encode the value and store it.
     (EncodingConfigBackend.
-     (as-> config-entry $
-       (dissoc $ :encoded)
-       (if-not encoded (marshall-value $) $)
-       (save backend $))))
+      (as-> config-entry $
+        (dissoc $ :encoded)
+        (if-not encoded (marshall-value $) $)
+        (save backend $))))
 
   (list [this filters]
     (list backend filters)))

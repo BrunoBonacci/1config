@@ -35,9 +35,9 @@
 
 (defn help! [errors]
   (println
-   (format (str (slurp (io/resource "help-page.txt")) \newline)
-           (util/oneconfig-version))
-   (str/join "\n" errors))
+    (format (str (slurp (io/resource "help-page.txt")) \newline)
+      (util/oneconfig-version))
+    (str/join "\n" errors))
   (System/exit 1))
 
 
@@ -110,9 +110,9 @@
 
 (defn- nil-argument-names [hm]
   (->> hm
-     (util/nil-value-keys)
-     (map name)
-     (str/join ", ")))
+    (util/nil-value-keys)
+    (map name)
+    (str/join ", ")))
 
 
 
@@ -148,7 +148,7 @@
 
       ;; check for invalid operation
       (not
-       (#{:get :set :init :list :diff :list-keys :create-key} op))
+        (#{:get :set :init :list :diff :list-keys :create-key} op))
       (help! ["INVALID operation: must be either GET, SET, LIST, INIT, DIFF, LIST-KEYS or CREATE-KEY"])
 
       ;; check for missing value on set
@@ -162,11 +162,11 @@
       ;; check for missing required args on get and set
       (and (= op :set) (some nil? [env key version]))
       (help! [(str "MISSING: required arguments: "
-                   (nil-argument-names {:env env, :key key, :version version}))])
+                (nil-argument-names {:env env, :key key, :version version}))])
 
       (and (= op :get) (some nil? [env key]))
       (help! [(str "MISSING: required arguments: "
-                   (nil-argument-names {:env env, :key key}))])
+                (nil-argument-names {:env env, :key key}))])
 
       ;; check for missing key name on create-key
       (and (= op :create-key) (not master-key))
@@ -199,35 +199,35 @@
           ;; SET
           ;;
           :set (cli/set! (keyword (or backend-name (util/default-backend-name)))
-                         (b/backend-factory {:type backend-name :force true})
-                         (as->
-                             {:env env :key key :version version
-                              :content-type content-type
-                              :value (or value (some-> content-file slurp))} $
-                           (if master-key (assoc $ :master-key master-key) $)))
+                 (b/backend-factory {:type backend-name :force true})
+                 (as->
+                  {:env env :key key :version version
+                   :content-type content-type
+                   :value (or value (some-> content-file slurp))} $
+                   (if master-key (assoc $ :master-key master-key) $)))
 
           ;;
           ;; GET
           ;;
           :get (cli/get! (b/backend-factory {:type backend-name})
-                         {:env env :key key :version version :change-num change-num}
-                         :with-meta with-meta :pretty-print? pretty-print)
+                 {:env env :key key :version version :change-num change-num}
+                 :with-meta with-meta :pretty-print? pretty-print)
 
           ;;
           ;; LIST
           ;;
           :list (cli/list! (b/backend-factory {:type backend-name})
-                           {:env env :key key :version version :order-by order-by}
-                           :output-format output-format :backend-name backend-name
-                           :extended extended)
+                  {:env env :key key :version version :order-by order-by}
+                  :output-format output-format :backend-name backend-name
+                  :extended extended)
 
           ;;
           ;; DIFF
           ;;
           :diff (cli/diff! [(b/backend-factory {:type backend-name})
                             {:env env :key key :version version :change-num change-num}]
-                           [(b/backend-factory {:type backend-name})
-                            {:env env2 :key key2 :version version2 :change-num change-num2}]
-                           :mode diff-mode)
+                  [(b/backend-factory {:type backend-name})
+                   {:env env2 :key key2 :version version2 :change-num change-num2}]
+                  :mode diff-mode)
           )
         (normal-exit!)))))

@@ -36,29 +36,29 @@
 
 (defonce state
   (atom
-   {
+    {
     ;; user defined preferences
-    :preferences nil
+     :preferences nil
     ;; contains the config entries retrieved from the server
-    :entries []
+     :entries []
     ;; filters
-    :filters {:key "", :env "", :version ""}
+     :filters {:key "", :env "", :version ""}
     ;; manages the toggle for the extended mode
-    :extended-mode? false
+     :extended-mode? false
     ;; one of :listing, :new-entry-mode, :show-entry-mode, :edit-entry-mode
-    :client-mode :listing
+     :client-mode :listing
      ;:new-version-flag? nil
-    :1config-version {:current "" :latest ""}
+     :1config-version {:current "" :latest ""}
 
-    :new-entry empty-new-entry
+     :new-entry empty-new-entry
 
-    :entry-management-button-style "ui inverted button"
+     :entry-management-button-style "ui inverted button"
 
     ;; modal window (initial as plain, should be nested) it should be  ":show-entry-mode"
-    :item-data   nil
-    :item-params nil
-    :selected empty-selected
-    }))
+     :item-data   nil
+     :item-params nil
+     :selected empty-selected
+     }))
 
 
 
@@ -97,8 +97,8 @@
 (defn create-url-a [item]
   (let [{:keys [key env version change-num]} item]
     (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
-               (gs/urlEncode key) (gs/urlEncode env)
-               (gs/urlEncode version) change-num)))
+      (gs/urlEncode key) (gs/urlEncode env)
+      (gs/urlEncode version) change-num)))
 
 (defn compare-selected-items [compare-items]
   (go
@@ -107,12 +107,12 @@
                    (<! (GETAsync (last urls)))]
           selected-entries (map #(:encoded-value %) configs)]
       (swap! state #(-> %
-                        (assoc-in [:new-entry] empty-new-entry)
-                        (assoc-in [:selected :counter] 0)
-                        (assoc-in [:selected :entries :left]  (first selected-entries))
-                        (assoc-in [:selected :entries :right]  (last selected-entries))
-                        (assoc-in [:entry-management-button-style] "ui inverted disabled button")
-                        (assoc-in [:client-mode] :compare-entry-mode))))))
+                      (assoc-in [:new-entry] empty-new-entry)
+                      (assoc-in [:selected :counter] 0)
+                      (assoc-in [:selected :entries :left]  (first selected-entries))
+                      (assoc-in [:selected :entries :right]  (last selected-entries))
+                      (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                      (assoc-in [:client-mode] :compare-entry-mode))))))
 
 (defn row-selected
   [e item]
@@ -120,8 +120,8 @@
     (if (.. e -target -checked)
       (do
         (swap! state #(-> %
-                          (update-in [:selected :counter] inc)
-                          (update-in [:selected :items-meta] merge item)))
+                        (update-in [:selected :counter] inc)
+                        (update-in [:selected :items-meta] merge item)))
         (.add (.-classList parent) "selected"))
       (do
         (swap! state update-in [:selected :counter] dec)
@@ -138,57 +138,57 @@
 
 (defn get-item-handler [response]
   (swap! state
-         (fn [s]
-           (-> s
-               (assoc :item-data (get response :encoded-value))
-               (assoc :client-mode :show-entry-mode)))))
+    (fn [s]
+      (-> s
+        (assoc :item-data (get response :encoded-value))
+        (assoc :client-mode :show-entry-mode)))))
 
 (defn footer-element
   [version]
   (str "1Config - A library to manage application secrets "
-       "and configuration safely and effectively.  "
-       "Apache License 2.0. Bruno Bonacci, 2019-2020, v." (get version :current)
-       (if (= (get version :current) (get version :latest))
-         ""
-         (str "  (Latest version v." (get version :latest) ")"))))
+    "and configuration safely and effectively.  "
+    "Apache License 2.0. Bruno Bonacci, 2019-2020, v." (get version :current)
+    (if (= (get version :current) (get version :latest))
+      ""
+      (str "  (Latest version v." (get version :latest) ")"))))
 
 
 (defn get-preferences! []
   (GET "/preferences"
-       {
-        :handler         (fn [prefs]
-                           (swap! state assoc :preferences prefs))
-        :format          :json
-        :response-format :json
-        :keywords?       true
-        :error-handler   error-handler}))
+    {
+     :handler         (fn [prefs]
+                        (swap! state assoc :preferences prefs))
+     :format          :json
+     :response-format :json
+     :keywords?       true
+     :error-handler   error-handler}))
 
 
 (defn all-configs-handler!
   [entries]
   (swap! state
-         (fn [s]
-           (-> s
-               (assoc-in [:new-entry] empty-new-entry)
-               (assoc :entries entries)
-               (assoc :client-mode :listing)))))
+    (fn [s]
+      (-> s
+        (assoc-in [:new-entry] empty-new-entry)
+        (assoc :entries entries)
+        (assoc :client-mode :listing)))))
 
 
 (defn get-all-configs! []
   (GET "/configs"
-       {
-        :handler         all-configs-handler!
-        :format          :json
-        :response-format :json
-        :keywords?       true
-        :error-handler   backend-error-handler}))
+    {
+     :handler         all-configs-handler!
+     :format          :json
+     :response-format :json
+     :keywords?       true
+     :error-handler   backend-error-handler}))
 
 
 (defn get-config-item! [item]
   (let [{:keys [key env version change-num content-type]} item
         get-url (gs/format "/configs/keys/%s/envs/%s/versions/%s?change-num=%s"
-                           (gs/urlEncode key) (gs/urlEncode env)
-                           (gs/urlEncode version) change-num)]
+                  (gs/urlEncode key) (gs/urlEncode env)
+                  (gs/urlEncode version) change-num)]
 
     (swap! state assoc-in [:item-params] {:key          key
                                           :env          env
@@ -207,7 +207,7 @@
   (let [new-entry (get @state :new-entry)
         ace-instance (.edit js/ace "jsEditor")
         form-data (doto
-                      (js/FormData.)
+                   (js/FormData.)
                     (.append "key"          (get new-entry :key))
                     (.append "env"          (get new-entry :env))
                     (.append "version"      (get new-entry :version))
@@ -226,11 +226,11 @@
 
 (defn get-version! []
   (GET "/info/versions"
-       {:handler          update-version!
-        :format          :json
-        :response-format :json
-        :keywords?       true
-        :error-handler   error-handler}))
+    {:handler          update-version!
+     :format          :json
+     :response-format :json
+     :keywords?       true
+     :error-handler   error-handler}))
 
 
 
@@ -243,16 +243,16 @@
 
 (defn remove-file! []
   (swap! state
-         #(-> %
-              (assoc-in [:new-entry :val] "")
-              (assoc-in [:new-entry :file-name] ""))))
+    #(-> %
+       (assoc-in [:new-entry :val] "")
+       (assoc-in [:new-entry :file-name] ""))))
 
 (defn config-entry-management-panel!
   [mode]
   (cond
     (= :listing mode)         (swap! state #(-> %
-                                                (assoc-in [:entry-management-button-style] "ui inverted disabled button")
-                                                (assoc-in [:client-mode] :new-entry-mode)))
+                                              (assoc-in [:entry-management-button-style] "ui inverted disabled button")
+                                              (assoc-in [:client-mode] :new-entry-mode)))
     (= :new-entry-mode mode)  (swap! state assoc-in [:client-mode] :edit-entry-mode)
     (= :show-entry-mode mode) (swap! state #(-> %
                                               (assoc-in [:new-entry] empty-new-entry)
@@ -288,11 +288,11 @@
   (.preventDefault event)
   (enable-body-scroll)
   (swap! state #(-> %
-                    (assoc-in [:item-params] nil)
-                    (assoc-in [:item-data] nil)
-                    (assoc-in [:new-entry] empty-new-entry)
-                    (assoc-in [:entry-management-button-style] "ui inverted button")
-                    (assoc-in [:client-mode] :listing))))
+                  (assoc-in [:item-params] nil)
+                  (assoc-in [:item-data] nil)
+                  (assoc-in [:new-entry] empty-new-entry)
+                  (assoc-in [:entry-management-button-style] "ui inverted button")
+                  (assoc-in [:client-mode] :listing))))
 
 (defn nodelist-to-seq
   [nl]
@@ -308,20 +308,20 @@
   (.preventDefault event)
   (enable-body-scroll)
   (let [selected-lines (apply list (-> js/document
-                                       (.getElementsByClassName "selected")
-                                       array-seq))]
+                                     (.getElementsByClassName "selected")
+                                     array-seq))]
     (doall (map #(.remove (.-classList %) "selected") selected-lines))
     (doall (map #(-> % .-childNodes
-                       nodelist-to-seq
-                       last
-                       .-childNodes
-                       nodelist-to-seq
-                       last
-                       uncheck-box) selected-lines)))
+                   nodelist-to-seq
+                   last
+                   .-childNodes
+                   nodelist-to-seq
+                   last
+                   uncheck-box) selected-lines)))
   (swap! state #(-> %
-                    (assoc-in [:selected] empty-selected)
-                    (assoc-in [:entry-management-button-style] "ui inverted button")
-                    (assoc-in [:client-mode] :listing))))
+                  (assoc-in [:selected] empty-selected)
+                  (assoc-in [:entry-management-button-style] "ui inverted button")
+                  (assoc-in [:client-mode] :listing))))
 
 ;;https://github.com/search?l=Clojure&p=2&q=.execCommand+js%2Fdocument&type=Code
 (defn copy-to-clipboard!
@@ -373,23 +373,23 @@
 (defn update-file-data
   [val file-name]
   (let [wrapper (-> js/document
-                    (.getElementsByClassName "overflow-class")
-                    (aget 0))
+                  (.getElementsByClassName "overflow-class")
+                  (aget 0))
         text    (.createTextNode js/document val)
         div     (.createElement js/document "div")
-         _      (.setAttribute
-                      div
-                      "id"
-                      "jsEditor")]
-      (aset wrapper "textContent" "")
-      (.appendChild div text)
-      (.appendChild wrapper div))
+        _      (.setAttribute
+                 div
+                 "id"
+                 "jsEditor")]
+    (aset wrapper "textContent" "")
+    (.appendChild div text)
+    (.appendChild wrapper div))
   (highlight-ace-code-block! false (get ace-theme-mapping (utils/get-extension file-name) "json"))
   (swap! state
-         #(-> %
-              (assoc-in [:new-entry :val] val)
-              (assoc-in [:new-entry :file-name] file-name)
-              (assoc-in [:new-entry :type] (utils/get-extension file-name)))))
+    #(-> %
+       (assoc-in [:new-entry :val] val)
+       (assoc-in [:new-entry :file-name] file-name)
+       (assoc-in [:new-entry :type] (utils/get-extension file-name)))))
 
 (defn hide-element [id]
   (let [elem        (js/document.getElementById id)
@@ -418,6 +418,6 @@
           file-name (-> file .-name)]
       (.readAsText reader file)
       (set! (.-onload reader)
-            (fn [e]
-              (let [val (-> e .-target .-result)]
-                (update-file-data val file-name)))))))
+        (fn [e]
+          (let [val (-> e .-target .-result)]
+            (update-file-data val file-name)))))))

@@ -21,12 +21,12 @@
         _ (.diff_cleanupSemantic dmp diff)
         - (.diff_cleanupEfficiency dmp diff)]
     (->> diff
-       (map (fn [^diff_match_patch$Diff d]
-              [(cond
-                 (.equals (.-operation d) diff_match_patch$Operation/INSERT) :+
-                 (.equals (.-operation d) diff_match_patch$Operation/DELETE) :-
-                 (.equals (.-operation d) diff_match_patch$Operation/EQUAL)  :=)
-               (.-text d)])))))
+      (map (fn [^diff_match_patch$Diff d]
+             [(cond
+                (.equals (.-operation d) diff_match_patch$Operation/INSERT) :+
+                (.equals (.-operation d) diff_match_patch$Operation/DELETE) :-
+                (.equals (.-operation d) diff_match_patch$Operation/EQUAL)  :=)
+              (.-text d)])))))
 
 
 
@@ -40,12 +40,12 @@
         _ (.diff_cleanupSemantic dmp diff)
         - (.diff_cleanupEfficiency dmp diff)]
     (->> diff
-       (map (fn [^diff_match_patch$Diff d]
-              [(cond
-                 (.equals (.-operation d) diff_match_patch$Operation/INSERT) :+
-                 (.equals (.-operation d) diff_match_patch$Operation/DELETE) :-
-                 (.equals (.-operation d) diff_match_patch$Operation/EQUAL)  :=)
-               (.-text d)])))))
+      (map (fn [^diff_match_patch$Diff d]
+             [(cond
+                (.equals (.-operation d) diff_match_patch$Operation/INSERT) :+
+                (.equals (.-operation d) diff_match_patch$Operation/DELETE) :-
+                (.equals (.-operation d) diff_match_patch$Operation/EQUAL)  :=)
+              (.-text d)])))))
 
 
 

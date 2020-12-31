@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.profiles
+ com.brunobonacci.oneconfig.profiles
   (:require [com.brunobonacci.oneconfig.util
              :refer [home-1config file-exists? parse-edn deep-merge]]
             [schema.core :as s]
@@ -58,13 +58,13 @@
   "loads the user-profiles.edn if present and it merges the content with the defaults."
   []
   (->>
-   (some-> (home-1config)
-           (str "user-profiles.edn")
-           (file-exists?)
-           (slurp)
-           (parse-edn)
-           last)
-   (deep-merge DEFAULT-PREFERENCES)))
+    (some-> (home-1config)
+      (str "user-profiles.edn")
+      (file-exists?)
+      (slurp)
+      (parse-edn)
+      last)
+    (deep-merge DEFAULT-PREFERENCES)))
 
 ;; (user-profiles)
 
@@ -87,15 +87,15 @@
 
 (def ^:private simple-condition-schema
   (s/either
-   [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")]
-   [(s/one (s/eq :not) "not") (s/one condition1-schema "cond")]))
+    [(s/one s/Keyword "field") (s/one s/Keyword "operator") (s/one s/Any "value")]
+    [(s/one (s/eq :not) "not") (s/one condition1-schema "cond")]))
 
 
 
 (def ^:private condition-schema
   (s/either
-   simple-condition-schema
-   [(s/one (s/enum :and :or) "logic") condition-schema]))
+    simple-condition-schema
+    [(s/one (s/enum :and :or) "logic") condition-schema]))
 
 
 
@@ -116,11 +116,11 @@
       ;;(prn "RESTRICTION::" rec :if guard "(" (guard* rec) ")" :-> restriction "("(restriction* rec) ")" :==> (and (guard* rec) (not (restriction* rec))))
       (when (and (guard* rec) (not (restriction* rec)))
         (throw
-         (ex-info
-          (str "RESTRICTION: " (or message "Invalid values supplied for request."))
-          {:data rec
-           :guard guard
-           :restriction restriction}))))))
+          (ex-info
+            (str "RESTRICTION: " (or message "Invalid values supplied for request."))
+            {:data rec
+             :guard guard
+             :restriction restriction}))))))
 
 
 
@@ -135,7 +135,7 @@
     (restriction-validator (partition-all 5 restrictions))
     (catch Exception x
       (throw (ex-info "Invalid restrictions in user-profiles"
-                      {:error x :restrictions restrictions})))))
+               {:error x :restrictions restrictions})))))
 
 
 

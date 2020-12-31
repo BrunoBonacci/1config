@@ -67,7 +67,7 @@
   [backend]
   (when-not backend
     (throw (ex-info "Operation Aborted. Couldn't find a valid backend for this operation."
-                    {}))))
+             {}))))
 
 
 
@@ -85,10 +85,10 @@
   (validate-backend! backend)
   (validate-version! (:version config-entry))
   (safely
-   (save backend (normalize-entry config-entry))
-   :on-error
-   :log-stacktrace false
-   :message "Saving config entry"))
+    (save backend (normalize-entry config-entry))
+    :on-error
+    :log-stacktrace false
+    :message "Saving config entry"))
 
 
 
@@ -113,11 +113,11 @@
 
 (defn- format-with-meta [{:keys [content-type] :as v} opts]
   (str/join "\n"
-            ["-----------------------[META]-----------------------"
-             (pp/write (dissoc v :value :encoded-value) :stream nil)
-             "----------------------[CONFIG]----------------------"
-             (format-value v opts)
-             "----------------------------------------------------"]))
+    ["-----------------------[META]-----------------------"
+     (pp/write (dissoc v :value :encoded-value) :stream nil)
+     "----------------------[CONFIG]----------------------"
+     (format-value v opts)
+     "----------------------------------------------------"]))
 
 
 
@@ -127,12 +127,12 @@
     (validate-backend! backend)
     (validate-version! (:version config-entry))
     (safely
-     (if (:change-num config-entry)
-       (load backend config-entry)
-       (find backend (dissoc config-entry :change-num)))
-     :on-error
-     :log-stacktrace false
-     :message "Retrieving config entry")))
+      (if (:change-num config-entry)
+        (load backend config-entry)
+        (find backend (dissoc config-entry :change-num)))
+      :on-error
+      :log-stacktrace false
+      :message "Retrieving config entry")))
 
 
 
@@ -162,12 +162,12 @@
 (defmethod format-output :cli
   [context entries]
   (->> entries
-     (map (fn [{:keys [key env version change-num content-type backend] :as e}]
-            (format "1cfg -b %s -k %s -e %s -v %s -t %s GET -c %s "
-                    (name (or backend (:backend context)))
-                    key env version
-                    (or content-type "") change-num)))
-     (str/join "\n")))
+    (map (fn [{:keys [key env version change-num content-type backend] :as e}]
+           (format "1cfg -b %s -k %s -e %s -v %s -t %s GET -c %s "
+             (name (or backend (:backend context)))
+             key env version
+             (or content-type "") change-num)))
+    (str/join "\n")))
 
 
 
@@ -179,8 +179,8 @@
                 {:name :change-num       :title "Change num"}
                 {:name :content-type     :title "Type"      :align :center}
                 {:name :ts               :title "Timestamp" :format timestamp-format}]
-               (->> entries
-                  (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
+    (->> entries
+      (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num))))))
 
 
 
@@ -194,10 +194,10 @@
                 {:name :ts               :title "Timestamp" :format timestamp-format}
                 {:name :master-key-alias :title "Master encryption key"}
                 {:name :user             :title "User"}]
-               (->> entries
-                  (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)))
-                  (map (fn [{:keys [master-key-alias master-key] :as m}]
-                         (assoc m :master-key-alias (or master-key-alias master-key)))))))
+    (->> entries
+      (map (fn [{:keys [change-num] :as m}] (assoc m :ts change-num)))
+      (map (fn [{:keys [master-key-alias master-key] :as m}]
+             (assoc m :master-key-alias (or master-key-alias master-key)))))))
 
 
 
@@ -207,13 +207,13 @@
   (validate-backend! backend)
 
   (safely
-   (->> (list backend (util/clean-map filters))
+    (->> (list backend (util/clean-map filters))
       (format-output {:format output-format :backend backend-name})
       println)
-   (println "(*) Timestamp is in local time.")
-   :on-error
-   :log-stacktrace false
-   :message "Listing config entry"))
+    (println "(*) Timestamp is in local time.")
+    :on-error
+    :log-stacktrace false
+    :message "Listing config entry"))
 
 
 
@@ -226,15 +226,15 @@
 
 (defn list-keys! []
   (safely
-   (println
-    (->> (kms/master-keys)
-       (map (fn [[k v]] {:alias k :master-key-arn v}))
-       (sort-by :alias)
-       (table/table [{:name :alias :title "Key alias"}
-                     {:name :master-key-arn :title "Master Key Arn"}])))
-   :on-error
-   :log-stacktrace false
-   :message "Listing keys"))
+    (println
+      (->> (kms/master-keys)
+        (map (fn [[k v]] {:alias k :master-key-arn v}))
+        (sort-by :alias)
+        (table/table [{:name :alias :title "Key alias"}
+                      {:name :master-key-arn :title "Master Key Arn"}])))
+    :on-error
+    :log-stacktrace false
+    :message "Listing keys"))
 
 
 
@@ -249,15 +249,15 @@
 (defn create-key!
   [{:keys [key-name]}]
   (safely
-   (let [key-alias (kms/normalize-alias key-name)]
-     (->>
-      (kms/create-master-key
-       key-alias
-       (format "1Config managed key for %s configurations" key-name))
-      (println "Created key: ")))
-   :on-error
-   :log-stacktrace false
-   :message "Creating key"))
+    (let [key-alias (kms/normalize-alias key-name)]
+      (->>
+        (kms/create-master-key
+          key-alias
+          (format "1Config managed key for %s configurations" key-name))
+        (println "Created key: ")))
+    :on-error
+    :log-stacktrace false
+    :message "Creating key"))
 
 
 

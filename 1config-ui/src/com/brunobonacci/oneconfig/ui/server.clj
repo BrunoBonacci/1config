@@ -58,8 +58,8 @@
   [url]
   (let [{:keys [body]} @(http/get url)]
     (->> (json/parse-string body true)
-       (map :tag_name)
-       first)))
+      (map :tag_name)
+      first)))
 
 
 
@@ -67,9 +67,9 @@
 (defn- oneconfig-version
   []
   (some->
-   (io/resource "1config.version")
-   slurp
-   (string/trim)))
+    (io/resource "1config.version")
+    slurp
+    (string/trim)))
 
 
 
@@ -91,43 +91,43 @@
 
 
   (GET "/configs" {{:keys [change-num] :as params} :params}
-       (let [filters (dissoc params :change-num)
-             change-num (when change-num (Long/parseLong change-num))
-             results (cfg1/list backend filters)
+    (let [filters (dissoc params :change-num)
+          change-num (when change-num (Long/parseLong change-num))
+          results (cfg1/list backend filters)
              ;; filtering further the result
-             results (if change-num
-                       (filter (where :change-num = change-num) results)
-                       results)]
-         (response results)))
+          results (if change-num
+                    (filter (where :change-num = change-num) results)
+                    results)]
+      (response results)))
 
 
   (GET "/info/versions" []
-       (response (releases-info)))
+    (response (releases-info)))
 
 
   (GET "/preferences" []
-       (response (:preferences (prof/user-profiles))))
+    (response (:preferences (prof/user-profiles))))
 
 
   (GET "/configs/keys/:key/envs/:env/versions/:version"
-       {:keys [params]}
+    {:keys [params]}
 
-       (let [entry  (if (:change-num params)
-                      (cfg1/load backend (normalize params))
-                      (cfg1/find backend params))]
-         (if entry
-           (response entry)
-           (not-found "Config entry not found"))))
+    (let [entry  (if (:change-num params)
+                   (cfg1/load backend (normalize params))
+                   (cfg1/find backend params))]
+      (if entry
+        (response entry)
+        (not-found "Config entry not found"))))
 
 
   (POST "/configs" {params :params {referer "referer"} :headers}
-        (try
-          (cfg1/save backend (assoc params :encoded true))
-          (response {:status "OK" :message "Entry saved."})
-          (catch Exception x
-            {:status  400
-             :body    {:status "ERROR" :message "Unknown error."
-                       :cause (.getMessage x)}})))
+    (try
+      (cfg1/save backend (assoc params :encoded true))
+      (response {:status "OK" :message "Entry saved."})
+      (catch Exception x
+        {:status  400
+         :body    {:status "ERROR" :message "Unknown error."
+                   :cause (.getMessage x)}})))
 
 
   (not-found "Not Found"))
@@ -136,15 +136,15 @@
 
 (def handler
   (-> (hdr/site #'endpoints)
-     (wrap-resource "public")
-     (wrap-defaults
+    (wrap-resource "public")
+    (wrap-defaults
       (-> site-defaults
          ;; TODO: disable Invalid anti-forgery token
-         (assoc-in [:security :anti-forgery] false)))
-     (wrap-cors :access-control-allow-origin [#".*"]
-                :access-control-allow-methods [:get :post])
-     (wrap-json-body {:keywords? true})
-     wrap-json-response))
+        (assoc-in [:security :anti-forgery] false)))
+    (wrap-cors :access-control-allow-origin [#".*"]
+      :access-control-allow-methods [:get :post])
+    (wrap-json-body {:keywords? true})
+    wrap-json-response))
 
 
 ;; TODO: remove workaround.
@@ -162,13 +162,13 @@
   []
   (println "Initialize encryption libs")
   (try
-   (some->> (cfg1/list backend {})
+    (some->> (cfg1/list backend {})
       first
       (#(select-keys % [:key :env :version :change-num]))
       (cfg1/load backend))
-   (catch Exception _
+    (catch Exception _
      ;; purposely ignoring errors
-     )))
+      )))
 
 
 (defn -main [& args]

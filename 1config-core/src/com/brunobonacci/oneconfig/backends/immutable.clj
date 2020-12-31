@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.immutable
+ com.brunobonacci.oneconfig.backends.immutable
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]))
 
@@ -35,7 +35,7 @@
   (save [_ config-entry]
     ;; overrides any previously present :change-num
     (->> (assoc config-entry :change-num (System/currentTimeMillis))
-         (save store)))
+      (save store)))
 
   (list [_ filters]
     (list store filters)))

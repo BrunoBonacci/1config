@@ -1,6 +1,6 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)"
       :doc "A library to manage application secrets and configuration safely and effectively."}
-    com.brunobonacci.oneconfig
+ com.brunobonacci.oneconfig
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends :refer [backend-factory]]

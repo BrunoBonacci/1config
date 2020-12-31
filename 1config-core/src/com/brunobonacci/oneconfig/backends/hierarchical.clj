@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.hierarchical
+ com.brunobonacci.oneconfig.backends.hierarchical
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.util :refer [list-entries]]))
@@ -24,13 +24,13 @@
 
   (list [_ filters]
     (->> read-stores
-       (mapcat #(list % filters))
-       (list-entries filters))))
+      (mapcat #(list % filters))
+      (list-entries filters))))
 
 
 
 (defn hierarchical-backend
   [read-stores write-stores]
   (HierarchicalBackend.
-   (remove nil? read-stores)
-   (remove nil? write-stores)))
+    (remove nil? read-stores)
+    (remove nil? write-stores)))

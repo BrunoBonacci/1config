@@ -18,156 +18,156 @@
 
 (facts "content-type: txt"
 
-       (fact "can list items that have been saved"
-             (let [store0 (in-memory-config-backend)
-                   store (make-encoding-wrapper store0)
-                   entry1 {:env          (rand-env "prod")
-                           :key          (rand-key "service1")
-                           :version      "1.2.3"
-                           :content-type "txt"
-                           :value        "some-value"}
+  (fact "can list items that have been saved"
+    (let [store0 (in-memory-config-backend)
+          store (make-encoding-wrapper store0)
+          entry1 {:env          (rand-env "prod")
+                  :key          (rand-key "service1")
+                  :version      "1.2.3"
+                  :content-type "txt"
+                  :value        "some-value"}
 
-                   entry2  {:env          (rand-env "prod")
-                            :key          (rand-key "service1")
-                            :version      "1.2.4"
-                            :content-type "txt"
-                            :value        "some-value"}]
-               (-> store
-                   (save entry1)
-                   (save entry2)
-                   (list {})) => (contains [(contains (dissoc entry1 :content-type :value))
-                                            (contains (dissoc entry2 :content-type :value))])))
+          entry2  {:env          (rand-env "prod")
+                   :key          (rand-key "service1")
+                   :version      "1.2.4"
+                   :content-type "txt"
+                   :value        "some-value"}]
+      (-> store
+        (save entry1)
+        (save entry2)
+        (list {})) => (contains [(contains (dissoc entry1 :content-type :value))
+                                 (contains (dissoc entry2 :content-type :value))])))
 
-       (fact "save and read a value a string "
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "txt"
-                          :value "some-value"}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value) => "some-value"))
-
-
-       (fact "save and read a numeric value should be returned as a string"
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "txt"
-                          :value 23}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => "23")
+  (fact "save and read a value a string "
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "txt"
+                 :value "some-value"}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
-       (fact "anything else should fail."
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "txt"
-                          :value {:some "complex" :value #{1}}}]
-               (-> store
-                   (save entry)
-                   )) => (throws Exception))
-       )
+  (fact "save and read a numeric value should be returned as a string"
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "txt"
+                 :value 23}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => "23")
+
+
+  (fact "anything else should fail."
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "txt"
+                 :value {:some "complex" :value #{1}}}]
+      (-> store
+        (save entry)
+        ))=> (throws Exception))
+  )
 
 
 
 (facts "content-type: edn"
 
-       (fact "save and read a value a string "
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "edn"
-                          :value "some-value"}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value) => "some-value"))
+  (fact "save and read a value a string "
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "edn"
+                 :value "some-value"}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
 
-       (fact "save and read a numeric value"
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "edn"
-                          :value 23}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => 23)
+  (fact "save and read a numeric value"
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "edn"
+                 :value 23}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => 23)
 
 
-       (fact "save and read a data-structure"
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "edn"
-                          :value {:some "complex" :value #{1}}}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => {:some "complex" :value #{1}})
-       )
+  (fact "save and read a data-structure"
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "edn"
+                 :value {:some "complex" :value #{1}}}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => {:some "complex" :value #{1}})
+  )
 
 
 
 (facts "content-type: json"
 
-       (fact "save and read a value a string "
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "json"
-                          :value "some-value"}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value) => "some-value"))
+  (fact "save and read a value a string "
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "json"
+                 :value "some-value"}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
-       (fact "save and read a numeric value"
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "json"
-                          :value 23}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => 23)
+  (fact "save and read a numeric value"
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "json"
+                 :value 23}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => 23)
 
 
-       (fact "save and read a data-structure"
-             (let [store0 (in-memory-config-backend)
-                   store  (make-encoding-wrapper store0)
-                   entry {:env (rand-env "prod")
-                          :key (rand-key "service1")
-                          :version "1.2.3"
-                          :content-type "json"
-                          :value {:some "complex" :value #{1}}}]
-               (-> store
-                   (save entry)
-                   (load (dissoc entry :value :content-type))
-                   :value)) => {:some "complex" :value [1]})
-       )
+  (fact "save and read a data-structure"
+    (let [store0 (in-memory-config-backend)
+          store  (make-encoding-wrapper store0)
+          entry {:env (rand-env "prod")
+                 :key (rand-key "service1")
+                 :version "1.2.3"
+                 :content-type "json"
+                 :value {:some "complex" :value #{1}}}]
+      (-> store
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => {:some "complex" :value [1]})
+  )

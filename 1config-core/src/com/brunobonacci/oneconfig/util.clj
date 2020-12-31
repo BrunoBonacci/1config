@@ -1,5 +1,5 @@
 (ns ^:no-doc ^{:author "Bruno Bonacci (@BrunoBonacci)"}
-    com.brunobonacci.oneconfig.util
+ com.brunobonacci.oneconfig.util
   (:require [cheshire.core :as json]
             [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
@@ -67,7 +67,7 @@
 
 (defn filter-entries [{:keys [key env version]} entries]
   (->> entries
-     (filter
+    (filter
       (where [:and
               [:env     :CONTAINS? (or env "")]
               [:key     :CONTAINS? (or key "")]
@@ -84,11 +84,11 @@
         ;; compose order function
         order-fn (apply juxt order)]
     (->> entries
-       (filter-entries filters)
-       (map #(select-keys % [:key :env :version :change-num :content-type
-                             :master-key :master-key-alias :user
-                             :backend]))
-       (sort-by order-fn))))
+      (filter-entries filters)
+      (map #(select-keys % [:key :env :version :change-num :content-type
+                            :master-key :master-key-alias :user
+                            :backend]))
+      (sort-by order-fn))))
 
 
 
@@ -98,10 +98,10 @@
    lazily concatenate all the results."
   [f coll]
   (lazy-seq
-   (if (not-empty coll)
-     (concat
-      (f (first coll))
-      (lazy-mapcat f (rest coll))))))
+    (if (not-empty coll)
+      (concat
+        (f (first coll))
+        (lazy-mapcat f (rest coll))))))
 
 
 
@@ -109,8 +109,8 @@
   "remove keys with nils"
   [map]
   (->> map
-     (remove (where second :is? nil))
-     (into {})))
+    (remove (where second :is? nil))
+    (into {})))
 
 
 
@@ -118,8 +118,8 @@
   "Returns keys which have a nil value"
   [map]
   (->> map
-     (filter (where second :is? nil))
-     (keys)))
+    (filter (where second :is? nil))
+    (keys)))
 
 
 
@@ -148,15 +148,15 @@
      (try
        (let [out# (do ~@body)]
          (log/infof "1config> requested config for: %s received: %s"
-                    (pr-str in#)
-                    (pr-str (and out#
-                               (select-keys out#
-                                            [:key :env :version :change-num]))))
+           (pr-str in#)
+           (pr-str (and out#
+                     (select-keys out#
+                       [:key :env :version :change-num]))))
          out#)
        (catch Exception x#
          (log/infof "1config> requested config for: %s received: %s"
-                    (pr-str in#)
-                    (str "ERROR: " (pr-str (.getMessage x#))))
+           (pr-str in#)
+           (str "ERROR: " (pr-str (.getMessage x#))))
          (throw x#)))))
 
 
@@ -209,27 +209,27 @@
 (defn oneconfig-version
   []
   (some->
-   (io/resource "1config.version")
-   slurp
-   (str/trim)))
+    (io/resource "1config.version")
+    slurp
+    (str/trim)))
 
 
 
 (defn config-property
   [prop-name env-name default]
   (or
-   (system-property prop-name)
-   (env env-name)
-   default))
+    (system-property prop-name)
+    (env env-name)
+    default))
 
 
 
 (defn default-backend-name
   []
   (keyword
-   (config-property "1config.default.backend"
-                    "ONECONFIG_DEFAULT_BACKEND"
-                    "hierarchical")))
+    (config-property "1config.default.backend"
+      "ONECONFIG_DEFAULT_BACKEND"
+      "hierarchical")))
 
 
 
@@ -244,9 +244,9 @@
   "reads a file and returns its content as a string or nil if not found or can't be read"
   [file]
   (safely
-   (slurp file :encoding "utf-8")
-   :on-error
-   :default nil))
+    (slurp file :encoding "utf-8")
+    :on-error
+    :default nil))
 
 
 
@@ -278,7 +278,7 @@
       (log/warn "HOME directory not set or it doesn't exist."))
 
     (or oneconfig-home
-       (some-> home (str "/.1config/")))))
+      (some-> home (str "/.1config/")))))
 
 
 
@@ -291,15 +291,15 @@
                     (constantly true))
          mapper   (if as-string (fn [^java.io.File f] (.getCanonicalPath f)) identity)]
      (->> (list-files dir)
-        (filter matches?)
-        (map mapper))))
+       (filter matches?)
+       (map mapper))))
   ([dir]
    (if-let [^java.io.File path (and dir (.exists (io/file dir)) (io/file dir))]
      (if (.isDirectory path)
        (lazy-seq
-        (cons path
-              (mapcat list-files
-                      (.listFiles path))))
+         (cons path
+           (mapcat list-files
+             (.listFiles path))))
        [path])
      [])))
 
@@ -317,16 +317,16 @@
    it returns a list of entries or nil if no configuration files are found."
   []
   (some file-exists?
-        [(system-property "1config.file")
-         (env "ONECONFIG_FILE")
-         (io/resource "1config.edn")
-         (io/resource "1config.json")
-         (io/resource "1config.txt")
-         (io/resource "1config.properties")
-         "./1config.edn"
-         "./1config.json"
-         "./1config.txt"
-         "./1config.properties"]))
+    [(system-property "1config.file")
+     (env "ONECONFIG_FILE")
+     (io/resource "1config.edn")
+     (io/resource "1config.json")
+     (io/resource "1config.txt")
+     (io/resource "1config.properties")
+     "./1config.edn"
+     "./1config.json"
+     "./1config.txt"
+     "./1config.properties"]))
 
 
 
@@ -348,28 +348,28 @@
   "reads a EDN file and returns its content or nil if invalid"
   [file]
   (safely
-   (some-> file slurp parse-edn last)
-   :on-error :default nil))
+    (some-> file slurp parse-edn last)
+    :on-error :default nil))
 
 
 
 (defn read-config-file
   [file]
   (safely
-   (some-> file slurp)
-   :on-error :default nil))
+    (some-> file slurp)
+    :on-error :default nil))
 
 
 
 (defn filename->content-type
   [^String file]
   (->> file
-     (re-find #"(?i).*\.(edn|json|txt|properties|yaml|yml)$")
-     second
-     (#(some-> % str/lower-case))
-     (#(case %
-         "yml" "yaml"
-         %))))
+    (re-find #"(?i).*\.(edn|json|txt|properties|yaml|yml)$")
+    second
+    (#(some-> % str/lower-case))
+    (#(case %
+        "yml" "yaml"
+        %))))
 
 
 
@@ -413,10 +413,10 @@
 (defmethod decode "yaml"
   [_ value]
   (->> (yaml/parse-string value)
-     (postwalk #(cond
-                  (map? %)  (into (array-map) %)
-                  (sequential? %) (vec %)
-                  :else %))))
+    (postwalk #(cond
+                 (map? %)  (into (array-map) %)
+                 (sequential? %) (vec %)
+                 :else %))))
 
 
 

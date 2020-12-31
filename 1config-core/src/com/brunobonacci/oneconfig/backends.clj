@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends
+ com.brunobonacci.oneconfig.backends
   (:refer-clojure :exclude [find load list])
   (:require [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends
@@ -122,9 +122,9 @@
 
 (def common-wrappers
   (comp make-encoding-wrapper
-     validation-backend
-     user-restriction-backend
-     immutable-backend))
+    validation-backend
+    user-restriction-backend
+    immutable-backend))
 
 
 
@@ -140,43 +140,43 @@
       (throw (ex-info "Invalid backend selection" {:backend backend})))
 
     (backend-factory
-     (assoc c :type backend))))
+      (assoc c :type backend))))
 
 
 
 (defmethod backend-factory :hierarchical
   [_]
   (common-wrappers
-   (or
+    (or
     ;; search exclusive configuration in files first
-    (some-> (configuration-file-search) file1-config-backend)
+      (some-> (configuration-file-search) file1-config-backend)
     ;; otherwise search in fs and then in dynamo
-    (let [kms+dynamo (iam-user-backend
-                      (kms-encryption-backend
-                       (dynamo-config-backend
-                        (default-dynamo-config))))]
-      (hierarchical-backend
-       [(filesystem-config-backend)
-        kms+dynamo]
-       [kms+dynamo])))))
+      (let [kms+dynamo (iam-user-backend
+                         (kms-encryption-backend
+                           (dynamo-config-backend
+                             (default-dynamo-config))))]
+        (hierarchical-backend
+          [(filesystem-config-backend)
+           kms+dynamo]
+          [kms+dynamo])))))
 
 
 
 (defmethod backend-factory :dynamo
   [_]
   (common-wrappers
-   (iam-user-backend
-    (kms-encryption-backend
-     (dynamo-config-backend
-      (default-dynamo-config))))))
+    (iam-user-backend
+      (kms-encryption-backend
+        (dynamo-config-backend
+          (default-dynamo-config))))))
 
 
 
 (defmethod backend-factory :fix
   [_]
   (->> (configuration-file-search)
-     file1-config-backend
-     common-wrappers))
+    file1-config-backend
+    common-wrappers))
 
 
 
@@ -189,4 +189,4 @@
 (defmethod backend-factory :filesystem
   [cfg]
   (->> (filesystem-config-backend cfg)
-     common-wrappers))
+    common-wrappers))

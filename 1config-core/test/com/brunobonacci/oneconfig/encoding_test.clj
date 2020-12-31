@@ -36,11 +36,11 @@
                    :content-type "txt"
                    :value        "some-value"}]
       (-> store
-         (save entry1)
-         (save entry2)
-         (list {}))
+        (save entry1)
+        (save entry2)
+        (list {}))
       => (contains [(contains (dissoc entry1 :content-type :value))
-                   (contains (dissoc entry2 :content-type :value))])))
+                    (contains (dissoc entry2 :content-type :value))])))
 
   (fact "save and read a value a string "
     (let [store0 (in-memory-config-backend)
@@ -51,9 +51,9 @@
                  :content-type "txt"
                  :value "some-value"}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value) => "some-value"))
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
   (fact "save and read a numeric value should be returned as a string"
@@ -65,9 +65,9 @@
                  :content-type "txt"
                  :value 23}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => "23")
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => "23")
 
 
   (fact "anything else should fail."
@@ -79,8 +79,8 @@
                  :content-type "txt"
                  :value {:some "complex" :value #{1}}}]
       (-> store
-         (save entry)
-         )) => (throws Exception))
+        (save entry)
+        ))=> (throws Exception))
   )
 
 
@@ -96,9 +96,9 @@
                  :content-type "edn"
                  :value "some-value"}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value) => "some-value"))
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
 
@@ -111,9 +111,9 @@
                  :content-type "edn"
                  :value 23}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => 23)
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => 23)
 
 
   (fact "save and read a data-structure"
@@ -125,9 +125,9 @@
                  :content-type "edn"
                  :value {:some "complex" :value #{1}}}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => {:some "complex" :value #{1}})
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => {:some "complex" :value #{1}})
   )
 
 
@@ -143,9 +143,9 @@
                  :content-type "json"
                  :value "some-value"}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value) => "some-value"))
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
   (fact "save and read a numeric value"
@@ -157,9 +157,9 @@
                  :content-type "json"
                  :value 23}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => 23)
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => 23)
 
 
   (fact "save and read a data-structure"
@@ -171,9 +171,9 @@
                  :content-type "json"
                  :value {:some "complex" :value #{1}}}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => {:some "complex" :value [1]})
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => {:some "complex" :value [1]})
   )
 
 
@@ -189,9 +189,9 @@
                  :content-type "yaml"
                  :value "some-value"}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value) => "some-value"))
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value) => "some-value"))
 
 
   (fact "save and read a numeric value"
@@ -203,9 +203,9 @@
                  :content-type "yaml"
                  :value 23}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => 23)
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => 23)
 
 
   (fact "save and read a data-structure"
@@ -217,7 +217,7 @@
                  :content-type "yaml"
                  :value {:some "complex" :values [1 2 3 4] :maps {:a 1 :b 2}}}]
       (-> store
-         (save entry)
-         (load (dissoc entry :value :content-type))
-         :value)) => {:some "complex" :values [1 2 3 4] :maps {:a 1 :b 2}})
+        (save entry)
+        (load (dissoc entry :value :content-type))
+        :value)) => {:some "complex" :values [1 2 3 4] :maps {:a 1 :b 2}})
   )

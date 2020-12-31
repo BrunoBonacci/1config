@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.file
+ com.brunobonacci.oneconfig.backends.file
   (:refer-clojure :exclude [find load list])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
@@ -13,16 +13,16 @@
    with something which doesn't cause problems"
   [s]
   (-> s
-     (str/replace #"/" "#")
-     (str/replace #"\\" "@")))
+    (str/replace #"/" "#")
+    (str/replace #"\\" "@")))
 
 
 (defn- filename->key
   "this function reverses the effect of `key->filename`"
   [s]
   (-> s
-     (str/replace #"#" "/")
-     (str/replace #"@" "\\\\")))
+    (str/replace #"#" "/")
+    (str/replace #"@" "\\\\")))
 
 
 (defn- search-files
@@ -32,20 +32,20 @@
         base-size   (inc (count (.getCanonicalPath ^java.io.File base-dir)))]
     (->>
      ;; list all the files with supported extensions
-     (list-files #"(?i).*\.(edn|json|txt|properties|yaml)$" search-root
-                 :as-string true)
+      (list-files #"(?i).*\.(edn|json|txt|properties|yaml)$" search-root
+        :as-string true)
      ;; create relative paths
-     (map #(subs % base-size))
+      (map #(subs % base-size))
      ;; split components
-     (map (juxt identity #(str/split % (re-pattern (str "\\Q" sep "\\E")))))
+      (map (juxt identity #(str/split % (re-pattern (str "\\Q" sep "\\E")))))
      ;; filter for these with 4 parts
-     (filter (where (comp count second) = 4))
+      (filter (where (comp count second) = 4))
      ;; create entries
-     (map (fn [[f [k e v t]]]
-            {:file (str base-dir sep f)
-             :key (filename->key k) :env (filename->key e) :version v
-             :content-type (filename->content-type t)
-             :change-num (.lastModified (io/file (str base-dir sep f)))})))))
+      (map (fn [[f [k e v t]]]
+             {:file (str base-dir sep f)
+              :key (filename->key k) :env (filename->key e) :version v
+              :content-type (filename->content-type t)
+              :change-num (.lastModified (io/file (str base-dir sep f)))})))))
 
 
 
@@ -59,13 +59,13 @@
           basefile (str key sep env)
           entries (search-files {:base-dir base-dir :sep sep} basefile)
           entry (->> entries
-                   (sort-by (comp comparable-version :version))
-                   (take-while #(<= 0 (compare (comparable-version version)
-                                               (comparable-version (:version %)))))
-                   last)]
+                  (sort-by (comp comparable-version :version))
+                  (take-while #(<= 0 (compare (comparable-version version)
+                                       (comparable-version (:version %)))))
+                  last)]
       (some-> entry
-              (assoc :value (slurp (:file entry)))
-              (dissoc :file))))
+        (assoc :value (slurp (:file entry)))
+        (dissoc :file))))
 
 
   IConfigBackend
@@ -76,8 +76,8 @@
           basefile (str key sep env sep version)
           entry (first (search-files {:base-dir base-dir :sep sep} basefile))]
       (some-> entry
-              (assoc :value (slurp (:file entry)))
-              (dissoc :file))))
+        (assoc :value (slurp (:file entry)))
+        (dissoc :file))))
 
 
 
@@ -95,8 +95,8 @@
   (list [this filters]
     (->> (search-files {:base-dir base-dir :sep sep} nil)
        ;; apply post filters and ordering
-       (list-entries filters)
-       (map #(assoc % :backend :fs)))))
+      (list-entries filters)
+      (map #(assoc % :backend :fs)))))
 
 
 
@@ -128,11 +128,11 @@
   (find c {:key "system1" :version "1.31.5" :env "dev"})
 
   (save c
-        {:key "system1"
-         :env "dev"
-         :version "1.6.3"
-         :content-type "edn"
-         :value (prn-str {:a 1 :b #{:c :d :x}})})
+    {:key "system1"
+     :env "dev"
+     :version "1.6.3"
+     :content-type "edn"
+     :value (prn-str {:a 1 :b #{:c :d :x}})})
 
   (find c {:key "system1" :version "1.6.3" :env "dev"})
   (load c {:key "system1" :version "1.6.3" :env "dev"})

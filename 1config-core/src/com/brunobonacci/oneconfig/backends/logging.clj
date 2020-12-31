@@ -1,5 +1,5 @@
 (ns ^{:author "Bruno Bonacci (@BrunoBonacci)" :no-doc true}
-    com.brunobonacci.oneconfig.backends.logging
+ com.brunobonacci.oneconfig.backends.logging
   (:refer-clojure :exclude [find load list])
   (:require [clojure.tools.logging :as log]
             [com.brunobonacci.oneconfig.backend :refer :all]))
