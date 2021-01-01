@@ -142,7 +142,7 @@
 
       ;; check for invalid operation
       (not
-       (#{:get :set :init :list :diff :list-keys :create-key} op))
+       (#{:get :set :init :list :diff :list-keys :create-key :migrate-database} op))
       (help! ["INVALID operation: must be either GET, SET, LIST, INIT, DIFF, LIST-KEYS or CREATE-KEY"])
 
       ;; check for missing value on set
@@ -223,5 +223,9 @@
                            [(b/backend-factory {:type backend-name})
                             {:env env2 :key key2 :version version2 :change-num change-num2}]
                            :mode diff-mode)
-          )
+
+          ;;
+          ;; MIGRATE-DATABASE
+          ;;
+          :migrate-database (cli/migrate-database!))
         (normal-exit!)))))

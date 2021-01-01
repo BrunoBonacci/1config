@@ -181,7 +181,29 @@
 
    (*) To list all the entries in command-line mode
    1cfg LIST -C
-   --------------------------------------------------------------------------------------------------
+
+  ---| MIGRATE-DATABASE |---------------------------------------------------------------------------
+  [#] migrates all the database entries to the new format (v0.20.0 and above).
+
+  1cfg MIGRATE-DATABASE
+
+  The migration step creates new entries of each config entry with a new format. All existing
+  entries remain untouched. The operation is idempotent and it can be repeated safely.
+  Starting from v0.20.0, 1cfg doesn't use the aws-encryption-sdk any longer,
+  and uses the KMS directly, therefore the binary format of the old entries is not compatible
+  with the raw KMS output.
+  The migration step attempts to decrypt all the existing entries and for each entry it
+  creates a new config entry in the database with the same values as the original entry
+  but with the encrypted payload from KMS. This allows the new version of 1cfg to read
+  the existing entries, as well as the older application to still work.
+
+  After the migration step is completed, please update all the clients to use the latest version
+  of 1cfg.
+
+  Examples:
+  1cfg MIGRATE-DATABASE
+
+  --------------------------------------------------------------------------------------------------
 
    NOTE: - set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to provide authentication
            and access to the target AWS account.
