@@ -24,8 +24,6 @@
                  [cljsjs/react "16.13.0-0"]
                  [cljsjs/react-dom "16.13.0-0"]
 
-                 [cheshire "5.10.0"]
-
                  [http-kit "2.5.0"]
                  [compojure "1.6.2"]
                  [ring "1.8.2"]

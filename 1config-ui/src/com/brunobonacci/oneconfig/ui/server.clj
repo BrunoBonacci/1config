@@ -13,7 +13,6 @@
             [org.httpkit.client :as http]
             [clojure.java.io :as io]
 
-            [cheshire.core :as json]
             [com.brunobonacci.oneconfig.backend :as cfg1]
             [com.brunobonacci.oneconfig.backends :as b]
             [com.brunobonacci.oneconfig.util :as util]
@@ -57,7 +56,7 @@
   "Retrieve 1config latest version from Github repo"
   [url]
   (let [{:keys [body]} @(http/get url)]
-    (->> (json/parse-string body true)
+    (->> (util/decode "json" body)
       (map :tag_name)
       first)))
 
