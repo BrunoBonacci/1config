@@ -44,30 +44,32 @@
   :global-vars {*warn-on-reflection* true}
 
   :clean-targets ^{:protect false} [:target-path "resources/public/cljs"]
-  :cljsbuild {:builds [{:id           "dev"
-                        :source-paths ["src"]
-                        :figwheel     true
-                        :compiler     {:main         com.brunobonacci.oneconfig.ui.view
-                                       :asset-path   "cljs/out"
-                                       :externs      ["resources/public/js/ace.js"]
-                                       :foreign-libs [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
-                                                       :provides ["ace"]}]
-                                       :closure-warnings {:externs-validation :off}
-                                       :output-to  "resources/public/cljs/main.js"
-                                       :output-dir "resources/public/cljs/out"}}
-                       {:id           "min"
-                        :jar          true
-                        :source-paths ["src"]
-                        :compiler     {:main          com.brunobonacci.oneconfig.ui.view
-                                       :output-to     "resources/public/cljs/main.js"
-                                       :optimizations :advanced
-                                       :externs       ["resources/public/js/ace.js"]
-                                       :foreign-libs  [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
-                                                        :provides ["ace"]}]
-                                       :closure-warnings {:externs-validation :off}
-                                       :closure-defines {goog.DEBUG false}
-                                       :pretty-print    false}}]
-              }
+  :cljsbuild
+  {:builds
+   [{:id           "dev"
+     :source-paths ["src"]
+     :figwheel     true
+     :compiler     {:main         com.brunobonacci.oneconfig.ui.view
+                    :asset-path   "cljs/out"
+                    :externs      ["resources/public/js/ace.js"]
+                    :foreign-libs [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
+                                    :provides ["ace"]}]
+                    :closure-warnings {:externs-validation :off}
+                    :output-to  "resources/public/cljs/main.js"
+                    :output-dir "resources/public/cljs/out"}}
+    {:id           "min"
+     :jar          true
+     :source-paths ["src"]
+     :compiler     {:main          com.brunobonacci.oneconfig.ui.view
+                    :output-to     "resources/public/cljs/main.js"
+                    :optimizations :advanced
+                    :externs       ["resources/public/js/ace.js"]
+                    :foreign-libs  [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
+                                     :provides ["ace"]}]
+                    :closure-warnings {:externs-validation :off}
+                    :closure-defines {goog.DEBUG false}
+                    :pretty-print    false}}]
+   }
 
   :figwheel {:server-port 5309}
 
