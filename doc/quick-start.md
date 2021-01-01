@@ -57,7 +57,7 @@ export PATH=~/bin:$PATH
   ``` bash
   export AWS_ACCESS_KEY_ID=xxx
   export AWS_SECRET_ACCESS_KEY=yyy
-  export AWS_DEFAULT_REGION=eu-west-1
+  export AWS_REGION=eu-west-1
   ```
   * Initialize DynamoDB table (only the first time)
   ``` bash

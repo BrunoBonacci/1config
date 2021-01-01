@@ -24,7 +24,7 @@ Here how to use it:
   ``` bash
   export AWS_ACCESS_KEY_ID=xxx
   export AWS_SECRET_ACCESS_KEY=yyy
-  export AWS_DEFAULT_REGION=eu-west-1
+  export AWS_REGION=eu-west-1
   ```
 
   If you have the AWS CLI setup then you can use switch to the given profile with:

@@ -24,7 +24,7 @@ Here how to use it:
   ``` bash
   export AWS_ACCESS_KEY_ID=xxx
   export AWS_SECRET_ACCESS_KEY=yyy
-  export AWS_DEFAULT_REGION=eu-west-1
+  export AWS_REGION=eu-west-1
   ```
 
   If you have the AWS CLI setup then you can use switch to the given profile with:
@@ -224,6 +224,6 @@ Here is how to use the command line:
 
    NOTE: - set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY or AWS_PROFILE to provide authentication
            and access to the target AWS account.
-         - set AWS_DEFAULT_REGION to set the AWS region to use.
+         - set AWS_REGION to set the AWS region to use.
 
 ```

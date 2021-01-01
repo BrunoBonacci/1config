@@ -33,7 +33,7 @@
 
 ## Release: v0.10.2 (2019-07-09)
 
-  * Fixed issue with regions when running on EC2 when AWS_DEFAULT_REGION is not set
+  * Fixed issue with regions when running on EC2 when AWS_REGION is not set
 
 ## Release: v0.10.1 (2019-06-09)
 
