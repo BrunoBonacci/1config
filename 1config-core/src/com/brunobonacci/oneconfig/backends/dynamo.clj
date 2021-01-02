@@ -70,7 +70,7 @@
         [result])))))
 
 
-(deftype DynamoTableConfigBackend [cfg]
+(deftype DynamoTableConfigBackendV1 [cfg]
 
   TestStore
 
@@ -221,10 +221,47 @@
 
 
 
-(defn dynamo-config-backend
+
+(deftype DynamoTableConfigBackendMulti [v1 v2]
+
+  TestStore
+
+  (data [_] nil)
+
+  IConfigClient
+
+  (find [this {:keys [key env version change-num] :as config-entry}]
+    (find v1 config-entry))
+
+  IConfigBackend
+
+  (load [_ {:keys [key env version change-num] :as config-entry}]
+    (load v1 config-entry))
+
+
+  (save [this config-entry]
+    (if (= :v2 (:1config/format config-entry))
+      (save v2 (dissoc config-entry :1config/format))
+      (save v1 config-entry)))
+
+
+  (list [this filters]
+    (list v1 filters)))
+
+
+
+
+(defn dynamo-config-backend-v1
   [dynamo-config]
-  (DynamoTableConfigBackend. dynamo-config))
+  (DynamoTableConfigBackendV1. dynamo-config))
 
 (defn dynamo-config-backend-v2
   [dynamo-config]
   (DynamoTableConfigBackendV2. dynamo-config))
+
+
+(defn dynamo-config-backend
+  [dynamo-config]
+  (DynamoTableConfigBackendMulti.
+    (DynamoTableConfigBackendV1. dynamo-config)
+    (DynamoTableConfigBackendV2. dynamo-config)))

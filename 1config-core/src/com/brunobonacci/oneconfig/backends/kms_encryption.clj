@@ -290,7 +290,7 @@
 
 
 
-(deftype KmsEncryptionConfigBackend [store]
+(deftype KmsEncryptionConfigBackendV1 [store]
 
   IConfigClient
 
@@ -326,7 +326,81 @@
 
 
 
+(deftype KmsEncryptionConfigBackendV2 [store]
+
+  IConfigClient
+
+  (find [this {:keys [key env version] :as config-entry}]
+    (when-let [entry (find store config-entry)]
+      (let [ctx (encryption-context entry)]
+        (update entry :value #(decrypt ctx %)))))
+
+
+  IConfigBackend
+
+  (load [_ {:keys [key env version change-num] :as config-entry}]
+    (when-let [entry (load store config-entry)]
+      (let [ctx (encryption-context entry)]
+        (update entry :value #(decrypt2 ctx %)))))
+
+
+  (save [_ {:keys [key value master-key] :as config-entry}]
+    (let [{:keys [master-key-alias master-key]
+           } (resolve-master-key (or master-key key))
+          context (encryption-context config-entry)
+          encrypted (encrypt2 master-key context value)]
+      (as-> config-entry $
+        ;; add the encrypted value and the master encryption key
+        (assoc $ :value encrypted
+          :master-key master-key
+          :master-key-alias master-key-alias
+          :1config/format :v2)
+        (clean-map $)
+        (save store $))))
+
+  (list [this filters]
+    (list store filters)))
+
+
+;; on save create both entries: v1 and v2
+(deftype KmsEncryptionConfigBackendMulti [v1 v2]
+
+  IConfigClient
+
+  (find [this {:keys [key env version] :as config-entry}]
+    (find v1 config-entry))
+
+
+  IConfigBackend
+
+  (load [_ {:keys [key env version change-num] :as config-entry}]
+    (load v1 config-entry))
+
+
+  (save [_ {:keys [key value master-key] :as config-entry}]
+    (save v1 config-entry)
+    (save v2 config-entry))
+
+  (list [this filters]
+    (list v1 filters)))
+
+
+
+(defn kms-encryption-backend-v1
+  [backend]
+  (when backend
+    (KmsEncryptionConfigBackendV1. backend)))
+
+
+(defn kms-encryption-backend-v2
+  [backend]
+  (when backend
+    (KmsEncryptionConfigBackendV2. backend)))
+
+
 (defn kms-encryption-backend
   [backend]
   (when backend
-    (KmsEncryptionConfigBackend. backend)))
+    (KmsEncryptionConfigBackendMulti.
+      (KmsEncryptionConfigBackendV1. backend)
+      (KmsEncryptionConfigBackendV2. backend))))

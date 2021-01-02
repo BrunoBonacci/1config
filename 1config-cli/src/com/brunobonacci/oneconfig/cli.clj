@@ -310,12 +310,12 @@
         (save v2 $)
         ((constantly :done)))
       (catch Exception x
-        :failed))))
+        [:failed (.getMessage ^Exception x)]))))
 
 
 (defn migrate-table
   [table]
-  (let [v1 (dyn/dynamo-config-backend
+  (let [v1 (dyn/dynamo-config-backend-v1
              (merge (dyn/default-dynamo-config) {:table table}))
         v2 (dyn/dynamo-config-backend-v2
              (merge (dyn/default-dynamo-config) {:table table}))]
@@ -330,11 +330,12 @@
 (defn migrate-database!
   []
   (safely
-    (migrate-table
-      (util/config-property
+    (let [table (util/config-property
         "1config.dynamo.table"
         "ONECONFIG_DYNAMO_TABLE"
-        "1Config"))
+                  "1Config")]
+      (println "Starting migration of:" table)
+      (migrate-table table))
     :on-error
     :log-stacktrace false
     :message "Migrating database"))
