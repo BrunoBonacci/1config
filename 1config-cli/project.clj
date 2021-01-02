@@ -34,6 +34,7 @@
                (vector "-server"))
 
   :java-source-paths ["java/src"]
+  :javac-options     ["-target" "1.8" "-source" "1.8" ]
 
   :resource-paths ["resources" "../ver" ]
 
