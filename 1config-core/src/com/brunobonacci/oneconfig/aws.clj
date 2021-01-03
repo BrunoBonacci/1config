@@ -35,8 +35,9 @@
             (or
               (:cognitect.anomalies/message resp)
               (-> resp :Error :Message)
-              (resp :Message)
-              (resp :message)))
+              (:Message resp)
+              (:message resp)
+              (:__type  resp)))
           resp)))
     resp))
 

@@ -122,12 +122,18 @@
 
 (defn decrypt
   [context text]
-  (->
-    (aws/invoke! (kms-client) :Decrypt
-      {:EncryptionContext (into {} (map (fn [[k v]] [(str k) (str v)]) context))
-       :CiphertextBlob (base64-decode text)})
-    :Plaintext
-    slurp))
+  (try
+    (->
+      (aws/invoke! (kms-client) :Decrypt
+        {:EncryptionContext (into {} (map (fn [[k v]] [(str k) (str v)]) context))
+         :CiphertextBlob (base64-decode text)})
+      :Plaintext
+      slurp)
+    (catch Exception x
+      (if (= "InvalidCiphertextException" (:__type (ex-data x)))
+        (throw (ex-info "Invalid encryption context. Possible tampering with config-entry."
+                 {:config-entry context}))
+        (throw x)))))
 
 
 
