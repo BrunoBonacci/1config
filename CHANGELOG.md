@@ -1,14 +1,14 @@
 # Changelog
 
-## Release: v0.20.0 (unreleased)
+## Release: v0.20.0 (2021-01-03)
 
   * [**BREAKING**] Dropped `aws-ancryption-sdk` in favour of direct KMS API use.
-    See migration procedure: (TODO: link)
+    See [migration procedure](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)
   * Switched from Amazonica to Cognitect's aws-api client for AWS.
   * Native binaries for command line tool.
   * Switched from Cheshire to Jasonista (to reduce library version clash)
 
-## Release: v0.17.0 (unreleased)
+## Release: v0.17.0 (2021-01-03)
 
   * Transition version in preparation for `v0.20.0`. **Use this
     version if you have an existing installation of 1Config,
