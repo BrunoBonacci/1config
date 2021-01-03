@@ -4,6 +4,7 @@
 
   ["User guides" {}
    ["Quick Start" {:file "doc/quick-start.md" }]
+   ["Migration Procedure" {:file "doc/migration-procedure.md" }]
    ["Security Model" {:file "doc/security-model.md" }]
    ["Best practices" {:file "doc/best-practices.md" }]
    ["Configuration resolution" {:file "doc/config-resolution.md" }]
