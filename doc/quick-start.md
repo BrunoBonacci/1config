@@ -1,20 +1,13 @@
 # Quick start
 
+**NOTE: if you are upgrading from previous version please check: [migration procedure](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)**
+
 Quick start guide to install and use 1Config.
 
 ## Install via `brew`
 
-Install command line tool via [Homebrew](https://brew.sh/)
-``` bash
-brew tap BrunoBonacci/lazy-tools
-brew install one-config
-```
+**homebrew updates not available at the moment**. This is to avoid accidental updates since the data format has changed.
 
-or update with
-
-``` bash
-brew update && brew upgrade one-config
-```
 
 
 ## Manual installation
