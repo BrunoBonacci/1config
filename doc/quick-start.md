@@ -28,7 +28,7 @@ The version v0.20.0 can only `GET` and `SET` entries with the new format,
 while v0.17.0 will `GET` and `LIST` work as before, `SET` will write both
 formats.
 
-For more info see [the migration page](TODO:)
+For more info see [the migration page](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)
 
 
 ## Manual installation
