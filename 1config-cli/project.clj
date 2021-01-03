@@ -51,24 +51,25 @@
                                   [lein-binplus "0.6.6"]]}}
 
   :aliases
-  {"package"
-   ["do" "shell" "./bin/package.sh"]
-
+  {
    "native-config"
    ["shell"
     ;; run the application to infer the build configuration
     "../test/bin/end-2-end-test.sh" "graalvm-config"]
 
    "native"
-   ["shell"
-    "native-image" "--report-unsupported-elements-at-runtime" "--no-server" "--no-fallback"
-    "-H:+PrintClassInitialization"
-    "-H:ConfigurationFileDirectories=./graalvm-config/"
-    "--initialize-at-build-time"
-    "--allow-incomplete-classpath"
-    "--enable-http" "--enable-https" "--enable-all-security-services"
-    "-jar" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}"
-    "-H:Name=./target/1cfg"]
+   ["shell" "./bin/native-image-build.sh" "."]
 
+
+   ;; assumes container on Mac with /tmp shared with DockerVM
+   "native-linux"
+   ["do"
+    ["shell" "mkdir" "-p" "/tmp/1cfg-build/target/"]
+    ["shell" "cp" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}" "/tmp/1cfg-build/target/"]
+    ["shell" "cp" "-r" "./graalvm-config" "/tmp/1cfg-build/"]
+    ["shell" "docker" "run" "-v" "/tmp/1cfg-build:/1config" "findepi/graalvm:20.3.0-java11-native"
+     "/bin/bash" "-c"
+     "find /1config ; apt-get update ; apt-get install -y g++ ; /graalvm/bin/native-image --report-unsupported-elements-at-runtime --no-server --no-fallback -H:+PrintClassInitialization -H:ConfigurationFileDirectories=/1config/graalvm-config/ --initialize-at-build-time --allow-incomplete-classpath --enable-http --enable-https --enable-all-security-services -jar /1config/target/${:uberjar-name:-${:name}-${:version}-standalone.jar} -H:Name=/1config/target/1cfg-Linux"]
+    ["shell" "cp" "/tmp/1cfg-build/target/1cfg-Linux" "./target/"]]
    }
   )
