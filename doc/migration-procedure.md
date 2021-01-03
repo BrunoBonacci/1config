@@ -79,7 +79,7 @@ export AWS_SECRET_ACCESS_KEY=yyy
 export AWS_REGION=eu-west-1
 
 # run the migration
-1cfg MIGRATE-DATABASE
+1cfgM MIGRATE-DATABASE
 ```
 
 If you want to test this step on a copy of the Database, you can do so
@@ -89,7 +89,7 @@ create a new copy of the table.
 Once you have the new table restore you can run:
 ``` bash
 # run the migration on the table 1ConfigMigration
-ONECONFIG_DYNAMO_TABLE=1ConfigMigration 1cfg MIGRATE-DATABASE
+ONECONFIG_DYNAMO_TABLE=1ConfigMigration 1cfgM MIGRATE-DATABASE
 ```
 
 You can use the similar command to test GET and SET.
