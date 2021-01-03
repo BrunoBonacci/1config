@@ -14,7 +14,7 @@
     version if you have an existing installation of 1Config,
     jump to the new version if you are starting on a new account.**
   * Migration tool to migrate database to new format
-  * `SAVE` command saves in both versions
+  * `SET` command saves in both versions
 
 ## Release: v0.16.4 (2020-04-04)
 
