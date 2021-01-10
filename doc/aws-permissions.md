@@ -155,3 +155,25 @@ Similarly the application can be limited to the key used for its own entries:
         }
    [...]
 ```
+
+NOTE: [until December 2020](https://aws.amazon.com/about-aws/whats-new/2020/12/attribute-based-access-control-abac-aws-key-management-service/), it was not possible to grant permissions using the KMS alias.
+Now you can specify the permissions without knowing the key ARN and just using the logical name (Alias) as explained in [AWS ABAC](https://docs.aws.amazon.com/kms/latest/developerguide/abac.html)
+
+
+``` json
+   [...]
+        {
+            "Sid": "AllowGetConfigEntriesPt2",
+            "Effect": "Allow",
+            "Action": "kms:Decrypt",
+            "Resource": "arn:aws:kms:eu-west-1:1234567890:key/*",
+            "Condition": {
+             "ForAnyValue:StringEquals": {
+              "kms:ResourceAliases": [
+                  "alias/1Config/my-app"
+               ]
+             }
+            }
+        }
+   [...]
+```
