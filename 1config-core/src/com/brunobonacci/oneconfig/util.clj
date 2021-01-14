@@ -47,12 +47,43 @@
 
 
 
+(defn sem-ver2
+  "Returns a vector of the numerical components of a 3-leg version number.
+  eg:
+
+       (sem-ver \"1.2.3\") ;;=> [1 2 3]
+       (sem-ver \"1.2-alpha\") ;;=> nil
+
+  "
+  [ver]
+  (when ver
+    (when-let [components (re-find #"(\d{1,20})\.(\d{1,20})\.(\d{1,20})" ver)]
+      (mapv (fn [^String n] (Long/parseLong n)) (rest components)))))
+
+
+
 (defn comparable-version
   "takes a 3-leg version number and returns a version string
    which it can be compared lexicographically and maintain it's semantic
    version ordering."
   [ver]
   (apply format "%05d%05d%05d" (sem-ver ver)))
+
+
+
+(defn comparable-version2
+  "takes a 3-leg version number and returns a version string
+   which it can be compared lexicographically and maintain it's semantic
+   version ordering."
+  [ver]
+  (apply format "%020d%020d%020d" (sem-ver ver)))
+
+
+
+(defn max-acceptable-version
+  "returns the max acceptable version number"
+  []
+  (str/join "." (repeat 3 Long/MAX_VALUE)))
 
 
 

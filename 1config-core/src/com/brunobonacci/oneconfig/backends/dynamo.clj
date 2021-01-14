@@ -154,8 +154,8 @@
   IConfigClient
 
   (find [this {:keys [key env version change-num] :as config-entry}]
-    (let [zver (comparable-version version)
-          sys-key (str "!2||" env  "||" key)
+    (let [zver (comparable-version2 version)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (or (and change-num (format "%020d" change-num ))
                                     (apply str (repeat 20 "9"))))]
       (some->
@@ -172,8 +172,8 @@
   IConfigBackend
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
-    (let [zver (comparable-version version)
-          sys-key (str "!2||" env  "||" key)
+    (let [zver (comparable-version2 version)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (when change-num (format "%020d" change-num)))]
       (some->
        (dyn/query cfg
@@ -190,9 +190,9 @@
   (save [this config-entry]
     (let [{:keys [key env version value change-num]
            :as entry} (merge {:content-type "edn"} config-entry)
-          zver (comparable-version version)
+          zver (comparable-version2 version)
           change-num (or change-num (System/currentTimeMillis))
-          sys-key (str "!2||" env  "||" key)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (format "%020d" change-num))
           db-entry (assoc entry
                           :__sys_key sys-key
