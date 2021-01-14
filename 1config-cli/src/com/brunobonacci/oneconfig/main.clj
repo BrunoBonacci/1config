@@ -38,7 +38,7 @@
     (format (str (slurp (io/resource "help-page.txt")) \newline)
       (util/oneconfig-version))
     (str/join "\n" errors))
-  (System/exit 1))
+  (System/exit 0))
 
 
 
