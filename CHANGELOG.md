@@ -1,6 +1,11 @@
 # Changelog
 
-## Release: v0.20.0 (2021-01-03)
+## Release: v0.21.0 (2021-01-14)
+
+  * [**BREAKING**] Expand version numbers to support more digits from 5 to 20
+    See [migration procedure](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)
+
+## Release: v0.20.0 (2021-01-03) *(DON'T USE THIS VERSION, use: `0.21.0` or newer)*
 
   * [**BREAKING**] Dropped `aws-ancryption-sdk` in favour of direct KMS API use.
     See [migration procedure](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)
@@ -8,11 +13,17 @@
   * Native binaries for command line tool.
   * Switched from Cheshire to Jasonista (to reduce library version clash)
 
-## Release: v0.17.0 (2021-01-03)
+## Release: v0.17.1 (2021-01-14)
 
-  * Transition version in preparation for `v0.20.0`. **Use this
+  * Transition version in preparation for `v0.21.0`. **Use this
     version if you have an existing installation of 1Config,
     jump to the new version if you are starting on a new account.**
+  * Migration tool to migrate database to new format
+  * `SET` command saves in both versions
+
+## Release: v0.17.0 (2021-01-03) *(use: `v0.17.1`)*
+
+  * Transition version in preparation for `v0.2x.0`.
   * Migration tool to migrate database to new format
   * `SET` command saves in both versions
 

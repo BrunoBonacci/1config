@@ -16,9 +16,9 @@ Quick start guide to install and use 1Config.
 
 ``` bash
 mkdir -p ~/bin
-wget https://github.com/BrunoBonacci/1config/releases/download/0.20.0/1cfg-`uname` -O ~/bin/1cfg
-wget https://github.com/BrunoBonacci/1config/releases/download/0.20.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
-wget https://github.com/BrunoBonacci/1config/releases/download/0.20.0/1cfgX -O ~/bin/1cfgX
+wget https://github.com/BrunoBonacci/1config/releases/download/0.21.0/1cfg-`uname` -O ~/bin/1cfg
+wget https://github.com/BrunoBonacci/1config/releases/download/0.21.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
+wget https://github.com/BrunoBonacci/1config/releases/download/0.21.0/1cfgX -O ~/bin/1cfgX
 chmod +x ~/bin/1cfg ~/bin/1cfgX ~/bin/1cfg-ui-beta
 export PATH=~/bin:$PATH
 ```
@@ -27,8 +27,8 @@ export PATH=~/bin:$PATH
 
  - Open a terminal window
  - Create installation dir `md %userprofile%\1config\bin`
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.20.0/1cfgX and save it in the above folder
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.20.0/1cfg-ui-beta and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.21.0/1cfgX and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.21.0/1cfg-ui-beta and save it in the above folder
  - Rename file into `1cfg.cmd` with `ren %userprofile%\1config\bin\1cfgX %userprofile%\1config\bin\1cfg.cmd`
  - Rename file into `1cfg-ui-beta.cmd` with `ren %userprofile%\1config\bin\1cfg-ui-beta %userprofile%\1config\bin\1cfg-ui-beta.cmd`
  - Add it to the System path:

@@ -141,6 +141,11 @@ $CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1.12.0' -t txt 'value-1120'
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1')" = "value-1120" ] || exit 9
 
 
+echo "(*) verify you can use big numbers for versions numbers"
+$CFG1 SET -b dynamo -e test1 -k 'test/service1' -v '1234567890123456789.1234567890123456789.1234567890123456789' -t txt 'value-1234567890123456789'
+[ "$($CFG1 GET -b dynamo -e test1 -k 'test/service1' -v '1234567890123456789.1234567890123456789.1234567890123456789')" = "value-1234567890123456789" ] || exit 16
+
+
 echo "(*) can use specific encryption key"
 $CFG1 SET -b dynamo -e test1 -k 'test/super-service' -v '1.1.3' -t txt 'super-113' -m 'test/service1'
 [ "$($CFG1 GET -b dynamo -e test1 -k 'test/super-service' -v '2.8.0')" = 'super-113' ] || exit 10
