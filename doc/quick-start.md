@@ -2,30 +2,30 @@
 
 Quick start guide to install and use 1Config.
 
-**ATTENTION: The version v0.17.0 is a transition version between the
-old format v0.16.4 and the new persistence format v0.20.0.**  Use this
+**ATTENTION: The version v0.17.1 is a transition version between the
+old format v0.16.4 and the new persistence format v0.21.0.**  Use this
 version only if you have an existing installation that you want to
-migrate to v0.20.0+. Use v0.16.4 if you happy with your current
+migrate to v0.21.0+. Use v0.16.4 if you happy with your current
 solution.
 
 This version has a migration task to migrate the database to a new
 persistence format. When you `SET` a new configuration entry, the
 entry will be written in two different format, the old one and the new
-one thus allowing the version v0.20.0 to read it as well.
+one thus allowing the version v0.21.0 to read it as well.
 
 ```
-v0.20.0     GET     SET     LIST      (new format)
+v0.21.0     GET     SET     LIST      (new format)
                      ^       |
                      |       v
-v0.17.0     GET     SET     LIST
+v0.17.1     GET     SET     LIST
              |       |       |
              v       v       v
 v0.16.4     GET     SET     LIST      (old format)
 ```
 
 
-The version v0.20.0 can only `GET` and `SET` entries with the new format,
-while v0.17.0 will `GET` and `LIST` work as before, `SET` will write both
+The version v0.21.0 can only `GET` and `SET` entries with the new format,
+while v0.17.1 will `GET` and `LIST` work as before, `SET` will write both
 formats.
 
 For more info see [the migration page](https://cljdoc.org/d/com.brunobonacci/oneconfig/CURRENT/doc/user-guides/migration-procedure)
@@ -37,8 +37,8 @@ For more info see [the migration page](https://cljdoc.org/d/com.brunobonacci/one
 
 ``` bash
 mkdir -p ~/bin
-wget https://github.com/BrunoBonacci/1config/releases/download/0.17.0/1cfg -O ~/bin/1cfg
-wget https://github.com/BrunoBonacci/1config/releases/download/0.17.0/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
+wget https://github.com/BrunoBonacci/1config/releases/download/0.17.1/1cfg -O ~/bin/1cfg
+wget https://github.com/BrunoBonacci/1config/releases/download/0.17.1/1cfg-ui-beta -O ~/bin/1cfg-ui-beta
 chmod +x ~/bin/1cfg
 export PATH=~/bin:$PATH
 ```
@@ -47,8 +47,8 @@ export PATH=~/bin:$PATH
 
  - Open a terminal window
  - Create installation dir `md %userprofile%\1config\bin`
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.17.0/1cfg and save it in the above folder
- - Download https://github.com/BrunoBonacci/1config/releases/download/0.17.0/1cfg-ui-beta and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.17.1/1cfg and save it in the above folder
+ - Download https://github.com/BrunoBonacci/1config/releases/download/0.17.1/1cfg-ui-beta and save it in the above folder
  - Rename file into `1cfg.cmd` with `ren %userprofile%\1config\bin\1cfg %userprofile%\1config\bin\1cfg.cmd`
  - Rename file into `1cfg-ui-beta.cmd` with `ren %userprofile%\1config\bin\1cfg-ui-beta %userprofile%\1config\bin\1cfg-ui-beta.cmd`
  - Add it to the System path:
