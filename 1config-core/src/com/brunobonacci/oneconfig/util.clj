@@ -42,7 +42,7 @@
   "
   [ver]
   (when ver
-    (when-let [components (re-find #"(\d{1,5})\.(\d{1,5})\.(\d{1,5})" ver)]
+    (when-let [components (re-find #"(\d{1,20})\.(\d{1,20})\.(\d{1,20})" ver)]
       (mapv (fn [^String n] (Long/parseLong n)) (rest components)))))
 
 
@@ -52,7 +52,14 @@
    which it can be compared lexicographically and maintain it's semantic
    version ordering."
   [ver]
-  (apply format "%05d%05d%05d" (sem-ver ver)))
+  (apply format "%020d%020d%020d" (sem-ver ver)))
+
+
+
+(defn max-acceptable-version
+  "returns the max acceptable version number"
+  []
+  (str/join "." (repeat 3 Long/MAX_VALUE)))
 
 
 

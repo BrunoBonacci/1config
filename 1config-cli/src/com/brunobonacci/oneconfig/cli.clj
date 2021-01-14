@@ -126,7 +126,7 @@
 
 (defn- retrieve-entry
   [backend config-entry]
-  (let [config-entry (update config-entry :version (fnil identity "99999.99999.99999"))]
+  (let [config-entry (update config-entry :version (fnil identity (util/max-acceptable-version)))]
     (validate-backend! backend)
     (validate-version! (:version config-entry))
     (safely

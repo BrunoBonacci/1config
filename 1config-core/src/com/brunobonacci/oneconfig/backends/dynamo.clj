@@ -102,7 +102,7 @@
 
   (find [this {:keys [key env version change-num] :as config-entry}]
     (let [zver (comparable-version version)
-          sys-key (str "!2||" env  "||" key)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (or (and change-num (format "%020d" change-num ))
                                    (apply str (repeat 20 "9"))))]
       (some->
@@ -120,7 +120,7 @@
 
   (load [_ {:keys [key env version change-num] :as config-entry}]
     (let [zver (comparable-version version)
-          sys-key (str "!2||" env  "||" key)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (when change-num (format "%020d" change-num)))]
       (some->
         (aws/invoke! (dyn-client) :Query
@@ -139,7 +139,7 @@
            :as entry} (merge {:content-type "edn"} config-entry)
           zver (comparable-version version)
           change-num (or change-num (System/currentTimeMillis))
-          sys-key (str "!2||" env  "||" key)
+          sys-key (str "!3||" env  "||" key)
           ver-key (str zver "||" (format "%020d" change-num))
           db-entry (assoc entry
                      :__sys_key sys-key
