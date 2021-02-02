@@ -1,7 +1,7 @@
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    ;                                 ----==| 1 C O N F I G |==----                                  ;
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                (c) Bruno Bonacci - 2019-2020 - v%s
+                                (c) Bruno Bonacci - 2019-2021 - v%s
 
    A command line tool to manage application secrets and configuration safely and effectively.
 
