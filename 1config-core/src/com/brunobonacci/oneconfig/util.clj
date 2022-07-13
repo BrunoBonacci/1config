@@ -223,11 +223,13 @@
 
 
 (defn config-property
-  [prop-name env-name default]
-  (or
-    (system-property prop-name)
-    (env env-name)
-    default))
+  ([prop-name env-name]
+   (config-property prop-name env-name nil))
+  ([prop-name env-name default]
+   (or
+     (system-property prop-name)
+     (env env-name)
+     default)))
 
 
 
@@ -272,11 +274,11 @@
 
 
 (defn home-1config
-  "returns ONECONFIG_HOME from the environment if it is set otherwise it
-  returns ~/.1config"
+  "Returns the 1config home directory from either `1config.home` system property
+   or `ONECONFIG_HOME` environment. If neither exists it returns ~/.1config"
   []
   (let [home (homedir)
-        oneconfig-home (env "ONECONFIG_HOME")]
+        oneconfig-home (config-property "1config.home" "ONECONFIG_HOME")]
     (cond
       (and oneconfig-home (not (dir-exists? oneconfig-home)))
       (log/warn "ONECONFIG_HOME is set, but its either not a directory or it doesn't exist.")
