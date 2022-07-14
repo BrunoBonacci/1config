@@ -1,5 +1,44 @@
 [
 {
+  "name":"[B"
+},
+{
+  "name":"[C"
+},
+{
+  "name":"[D"
+},
+{
+  "name":"[F"
+},
+{
+  "name":"[I"
+},
+{
+  "name":"[J"
+},
+{
+  "name":"[Ljava.lang.Object;"
+},
+{
+  "name":"[Ljava.lang.StackTraceElement;"
+},
+{
+  "name":"[Ljava.lang.String;"
+},
+{
+  "name":"[Ljava.nio.HeapByteBuffer;"
+},
+{
+  "name":"[Lsun.security.pkcs.SignerInfo;"
+},
+{
+  "name":"[S"
+},
+{
+  "name":"[Z"
+},
+{
   "name":"amalloy.ring_buffer.RingBuffer"
 },
 {
@@ -10,13 +49,88 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"boolean[]"
+  "name":"charred.CSVReader"
 },
 {
-  "name":"byte[]"
+  "name":"charred.CSVReader$RowReader"
 },
 {
-  "name":"char[]"
+  "name":"charred.CSVWriter"
+},
+{
+  "name":"charred.CharBuffer"
+},
+{
+  "name":"charred.CharReader"
+},
+{
+  "name":"charred.CloseableSupplier"
+},
+{
+  "name":"charred.JSONReader"
+},
+{
+  "name":"charred.JSONReader$ArrayReader"
+},
+{
+  "name":"charred.JSONReader$ObjReader"
+},
+{
+  "name":"charred.JSONWriter"
+},
+{
+  "name":"charred.api.AllocCharBufFn"
+},
+{
+  "name":"charred.api.CSVRowSupplier"
+},
+{
+  "name":"charred.api.JSONSupplier"
+},
+{
+  "name":"charred.api.PToJSON"
+},
+{
+  "name":"charred.api.RotatingCharBufFn"
+},
+{
+  "name":"charred.api__init"
+},
+{
+  "name":"charred.coerce.ByteArrayIter"
+},
+{
+  "name":"charred.coerce.CharArrayIter"
+},
+{
+  "name":"charred.coerce.DoubleArrayIter"
+},
+{
+  "name":"charred.coerce.FloatArrayIter"
+},
+{
+  "name":"charred.coerce.IntArrayIter"
+},
+{
+  "name":"charred.coerce.LongArrayIter"
+},
+{
+  "name":"charred.coerce.ObjectArrayIter"
+},
+{
+  "name":"charred.coerce.ShortArrayIter"
+},
+{
+  "name":"charred.coerce__init"
+},
+{
+  "name":"charred.parallel.QueueException"
+},
+{
+  "name":"charred.parallel.QueueFn"
+},
+{
+  "name":"charred.parallel__init"
 },
 {
   "name":"clj_yaml.MarkedConstructor"
@@ -535,9 +649,6 @@
   "name":"clojure.data.json__init"
 },
 {
-  "name":"clojure.data.json_compat_0_1__init"
-},
-{
   "name":"clojure.data.priority_map.PersistentPriorityMap"
 },
 {
@@ -747,8 +858,8 @@
 },
 {
   "name":"clojure.lang.IObj",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.IPersistentCollection"
@@ -773,6 +884,9 @@
 },
 {
   "name":"clojure.lang.IRecord"
+},
+{
+  "name":"clojure.lang.IReduce"
 },
 {
   "name":"clojure.lang.IReduceInit"
@@ -821,7 +935,7 @@
 },
 {
   "name":"clojure.lang.LockingTransaction",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.MapEntry"
@@ -837,14 +951,15 @@
 },
 {
   "name":"clojure.lang.Namespace",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.Numbers"
 },
 {
   "name":"clojure.lang.PersistentArrayMap",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"create","parameterTypes":["java.util.Map"] }]
 },
 {
   "name":"clojure.lang.PersistentArrayMap$Seq"
@@ -872,7 +987,7 @@
 },
 {
   "name":"clojure.lang.RT",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.Ratio"
@@ -900,7 +1015,7 @@
 },
 {
   "name":"clojure.lang.Symbol",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.TaggedLiteral"
@@ -910,7 +1025,7 @@
 },
 {
   "name":"clojure.lang.Var",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.lang.Volatile"
@@ -1102,8 +1217,8 @@
 },
 {
   "name":"clojure.tools.logging.impl.LoggerFactory",
-  "allDeclaredMethods":true,
-  "allPublicMethods":true
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true
 },
 {
   "name":"clojure.tools.logging.impl__init"
@@ -1451,44 +1566,23 @@
   "name":"com.codahale.metrics.jvm.ThreadStatesGaugeSet"
 },
 {
-  "name":"com.fasterxml.jackson.core.JsonGenerator$Feature"
-},
-{
-  "name":"com.fasterxml.jackson.databind.DeserializationFeature"
-},
-{
-  "name":"com.fasterxml.jackson.databind.JsonSerializer"
-},
-{
-  "name":"com.fasterxml.jackson.databind.ObjectMapper"
-},
-{
-  "name":"com.fasterxml.jackson.databind.SerializationFeature"
-},
-{
-  "name":"com.fasterxml.jackson.databind.deser.Deserializers[]"
-},
-{
-  "name":"com.fasterxml.jackson.databind.deser.KeyDeserializers[]"
-},
-{
-  "name":"com.fasterxml.jackson.databind.deser.ValueInstantiators[]"
-},
-{
-  "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+  "name":"com.sun.crypto.provider.AESCipher$General",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.fasterxml.jackson.databind.module.SimpleModule"
+  "name":"com.sun.crypto.provider.ARCFOURCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.fasterxml.jackson.databind.ser.Serializers[]"
+  "name":"com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"
+  "name":"com.sun.crypto.provider.DESCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.sun.crypto.provider.AESCipher$General",
+  "name":"com.sun.crypto.provider.DESedeCipher",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1496,7 +1590,15 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.crypto.provider.GaloisCounterMode$AESGCM",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.crypto.provider.HmacCore$HmacSHA256",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.HmacCore$HmacSHA384",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1517,9 +1619,6 @@
 },
 {
   "name":"defun.core__init"
-},
-{
-  "name":"double[]"
 },
 {
   "name":"flatland.ordered.common.Compactable"
@@ -1544,12 +1643,6 @@
 },
 {
   "name":"flatland.ordered.set__init"
-},
-{
-  "name":"float[]"
-},
-{
-  "name":"int[]"
 },
 {
   "name":"java.beans.PropertyVetoException"
@@ -1577,9 +1670,6 @@
 },
 {
   "name":"java.io.Closeable"
-},
-{
-  "name":"java.io.DataOutput"
 },
 {
   "name":"java.io.EOFException"
@@ -1636,12 +1726,15 @@
   "name":"java.io.Writer"
 },
 {
+  "name":"java.lang.AutoCloseable"
+},
+{
   "name":"java.lang.Boolean",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Byte",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.CharSequence"
@@ -1651,39 +1744,45 @@
 },
 {
   "name":"java.lang.Class",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"getModule","parameterTypes":[] }]
 },
 {
   "name":"java.lang.ClassLoader"
 },
 {
   "name":"java.lang.Double",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Float",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.IllegalArgumentException",
-  "allPublicConstructors":true
+  "queryAllPublicConstructors":true
 },
 {
   "name":"java.lang.Integer",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Iterable"
 },
 {
   "name":"java.lang.Long",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
-  "name":"java.lang.Module"
+  "name":"java.lang.Module",
+  "methods":[
+    {"name":"getLayer","parameterTypes":[] }, 
+    {"name":"getName","parameterTypes":[] }
+  ]
 },
 {
-  "name":"java.lang.ModuleLayer"
+  "name":"java.lang.ModuleLayer",
+  "methods":[{"name":"configuration","parameterTypes":[] }]
 },
 {
   "name":"java.lang.Number"
@@ -1691,32 +1790,22 @@
 {
   "name":"java.lang.Object",
   "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true
-},
-{
-  "name":"java.lang.Object[]"
+  "queryAllDeclaredMethods":true,
+  "queryAllPublicMethods":true,
+  "queryAllDeclaredConstructors":true
 },
 {
   "name":"java.lang.Runnable"
 },
 {
   "name":"java.lang.Short",
-  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.StackTraceElement"
 },
 {
-  "name":"java.lang.StackTraceElement[]"
-},
-{
-  "name":"java.lang.String",
-  "allPublicMethods":true
-},
-{
-  "name":"java.lang.String[]"
+  "name":"java.lang.String"
 },
 {
   "name":"java.lang.Thread",
@@ -1757,7 +1846,8 @@
   "methods":[{"name":"location","parameterTypes":[] }]
 },
 {
-  "name":"java.lang.module.ResolvedModule"
+  "name":"java.lang.module.ResolvedModule",
+  "methods":[{"name":"reference","parameterTypes":[] }]
 },
 {
   "name":"java.lang.ref.ReferenceQueue"
@@ -1773,6 +1863,10 @@
 },
 {
   "name":"java.lang.reflect.Field"
+},
+{
+  "name":"java.lang.reflect.Method",
+  "methods":[{"name":"canAccess","parameterTypes":["java.lang.Object"] }]
 },
 {
   "name":"java.lang.reflect.Modifier"
@@ -1823,9 +1917,6 @@
   "name":"java.nio.ByteBuffer"
 },
 {
-  "name":"java.nio.HeapByteBuffer[]"
-},
-{
   "name":"java.nio.charset.Charset"
 },
 {
@@ -1842,9 +1933,6 @@
 },
 {
   "name":"java.security.MessageDigest"
-},
-{
-  "name":"java.security.MessageDigestSpi"
 },
 {
   "name":"java.security.SecureRandomParameters"
@@ -1883,7 +1971,13 @@
   "name":"java.util.ArrayList"
 },
 {
+  "name":"java.util.Arrays"
+},
+{
   "name":"java.util.Base64"
+},
+{
+  "name":"java.util.BitSet"
 },
 {
   "name":"java.util.Calendar"
@@ -1922,8 +2016,10 @@
   "name":"java.util.Map$Entry"
 },
 {
-  "name":"java.util.Properties",
-  "allPublicMethods":true
+  "name":"java.util.NoSuchElementException"
+},
+{
+  "name":"java.util.Properties"
 },
 {
   "name":"java.util.Queue"
@@ -1971,6 +2067,12 @@
   "name":"java.util.concurrent.Executors"
 },
 {
+  "name":"java.util.concurrent.ForkJoinPool"
+},
+{
+  "name":"java.util.concurrent.ForkJoinTask"
+},
+{
   "name":"java.util.concurrent.Future"
 },
 {
@@ -2016,6 +2118,27 @@
   "name":"java.util.concurrent.locks.ReentrantLock"
 },
 {
+  "name":"java.util.function.BiConsumer"
+},
+{
+  "name":"java.util.function.BiFunction"
+},
+{
+  "name":"java.util.function.Consumer"
+},
+{
+  "name":"java.util.function.Function"
+},
+{
+  "name":"java.util.function.LongPredicate"
+},
+{
+  "name":"java.util.function.Predicate"
+},
+{
+  "name":"java.util.function.Supplier"
+},
+{
   "name":"java.util.logging.Level"
 },
 {
@@ -2026,6 +2149,9 @@
 },
 {
   "name":"java.util.regex.Pattern"
+},
+{
+  "name":"java.util.stream.Stream"
 },
 {
   "name":"java.util.zip.GZIPInputStream"
@@ -2078,48 +2204,6 @@
   "name":"javax.xml.transform.stream.StreamSource"
 },
 {
-  "name":"jsonista.core.ReadValue"
-},
-{
-  "name":"jsonista.core.WriteValue"
-},
-{
-  "name":"jsonista.core__init"
-},
-{
-  "name":"jsonista.jackson.DateSerializer"
-},
-{
-  "name":"jsonista.jackson.FunctionalKeyDeserializer"
-},
-{
-  "name":"jsonista.jackson.FunctionalKeywordSerializer"
-},
-{
-  "name":"jsonista.jackson.FunctionalSerializer"
-},
-{
-  "name":"jsonista.jackson.KeywordKeyDeserializer"
-},
-{
-  "name":"jsonista.jackson.KeywordSerializer"
-},
-{
-  "name":"jsonista.jackson.PersistentHashMapDeserializer"
-},
-{
-  "name":"jsonista.jackson.PersistentVectorDeserializer"
-},
-{
-  "name":"jsonista.jackson.RatioSerializer"
-},
-{
-  "name":"jsonista.jackson.SymbolSerializer"
-},
-{
-  "name":"long[]"
-},
-{
   "name":"metrics.core__init"
 },
 {
@@ -2159,44 +2243,33 @@
   "name":"name.fraser.neil.plaintext.diff_match_patch$Operation"
 },
 {
-  "name":"org.apache.log4j.Appender"
-},
-{
   "name":"org.apache.log4j.AppenderSkeleton",
-  "allPublicMethods":true
-},
-{
-  "name":"org.apache.log4j.Category"
-},
-{
-  "name":"org.apache.log4j.CategoryKey"
+  "queryAllPublicMethods":true
 },
 {
   "name":"org.apache.log4j.ConsoleAppender",
-  "allPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllPublicMethods":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setTarget","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"org.apache.log4j.Layout",
-  "allPublicMethods":true
-},
-{
-  "name":"org.apache.log4j.Logger"
+  "queryAllPublicMethods":true
 },
 {
   "name":"org.apache.log4j.PatternLayout",
-  "allPublicMethods":true,
-  "methods":[{"name":"<init>","parameterTypes":[] }]
+  "queryAllPublicMethods":true,
+  "methods":[
+    {"name":"<init>","parameterTypes":[] }, 
+    {"name":"setConversionPattern","parameterTypes":["java.lang.String"] }
+  ]
 },
 {
   "name":"org.apache.log4j.WriterAppender",
-  "allPublicMethods":true
-},
-{
-  "name":"org.apache.log4j.helpers.Loader"
-},
-{
-  "name":"org.apache.log4j.spi.OptionHandler"
+  "queryAllPublicMethods":true,
+  "methods":[{"name":"setEncoding","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"org.eclipse.jetty.client.HttpClient"
@@ -2226,6 +2299,10 @@
   "name":"org.eclipse.jetty.client.util.ByteBufferContentProvider"
 },
 {
+  "name":"org.eclipse.jetty.util.ModuleLocation",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"org.eclipse.jetty.util.log.Slf4jLog",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2240,15 +2317,15 @@
 },
 {
   "name":"org.slf4j.ILoggerFactory",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"org.slf4j.Logger",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"org.slf4j.LoggerFactory",
-  "allPublicMethods":true
+  "queryAllPublicMethods":true
 },
 {
   "name":"org.yaml.snakeyaml.DumperOptions"
@@ -2423,12 +2500,6 @@
   "name":"schema.utils__init"
 },
 {
-  "name":"short[]"
-},
-{
-  "name":"sun.security.pkcs.SignerInfo[]"
-},
-{
   "name":"sun.security.pkcs12.PKCS12KeyStore",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2482,6 +2553,10 @@
 },
 {
   "name":"sun.security.provider.certpath.PKIXCertPathValidator",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.PSSParameters",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
