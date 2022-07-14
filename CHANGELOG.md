@@ -1,7 +1,8 @@
 # Changelog
 
-## Release: v0.21.1 (2022-07-14)
+## Release: v0.22.0 (2022-07-14)
 
+  * [NEW] drop dependency from Jsonista and Jackson in favour or cnuernber/charred
   * [NEW] add possibility to customise `1config.home` dir via java property (#35)
 
 ## Release: v0.21.0 (2021-01-14)
