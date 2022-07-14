@@ -114,8 +114,8 @@ build-ui: check-ver build-core 1config-ui/target/1cfg-ui-beta
 #
 # run the end-2-end integration test
 #
-test: build-core 1config-cli/target/1cfg
-- AWS_PROFILE=${AWS_PROFILE} ./test/bin/end-2-end-test.sh
+test: build-core
+- AWS_PROFILE=${AWS_PROFILE} ./test/bin/end-2-end-test.sh uberjar
 
 #
 # Package artifacts for homebrew and git release
