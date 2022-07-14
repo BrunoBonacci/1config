@@ -18,11 +18,12 @@
 
   :main com.brunobonacci.oneconfig.main
 
-  :dependencies [[org.clojure/clojure "1.10.2-rc1"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [com.brunobonacci/oneconfig #=(ver)]
-                 [org.clojure/tools.cli "1.0.194"]
-                 [org.slf4j/slf4j-log4j12 "1.7.30"]
-                 [com.brunobonacci/safely "0.5.0"]]
+                 [org.clojure/tools.cli "1.0.206"]
+                 [org.slf4j/slf4j-log4j12 "1.7.36"]
+                 [com.brunobonacci/safely "0.5.0"]
+                 [com.github.clj-easy/graal-build-time "0.1.4"]]
 
   :global-vars {*warn-on-reflection* true}
 
@@ -41,10 +42,10 @@
         :jvm-opts ["-server" "$JVM_OPTS" "-Dfile.encoding=utf-8"]}
 
   :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[midje "1.9.9"]
-                                  [org.clojure/test.check "1.1.0"]
+             :dev {:dependencies [[midje "1.10.5"]
+                                  [org.clojure/test.check "1.1.1"]
                                   [criterium "0.4.6"]
-                                  [org.slf4j/slf4j-log4j12 "1.7.30"]]
+                                  [org.slf4j/slf4j-log4j12 "1.7.36"]]
                    :resource-paths ["dev-resources"]
                    :plugins      [[lein-midje "3.2.2"]
                                   [lein-shell "0.5.0"]
@@ -52,6 +53,9 @@
 
   :aliases
   {
+   "test"
+   ["midje"]
+
    "native-config"
    ["shell"
     ;; run the application to infer the build configuration
