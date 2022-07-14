@@ -1,28 +1,23 @@
 (ns com.brunobonacci.oneconfig.ui.server
   (:refer-clojure :exclude [find load list])
-  (:require [org.httpkit.server :as http-kit]
-            [compojure.core :refer [GET POST defroutes routes]]
-            [compojure.handler :as hdr]
-            [ring.middleware.defaults :refer [wrap-defaults
-                                              site-defaults
-                                              api-defaults]]
-            [ring.middleware.resource :refer [wrap-resource]]
-            [ring.middleware.reload :refer [wrap-reload]]
-            [ring.middleware.json :refer [wrap-json-params wrap-json-body wrap-json-response]]
-
-            [org.httpkit.client :as http]
-            [clojure.java.io :as io]
-
-            [com.brunobonacci.oneconfig.backend :as cfg1]
-            [com.brunobonacci.oneconfig.backends :as b]
-            [com.brunobonacci.oneconfig.util :as util]
-            [com.brunobonacci.oneconfig.profiles :as prof]
-            [clojure.string :as string]
-            [where.core :refer [where]]
-            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.cors :refer [wrap-cors]]
-            [ring.util.response :refer :all])
+  (:require
+   [clojure.java.io :as io]
+   [clojure.string :as string]
+   [com.brunobonacci.oneconfig.backend :as cfg1]
+   [com.brunobonacci.oneconfig.backends :as b]
+   [com.brunobonacci.oneconfig.profiles :as prof]
+   [com.brunobonacci.oneconfig.util :as util]
+   [compojure.core :refer [defroutes GET POST]]
+   [compojure.handler :as hdr]
+   [org.httpkit.client :as http]
+   [org.httpkit.server :as http-kit]
+   [ring.middleware.cors :refer [wrap-cors]]
+   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+   [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
+   [ring.middleware.resource :refer [wrap-resource]]
+   [ring.util.response :refer
+    [redirect redirect-status-codes response not-found]]
+   [where.core :refer [where]])
   (:gen-class))
 
 

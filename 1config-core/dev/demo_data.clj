@@ -2,24 +2,12 @@
   (:require [com.brunobonacci.oneconfig :refer :all]
             [com.brunobonacci.oneconfig.backend :refer :all]
             [com.brunobonacci.oneconfig.backends :as b]
-            [com.brunobonacci.oneconfig.util :as u]
-            [cheshire.core :as json]))
-
-
-(defn to-json
-  [v]
-  (json/generate-string v {:pretty true}))
+            [com.brunobonacci.oneconfig.util :as ut]))
 
 
 
-#_(defn clear-table
-    []
-    (loop [items (:items (dyn/scan {:table-name "1Config"}))]
-      (doseq [i items]
-        (dyn/delete-item {:table-name "1Config"
-                          :key (select-keys i [:__sys_key :__ver_key])}))
-      (when (seq items)
-        (recur (:items (dyn/scan {:table-name "1Config"}))))))
+
+
 
 (def backend
   (b/backend-factory {:type :default}))
@@ -83,7 +71,7 @@
     :content-type "json"
     :encoded true
     :value
-    (to-json
+    (ut/to-json
       {:backends [{:mail :ses}
                   {:sms  :twilio :token "asdfghjkl3245678"}
                   {:notification :ses}]})
@@ -96,7 +84,7 @@
     :content-type "json"
     :encoded true
     :value
-    (to-json
+    (ut/to-json
       {:backends [{:mail :ses}
                   {:sms  :twilio :token "jhasgdf23487werg"}
                   {:notification :ses}]})}
@@ -108,7 +96,7 @@
     :content-type "json"
     :encoded true
     :value
-    (to-json
+    (ut/to-json
       {:backends [{:mail :ses}
                   {:sms  :twilio :token "plojniugtadfgwe5"}
                   {:notification :ses}]})}
@@ -357,6 +345,15 @@ mail.credentials.authMethod=SHA1
 
 
 (comment
+
+  (defn clear-table
+    []
+    (loop [items (:items (dyn/scan {:table-name "1Config"}))]
+      (doseq [i items]
+        (dyn/delete-item {:table-name "1Config"
+                          :key (select-keys i [:__sys_key :__ver_key])}))
+      (when (seq items)
+        (recur (:items (dyn/scan {:table-name "1Config"}))))))
 
   ;; DELETE ALL THE ITEMS
   (clear-table)

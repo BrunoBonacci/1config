@@ -16,19 +16,26 @@
                (vector "-server"))
 
 
-  :dependencies [[org.clojure/clojure "1.10.2-rc1"]
-                 [org.clojure/clojurescript "1.10.773"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
+                 [org.clojure/clojurescript "1.11.60"]
+
+                 ;; avoid conflicts across transitive deps
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-cbor "2.13.3"]
+                 [com.fasterxml.jackson.dataformat/jackson-dataformat-smile "2.13.3"]
+                 [com.fasterxml.jackson.core/jackson-core "2.13.3"]
+                 [cheshire "5.11.0"]
+
                  [com.brunobonacci/oneconfig #=(ver)]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
-                 [cljs-ajax "0.8.1"]
-                 [cljsjs/react "16.13.0-0"]
-                 [cljsjs/react-dom "16.13.0-0"]
+                 [cljs-ajax "0.8.4"]
+                 [cljsjs/react "17.0.2-0"]
+                 [cljsjs/react-dom "17.0.2-0"]
 
-                 [http-kit "2.5.0"]
-                 [compojure "1.6.2"]
-                 [ring "1.8.2"]
-                 [ring/ring-defaults "0.3.2"]
-                 [ring/ring-json "0.5.0"]
+                 [http-kit "2.6.0"]
+                 [compojure "1.7.0"]
+                 [ring/ring-core "1.9.5"]
+                 [ring/ring-defaults "0.3.3"]
+                 [ring/ring-json "0.5.1"]
                  [ring-cors "0.1.13"]
                  [enlive "1.1.6"]
                  [reagent "0.10.0"]
@@ -36,7 +43,8 @@
 
                  [re-frisk "0.5.4.1"]
 
-                 [org.slf4j/slf4j-log4j12 "1.7.30"]]
+                 [org.slf4j/slf4j-log4j12 "1.7.36"]
+                 [com.github.clj-easy/graal-build-time "0.1.4"]]
 
   :min-lein-version "2.7.1"
   :source-paths     ["src" "../1config-shared/src"]
@@ -63,6 +71,8 @@
      :compiler     {:main          com.brunobonacci.oneconfig.ui.view
                     :output-to     "resources/public/cljs/main.js"
                     :optimizations :advanced
+                    :language-in     :ecmascript-next
+                    :language-out    :ecmascript-next
                     :externs       ["resources/public/js/ace.js"]
                     :foreign-libs  [{:file "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.7/ace.js"
                                      :provides ["ace"]}]
@@ -81,7 +91,7 @@
 
   :profiles {:uberjar {:aot        :all
                        :prep-tasks ["compile" ["cljsbuild" "once" "min"]]}
-             :dev     {:dependencies [[figwheel-sidecar "0.5.19"]]
+             :dev     {:dependencies [[figwheel-sidecar "0.5.20"]]
                        :plugins [[lein-figwheel "0.5.19"]
                                  [lein-cljsbuild "1.1.7"]
                                  [lein-binplus "0.6.6"]]}}
