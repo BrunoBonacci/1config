@@ -1,5 +1,9 @@
 # Changelog
 
+## Release: v0.21.1 (2022-07-14)
+
+  * [NEW] add possibility to customise `1config.home` dir via java property (#35)
+
 ## Release: v0.21.0 (2021-01-14)
 
   * [**BREAKING**] Expand version numbers to support more digits from 5 to 20

@@ -1,6 +1,6 @@
 (ns ^:no-doc ^{:author "Bruno Bonacci (@BrunoBonacci)"}
  com.brunobonacci.oneconfig.util
-  (:require [jsonista.core :as json]
+  (:require [charred.api :as json]
             [clj-yaml.core :as yaml]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -394,6 +394,55 @@
     (-> out (.getBuffer) (.toString))))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                                            ;;
+;;                    ----==| J S O N   U T I L S |==----                     ;;
+;;                                                                            ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;
+;; Add encoders for various types
+;;
+(extend-protocol json/PToJSON
+
+  java.util.Date
+  (->json-data [item]
+    (-> (.getTime ^java.util.Date item)
+      (java.time.Instant/ofEpochMilli)
+      (.toString))))
+
+
+(let [with-output-to-str
+      (fn [writer]
+        (fn [m] (str (doto (java.io.StringWriter.) (writer m)))))
+
+      packed-writer
+      (with-output-to-str
+        (json/write-json-fn {:indent-str nil :escape-slash false}))
+
+      pretty-writer
+      (with-output-to-str
+        (json/write-json-fn {:indent-str "    " :escape-slash false}))]
+
+  (defn to-json
+    "It takes a map and return a JSON encoded string of the given map data."
+    ([m]
+     (packed-writer m))
+    ([m {:keys [pretty?]}]
+     (if pretty?
+       (pretty-writer m)
+       (packed-writer m)))))
+
+
+
+(defn from-json
+  "Parses a JSON encoded string `s` into the representing data"
+  ([s]
+   (json/read-json s :key-fn keyword))
+  ([s {:keys [keywordize] :or {keywordize true}}]
+   (json/read-json s :key-fn (if keywordize keyword identity))))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                            ;;
@@ -415,7 +464,7 @@
 
 (defmethod decode "json"
   [_ value]
-  (json/read-value value json/keyword-keys-object-mapper))
+  (from-json value))
 
 
 
@@ -459,8 +508,7 @@
 
 (defmethod encode "json"
   [_ value]
-  (json/write-value-as-string value
-    (json/object-mapper {:date-format "yyyy-MM-dd'T'HH:mm:ss.SSSX"})))
+  (to-json value))
 
 
 

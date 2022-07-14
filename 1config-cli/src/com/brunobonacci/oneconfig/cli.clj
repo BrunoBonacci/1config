@@ -1,7 +1,6 @@
 (ns com.brunobonacci.oneconfig.cli
   (:refer-clojure :exclude [find load list])
-  (:require [jsonista.core :as json]
-            [clojure.pprint :as pp]
+  (:require [clojure.pprint :as pp]
             [clojure.string :as str]
             [clojure.tools.logging :as log]
             [com.brunobonacci.oneconfig.backend :refer :all]
@@ -11,6 +10,7 @@
             [com.brunobonacci.oneconfig.profiles :as prof]
             [com.brunobonacci.oneconfig.diff :as diff]
             [com.brunobonacci.oneconfig.table :as table]
+            [com.brunobonacci.oneconfig.util :as ut]
             [safely.core :refer [safely]]))
 
 
@@ -103,10 +103,7 @@
   (if-not pretty-print?
     (or encoded-value value)
     (case content-type
-      "json"       (json/write-value-as-string value
-                     (json/object-mapper
-                       {:date-format "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-                        :pretty true}))
+      "json"       (ut/to-json value {:pretty? true})
       "yaml"       encoded-value
       "edn"        (pp/write value :stream nil)
       "txt"        value
