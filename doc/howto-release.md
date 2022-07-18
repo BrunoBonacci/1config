@@ -33,12 +33,17 @@
   - build cli packages
     ```
     cd 1config-cli
-    lein do clean, bin, package
+    lein do clean, bin, native-config, native
+    ```
+  - build Linux version of a linux machine
+    ```
+    cd 1config-cli
+    lein do clean, uberjar, native
     ```
   - build UI packages
     ```
     cd 1config-ui
-    lein do clean, bin, package
+    lein do clean, bin
     ```
   - release to clojars
     ```

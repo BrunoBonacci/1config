@@ -3,7 +3,7 @@
 export BASE=${1:-.}
 export PLATFORM=${2}
 
-# using GraalVM CE 20.3.0
+# using GraalVM CE 20.3.0 java 11
 native-image --report-unsupported-elements-at-runtime \
              --no-server \
              --no-fallback \

@@ -15,6 +15,7 @@
                (vector "--add-opens" "java.base/java.lang=ALL-UNNAMED" "-server")
                (vector "-server"))
 
+  :javac-options     ["-target" "1.8" "-source" "1.8" ]
 
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/clojurescript "1.11.60"]
@@ -44,6 +45,7 @@
                  [re-frisk "0.5.4.1"]
 
                  [org.slf4j/slf4j-log4j12 "1.7.36"]
+                 [org.apache.logging.log4j/log4j-core "2.18.0"]
                  [com.github.clj-easy/graal-build-time "0.1.4"]]
 
   :min-lein-version "2.7.1"
