@@ -21,7 +21,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [com.brunobonacci/oneconfig #=(ver)]
                  [org.clojure/tools.cli "1.0.206"]
-                 [org.slf4j/slf4j-log4j12 "1.7.36"]
+                 [ch.qos.logback/logback-classic "1.2.11"]
                  [com.brunobonacci/safely "0.5.0"]
                  [com.github.clj-easy/graal-build-time "0.1.4"]]
 
@@ -44,8 +44,7 @@
   :profiles {:uberjar {:aot :all}
              :dev {:dependencies [[midje "1.10.5"]
                                   [org.clojure/test.check "1.1.1"]
-                                  [criterium "0.4.6"]
-                                  [org.slf4j/slf4j-log4j12 "1.7.36"]]
+                                  [criterium "0.4.6"]]
                    :resource-paths ["dev-resources"]
                    :plugins      [[lein-midje "3.2.2"]
                                   [lein-shell "0.5.0"]
@@ -71,9 +70,9 @@
     ["shell" "mkdir" "-p" "/tmp/1cfg-build/target/"]
     ["shell" "cp" "./target/${:uberjar-name:-${:name}-${:version}-standalone.jar}" "/tmp/1cfg-build/target/"]
     ["shell" "cp" "-r" "./graalvm-config" "/tmp/1cfg-build/"]
-    ["shell" "docker" "run" "-v" "/tmp/1cfg-build:/1config" "findepi/graalvm:20.3.0-java11-native"
+    ["shell" "docker" "run" "--platform=linux/amd64" "-v" "/tmp/1cfg-build:/1config" "findepi/graalvm:22.1.0-java17-native"
      "/bin/bash" "-c"
-     "find /1config ; apt-get update ; apt-get install -y g++ ; /graalvm/bin/native-image --report-unsupported-elements-at-runtime --no-server --no-fallback -H:+PrintClassInitialization -H:ConfigurationFileDirectories=/1config/graalvm-config/ --initialize-at-build-time --allow-incomplete-classpath --enable-http --enable-https --enable-all-security-services -jar /1config/target/${:uberjar-name:-${:name}-${:version}-standalone.jar} -H:Name=/1config/target/1cfg-Linux"]
+     "find /1config ; /graalvm/bin/native-image -H:-CheckToolchain --report-unsupported-elements-at-runtime --no-server --no-fallback -H:ConfigurationFileDirectories=/1config/graalvm-config/ --allow-incomplete-classpath --enable-http --enable-https --enable-all-security-services -jar /1config/target/${:uberjar-name:-${:name}-${:version}-standalone.jar} -H:Name=/1config/target/1cfg-Linux"]
     ["shell" "cp" "/tmp/1cfg-build/target/1cfg-Linux" "./target/"]]
    }
   )

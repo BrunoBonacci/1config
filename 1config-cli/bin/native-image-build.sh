@@ -3,12 +3,13 @@
 export BASE=${1:-.}
 export PLATFORM=${2}
 
-#  using graalvm-ce-java17-22.1.0
+# using GraalVM CE 20.3.0
 native-image --report-unsupported-elements-at-runtime \
              --no-server \
              --no-fallback \
              -H:+PrintClassInitialization \
              -H:ConfigurationFileDirectories=$BASE/graalvm-config/ \
+             --initialize-at-build-time \
              --allow-incomplete-classpath \
              --enable-http \
              --enable-https \

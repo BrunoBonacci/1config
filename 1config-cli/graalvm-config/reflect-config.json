@@ -1,44 +1,5 @@
 [
 {
-  "name":"[B"
-},
-{
-  "name":"[C"
-},
-{
-  "name":"[D"
-},
-{
-  "name":"[F"
-},
-{
-  "name":"[I"
-},
-{
-  "name":"[J"
-},
-{
-  "name":"[Ljava.lang.Object;"
-},
-{
-  "name":"[Ljava.lang.StackTraceElement;"
-},
-{
-  "name":"[Ljava.lang.String;"
-},
-{
-  "name":"[Ljava.nio.HeapByteBuffer;"
-},
-{
-  "name":"[Lsun.security.pkcs.SignerInfo;"
-},
-{
-  "name":"[S"
-},
-{
-  "name":"[Z"
-},
-{
   "name":"amalloy.ring_buffer.RingBuffer"
 },
 {
@@ -47,6 +8,54 @@
 {
   "name":"apple.security.AppleProvider",
   "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"boolean[]"
+},
+{
+  "name":"byte[]"
+},
+{
+  "name":"ch.qos.logback.classic.encoder.PatternLayoutEncoder",
+  "allPublicMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.filter.ThresholdFilter",
+  "allPublicMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.DateConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.LevelConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.LineSeparatorConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.LoggerConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.MessageConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.classic.pattern.ThreadConverter",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"ch.qos.logback.core.ConsoleAppender",
+  "allPublicMethods":true,
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"char[]"
 },
 {
   "name":"charred.CSVReader"
@@ -858,8 +867,8 @@
 },
 {
   "name":"clojure.lang.IObj",
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "allDeclaredMethods":true,
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.IPersistentCollection"
@@ -935,7 +944,7 @@
 },
 {
   "name":"clojure.lang.LockingTransaction",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.MapEntry"
@@ -951,15 +960,14 @@
 },
 {
   "name":"clojure.lang.Namespace",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.Numbers"
 },
 {
   "name":"clojure.lang.PersistentArrayMap",
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"create","parameterTypes":["java.util.Map"] }]
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.PersistentArrayMap$Seq"
@@ -987,7 +995,7 @@
 },
 {
   "name":"clojure.lang.RT",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.Ratio"
@@ -1015,7 +1023,7 @@
 },
 {
   "name":"clojure.lang.Symbol",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.TaggedLiteral"
@@ -1025,7 +1033,7 @@
 },
 {
   "name":"clojure.lang.Var",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"clojure.lang.Volatile"
@@ -1217,8 +1225,8 @@
 },
 {
   "name":"clojure.tools.logging.impl.LoggerFactory",
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true
+  "allDeclaredMethods":true,
+  "allPublicMethods":true
 },
 {
   "name":"clojure.tools.logging.impl__init"
@@ -1570,27 +1578,7 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"com.sun.crypto.provider.ARCFOURCipher",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DESCipher",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.DESedeCipher",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"com.sun.crypto.provider.DHParameters",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.sun.crypto.provider.GaloisCounterMode$AESGCM",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -1614,11 +1602,18 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"com.sun.xml.internal.stream.XMLInputFactoryImpl",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
   "name":"defun.core__init"
+},
+{
+  "name":"double[]"
 },
 {
   "name":"flatland.ordered.common.Compactable"
@@ -1645,7 +1640,10 @@
   "name":"flatland.ordered.set__init"
 },
 {
-  "name":"java.beans.PropertyVetoException"
+  "name":"float[]"
+},
+{
+  "name":"int[]"
 },
 {
   "name":"java.io.BufferedInputStream"
@@ -1682,6 +1680,9 @@
 },
 {
   "name":"java.io.FileOutputStream"
+},
+{
+  "name":"java.io.FilePermission"
 },
 {
   "name":"java.io.FileWriter"
@@ -1730,11 +1731,11 @@
 },
 {
   "name":"java.lang.Boolean",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Byte",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.CharSequence"
@@ -1744,45 +1745,39 @@
 },
 {
   "name":"java.lang.Class",
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"getModule","parameterTypes":[] }]
+  "allPublicMethods":true
 },
 {
   "name":"java.lang.ClassLoader"
 },
 {
   "name":"java.lang.Double",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Float",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.IllegalArgumentException",
-  "queryAllPublicConstructors":true
+  "allPublicConstructors":true
 },
 {
   "name":"java.lang.Integer",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.Iterable"
 },
 {
   "name":"java.lang.Long",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
-  "name":"java.lang.Module",
-  "methods":[
-    {"name":"getLayer","parameterTypes":[] }, 
-    {"name":"getName","parameterTypes":[] }
-  ]
+  "name":"java.lang.Module"
 },
 {
-  "name":"java.lang.ModuleLayer",
-  "methods":[{"name":"configuration","parameterTypes":[] }]
+  "name":"java.lang.ModuleLayer"
 },
 {
   "name":"java.lang.Number"
@@ -1790,26 +1785,34 @@
 {
   "name":"java.lang.Object",
   "allDeclaredFields":true,
-  "queryAllDeclaredMethods":true,
-  "queryAllPublicMethods":true,
-  "queryAllDeclaredConstructors":true
+  "allDeclaredMethods":true,
+  "allPublicMethods":true,
+  "allDeclaredConstructors":true
+},
+{
+  "name":"java.lang.Object[]"
 },
 {
   "name":"java.lang.Runnable"
 },
 {
+  "name":"java.lang.RuntimePermission"
+},
+{
   "name":"java.lang.Short",
-  "queriedMethods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
+  "methods":[{"name":"valueOf","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"java.lang.StackTraceElement"
 },
 {
+  "name":"java.lang.StackTraceElement[]"
+},
+{
   "name":"java.lang.String"
 },
 {
-  "name":"java.lang.Thread",
-  "methods":[{"name":"getContextClassLoader","parameterTypes":[] }]
+  "name":"java.lang.String[]"
 },
 {
   "name":"java.lang.ThreadLocal"
@@ -1846,8 +1849,7 @@
   "methods":[{"name":"location","parameterTypes":[] }]
 },
 {
-  "name":"java.lang.module.ResolvedModule",
-  "methods":[{"name":"reference","parameterTypes":[] }]
+  "name":"java.lang.module.ResolvedModule"
 },
 {
   "name":"java.lang.ref.ReferenceQueue"
@@ -1863,10 +1865,6 @@
 },
 {
   "name":"java.lang.reflect.Field"
-},
-{
-  "name":"java.lang.reflect.Method",
-  "methods":[{"name":"canAccess","parameterTypes":["java.lang.Object"] }]
 },
 {
   "name":"java.lang.reflect.Modifier"
@@ -1887,6 +1885,9 @@
   "name":"java.net.MalformedURLException"
 },
 {
+  "name":"java.net.NetPermission"
+},
+{
   "name":"java.net.ServerSocket"
 },
 {
@@ -1894,6 +1895,9 @@
 },
 {
   "name":"java.net.SocketException"
+},
+{
+  "name":"java.net.SocketPermission"
 },
 {
   "name":"java.net.SocketTimeoutException"
@@ -1911,10 +1915,17 @@
   "name":"java.net.URLEncoder"
 },
 {
+  "name":"java.net.URLPermission",
+  "methods":[{"name":"<init>","parameterTypes":["java.lang.String","java.lang.String"] }]
+},
+{
   "name":"java.net.UnknownHostException"
 },
 {
   "name":"java.nio.ByteBuffer"
+},
+{
+  "name":"java.nio.HeapByteBuffer[]"
 },
 {
   "name":"java.nio.charset.Charset"
@@ -1929,13 +1940,22 @@
   "name":"java.security.AlgorithmParametersSpi"
 },
 {
+  "name":"java.security.AllPermission"
+},
+{
   "name":"java.security.KeyStoreSpi"
 },
 {
   "name":"java.security.MessageDigest"
 },
 {
+  "name":"java.security.MessageDigestSpi"
+},
+{
   "name":"java.security.SecureRandomParameters"
+},
+{
+  "name":"java.security.SecurityPermission"
 },
 {
   "name":"java.security.interfaces.ECPrivateKey"
@@ -2020,6 +2040,9 @@
 },
 {
   "name":"java.util.Properties"
+},
+{
+  "name":"java.util.PropertyPermission"
 },
 {
   "name":"java.util.Queue"
@@ -2163,6 +2186,9 @@
   "name":"javax.crypto.spec.SecretKeySpec"
 },
 {
+  "name":"javax.management.ObjectName"
+},
+{
   "name":"javax.security.auth.x500.X500Principal",
   "fields":[{"name":"thisX500Name"}],
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
@@ -2204,6 +2230,9 @@
   "name":"javax.xml.transform.stream.StreamSource"
 },
 {
+  "name":"long[]"
+},
+{
   "name":"metrics.core__init"
 },
 {
@@ -2241,35 +2270,6 @@
 },
 {
   "name":"name.fraser.neil.plaintext.diff_match_patch$Operation"
-},
-{
-  "name":"org.apache.log4j.AppenderSkeleton",
-  "queryAllPublicMethods":true
-},
-{
-  "name":"org.apache.log4j.ConsoleAppender",
-  "queryAllPublicMethods":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setTarget","parameterTypes":["java.lang.String"] }
-  ]
-},
-{
-  "name":"org.apache.log4j.Layout",
-  "queryAllPublicMethods":true
-},
-{
-  "name":"org.apache.log4j.PatternLayout",
-  "queryAllPublicMethods":true,
-  "methods":[
-    {"name":"<init>","parameterTypes":[] }, 
-    {"name":"setConversionPattern","parameterTypes":["java.lang.String"] }
-  ]
-},
-{
-  "name":"org.apache.log4j.WriterAppender",
-  "queryAllPublicMethods":true,
-  "methods":[{"name":"setEncoding","parameterTypes":["java.lang.String"] }]
 },
 {
   "name":"org.eclipse.jetty.client.HttpClient"
@@ -2317,15 +2317,15 @@
 },
 {
   "name":"org.slf4j.ILoggerFactory",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"org.slf4j.Logger",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"org.slf4j.LoggerFactory",
-  "queryAllPublicMethods":true
+  "allPublicMethods":true
 },
 {
   "name":"org.yaml.snakeyaml.DumperOptions"
@@ -2500,6 +2500,12 @@
   "name":"schema.utils__init"
 },
 {
+  "name":"short[]"
+},
+{
+  "name":"sun.security.pkcs.SignerInfo[]"
+},
+{
   "name":"sun.security.pkcs12.PKCS12KeyStore",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -2553,10 +2559,6 @@
 },
 {
   "name":"sun.security.provider.certpath.PKIXCertPathValidator",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"sun.security.rsa.PSSParameters",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {

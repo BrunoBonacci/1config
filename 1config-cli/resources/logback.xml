@@ -1,0 +1,39 @@
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.err</target>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.brunobonacci.oneconfig" level="WARN" />
+  <logger name="user" level="ERROR" />
+  <!--
+      ingore annoying WARN from AWS SDK like the following one:
+
+      WARN BasicProfileConfigLoader:96 - Your profile name includes a
+      'profile ' prefix. This is considered part of the profile name
+      in the Java SDK, so you will need to include this prefix in
+      your profile name when you reference this profile from your
+      Java code.
+  -->
+  <logger name="com.amazonaws.auth.profile.internal.BasicProfileConfigLoader" level="ERROR" />
+
+  <!--
+  # muting warning for JDK9+ JAXTB
+  # WARN  Base64:113 - JAXB is unavailable. Will fallback to SDK implementation which may be less performant
+  -->
+  <logger name="com.amazonaws.util.Base64" level="ERROR" />
+
+  <!-- # muting "Failed to connect to service endpoint:" errors -->
+  <logger name="com.amazonaws" level="ERROR" />
+
+  <!-- # muting "Unable to fetch credentials from environment variables" -->
+  <logger name="cognitect.aws.credentials" level="WARN" />
+  <logger name="org.eclipse.jetty" level="WARN" />
+
+</configuration>
